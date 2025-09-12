@@ -807,13 +807,14 @@ Liens utiles pour des révisions de l'épreuve écrite :
 === "TRAVAIL À FAIRE"
 
     - **Poursuivre** l'introduction à la [Programmation Orientée Objet](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-IntroductionProgrammationOrienteeObjet.ipynb){target=_blank} ;
-
+-->
 ***
-## Le 09/09
+
+## Le 12/09
 
 === "CONTENU DE SÉANCE"
 
-    - Retour sur le travail demandé ;
+    - Retour sur le travail demandé : [Capytale n° `cda0-6985546`](https://capytale2.ac-paris.fr/web/c/cda0-6985546){target=_blank .md-button .md-button--primary};
 
     - [Recommandations de programmation appliquées à l'exercice série de notes](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/Recommandations_de_programmation-Exercice_notes.ipynb){target=_blank} [Capytale n°4bbe-3858950](https://capytale2.ac-paris.fr/web/c/4bbe-3858950){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/Recommandations_de_programmation-Exercice_notes.ipynb){ .md-button .md-button--primary} -> ==**expérimenter** les solutions du notebook en complétant le code et la documentation des fonctions partiellement données==
 
@@ -821,7 +822,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **Finir** le notebook des [recommandations de programmation appliquées à l'exercice série de notes sur Capytale n°4bbe-3858950](https://capytale2.ac-paris.fr/web/c/4bbe-3858950){target=_blank} et le **rendre** pour le 16/09 ;
 
--->
+
 
 ***
 ## Du 05/09
