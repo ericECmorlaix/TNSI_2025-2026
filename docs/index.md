@@ -735,14 +735,9 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
         - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;
         
-***
-## Du 23/09
 
-=== "CONTENU DE SÉANCE"    
 
-    - [Synthèse de Programmation Orientée Objet](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-SyntheseProgrammationOrienteeObjet.ipynb){target=_blank} 
-    [Capytale n° af58-4011978](https://capytale2.ac-paris.fr/web/c/af58-4011978){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-SyntheseProgrammationOrienteeObjet.ipynb){ .md-button .md-button--primary};
+    
     
 
 
@@ -754,8 +749,34 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - *Communication en mer* :  Communication TCP/IP, HTTP et IOT avec un [ESP32](https://ericecmorlaix.github.io/adn-Tutoriel_lab_si/IOT/ESP/32/){target=_blank} ;
         - *Pollution plastique en mer* :  Programmation Orientée Objet avec Pyxel, [POOng-Le_TP_qui_fait_des_bonds](https://capytale2.ac-paris.fr/web/c/f3aa-4011176){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/POOng/POOng-Le_TP_qui_fait_des_bonds.ipynb){ .md-button .md-button--primary} ;        
 
-
 -->
+***
+## Du 26/09
+
+=== "CONTENU DE SÉANCE"
+
+    - Retour sur le T.A.F. ;
+
+    - [Synthèse de Programmation Orientée Objet](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-SyntheseProgrammationOrienteeObjet.ipynb){target=_blank} 
+    [Capytale n° af58-4011978](https://capytale2.ac-paris.fr/web/c/af58-4011978){target=_blank .md-button .md-button--primary} 
+    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-SyntheseProgrammationOrienteeObjet.ipynb){ .md-button .md-button--primary};
+
+    - **Explorer** les environnements de développement associés aux projets de la fête de la science et y appliquer de la POO...
+           
+
+=== "TRAVAIL À FAIRE"
+
+    - **S'entrainer** en POO en réalisant des exercices pratiques :
+        
+        - [`programmeur.saisit(code)`](https://codex.forge.apps.education.fr/exercices/syntaxe_poo/#programmeursaisitcode){target=_blank} ;
+        - [La classe Chien](https://codex.forge.apps.education.fr/exercices/poo_chien/#la-classe-chien){target=_blank} ;
+        - [Géométrie vectorielle en POO](https://codex.forge.apps.education.fr/en_travaux/geometrie_vectorielle_POO/){target=_blank} _Maths_ ;
+        - [La domotique (I)](https://codex.forge.apps.education.fr/en_travaux/domotique/){target=_blank} ;
+        - [La domotique (II)](https://codex.forge.apps.education.fr/en_travaux/domotique_II/){target=_blank} ;
+        - [Carrés semi-magiques (POO)](https://codex.forge.apps.education.fr/exercices/carre_semi_magiques/){target=_blank} _Tableaux;
+        - [La Belote](https://codex.forge.apps.education.fr/en_travaux/belote/#la-belote){target=_blank} _Dictionnaires_;
+        - [Programmer un robot (2)](https://codex.forge.apps.education.fr/en_travaux/robot_2/){target=_blank} _Chaines de caractères_;
+
 ***
 ## Les 19 et 22/09
 
@@ -764,8 +785,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
     - Retour sur le T.A.F. ;
 
     - Introduction à la [Programmation Orientée Objet](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-IntroductionProgrammationOrienteeObjet.ipynb){target=_blank} [Capytale n°914d-3933344](https://capytale2.ac-paris.fr/web/c/914d-3933344){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/POO-IntroductionProgrammationOrienteeObjet.ipynb){ .md-button .md-button--primary} ;
-
-            
+           
 
 === "TRAVAIL À FAIRE"
 
