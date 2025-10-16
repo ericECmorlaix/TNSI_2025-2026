@@ -697,14 +697,15 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
         - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;
 
-    - **Découvrir** l'interface graphique **Dear PyGui** à l'aide de [sa documentation](https://dearpygui.readthedocs.io){target=_blank}, de [la playlist de Frédéric LEULEU](https://youtube.com/playlist?list=PL-Q7fIakgvUBR2PNPoGqb9o-koAzFwoDs&feature=shared){target=_blank} et, spécialement pour *Ivan*, [du tutoriel](https://youtu.be/2RocXKPPx4o){target=_blank} ;
+ 
         
-
+-->
 ***
-## Du 09/10
+## Du 16/10
 
 === "CONTENU DE SÉANCE"    
 
+    - Evaluation POO ;
     - Structure Linéaire de Données :
         - [Liste](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){target=_blank} [Capytale n° f652-4226408](https://capytale2.ac-paris.fr/web/c/f652-4226408){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){ .md-button .md-button--primary} ;
         - [Pile](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Pile.ipynb){target=_blank} [Capytale n° 39ef-4226515](https://capytale2.ac-paris.fr/web/c/39ef-4226515){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Pile.ipynb){ .md-button .md-button--primary} ;
@@ -713,8 +714,6 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
 === "TRAVAIL À FAIRE"
 
-    - **Se préparer** pour une évaluation sur la POO, les listes chainées et la programmation impérative et procédurale en Python plus généralement.
-      
     - **S'entrainer** en réalisant des exercices pratiques :
         
         - [`programmeur.saisit(code)`](https://codex.forge.apps.education.fr/exercices/syntaxe_poo/#programmeursaisitcode){target=_blank} ;
@@ -734,22 +733,15 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [File avec deux piles](https://codex.forge.apps.education.fr/en_travaux/file_deux_piles/){target=_blank} *Structure linéaire* ; 
         - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
         - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;
-        
 
+        - **Découvrir** l'interface graphique **Dear PyGui** à l'aide de [sa documentation](https://dearpygui.readthedocs.io){target=_blank} et de [la playlist de Frédéric LEULEU](https://youtu.be/AtQAfI91GcI?si=uTl8KkSBcn3oDo-y){target=_blank} et d'autres tutoriels comme :
 
-    
-    
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/f80-gyFG0vA?si=n3pFw4YCGtgXSBNA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/sccsdWGZtAU?si=kavx8VIAgGI4ikgL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/2RocXKPPx4o?si=s6syLbtogjhpU6Vc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-    - **Explorer** les environnements de développement associés aux projets de la fête de la science et y appliquer de la POO :
-
-        - *Robot sous-marin* : programmation d'un [BBC micro:bit](https://ericecmorlaix.github.io/adn-Tutoriel_lab_si/IOT/BBC_microbit/){target=_blank} avec communication point à point pour radiocommander un [robot](https://ericecmorlaix.github.io/1SI_2023-2024/Projet/Robotique/){target=_blank} ;
-        - *Elévation des océans* : programmation distante à travers un LAN d'un [Lego EV3](https://ericecmorlaix.github.io/adn-Tutoriel_lab_si/IOT/Lego/EV3/){target=_blank} ;
-        - *Communication en mer* :  Communication TCP/IP, HTTP et IOT avec un [ESP32](https://ericecmorlaix.github.io/adn-Tutoriel_lab_si/IOT/ESP/32/){target=_blank} ;
-        - *Pollution plastique en mer* :  Programmation Orientée Objet avec Pyxel, [POOng-Le_TP_qui_fait_des_bonds](https://capytale2.ac-paris.fr/web/c/f3aa-4011176){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/POOng/POOng-Le_TP_qui_fait_des_bonds.ipynb){ .md-button .md-button--primary} ;        
-
--->
 ***
 ## Du 26/09
 
