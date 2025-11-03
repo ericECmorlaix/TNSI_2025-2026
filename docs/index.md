@@ -658,14 +658,14 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [File avec deux piles](https://codex.forge.apps.education.fr/en_travaux/file_deux_piles/){target=_blank} *Structure linéaire* ; 
         - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
         - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;   
-        
+-->        
 ***
 
-## Les 17 et18/10
+## Du 03/11
 
 === "CONTENU DE SÉANCE"    
 
-    - Evaluation POO, Liste et Pile [partie 1](./SD/Eval_1p1_POO_Liste.pdf){target=_blank}, [partie 2](./SD/Eval_1p2_POO_Pile.pdf){target=_blank}, [partie 3](./SD/Eval_1p3_POO_Liste_Pile.pdf){target=_blank} ;
+    - Correction de l'évaluation POO [partie 1](./SD/Eval_1p1_POO.pdf){target=_blank}, [partie 2](./SD/Eval_1p2_POO.pdf){target=_blank}[Correction partie 2](./SD/Eval_1p2_POO-COR.pdf){target=_blank}, [partie 3](./SD/Eval_1p3_POO.pdf){target=_blank} ;
     
     - ** A Finir** Structure Linéaire de Données :
         - [Liste](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){target=_blank} [Capytale n° f652-4226408](https://capytale2.ac-paris.fr/web/c/f652-4226408){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){ .md-button .md-button--primary} ;
@@ -675,7 +675,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
 === "TRAVAIL À FAIRE"
 
-    - **Faire** le [DM](./SD/DM_Pile_File.pdf) et la [partie 3](./SD/Eval_1p3_POO_Liste_Pile.pdf){target=_blank} de l'évaluation POO, Liste et Pile ;
+    - **Faire** en DM [la partie 1 de POO **+ Liste**](./SD/DM_POO_Liste.pdf) la [partie 3 POO **+ Pile**](./SD/Eval_1p3_POO+Pile.pdf) et le [DM Pile-File](./SD/DM_Pile_File.pdf){target=_blank} ;
       
     - **S'entrainer** en réalisant des exercices pratiques :
         
@@ -699,7 +699,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
  
         
--->
+
 ***
 ## Du 16/10
 
