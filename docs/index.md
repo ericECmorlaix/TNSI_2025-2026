@@ -677,25 +677,9 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **Faire** en DM [la partie 1 de POO **+ Liste**](./SD/DM_POO_Liste.pdf) la [partie 3 POO **+ Pile**](./SD/Eval_1p3_POO+Pile.pdf) et le [DM Pile-File](./SD/DM_Pile_File.pdf){target=_blank} ;
       
-    - **S'entrainer** en réalisant des exercices pratiques :
+    - **S'entrainer** en réalisant des [exercices pratiques de Codex via Capytale n°`00d9-7948274`](https://capytale2.ac-paris.fr/web/c/00d9-7948274){target=_blank} tout en conservant une trace de vos développements dans le notebook [Exos-structures_linéaires-POO Capytale n°`8337-8033909`](https://capytale2.ac-paris.fr/web/c/8337-8033909){target=_blank}  ;
         
-        - [`programmeur.saisit(code)`](https://codex.forge.apps.education.fr/exercices/syntaxe_poo/#programmeursaisitcode){target=_blank} ;
-        - [La classe Chien](https://codex.forge.apps.education.fr/exercices/poo_chien/#la-classe-chien){target=_blank} ;
-        - [Géométrie vectorielle en POO](https://codex.forge.apps.education.fr/en_travaux/geometrie_vectorielle_POO/){target=_blank} *Maths* ;
-        - [La domotique (I)](https://codex.forge.apps.education.fr/en_travaux/domotique/){target=_blank} ;
-        - [La domotique (II)](https://codex.forge.apps.education.fr/en_travaux/domotique_II/){target=_blank} ;
-        - [Carrés semi-magiques (POO)](https://codex.forge.apps.education.fr/exercices/carre_semi_magiques/){target=_blank} *Tableaux* ;
-        - [La Belote](https://codex.forge.apps.education.fr/en_travaux/belote/#la-belote){target=_blank} *Dictionnaires*;
-        - [Programmer un robot (2)](https://codex.forge.apps.education.fr/en_travaux/robot_2/){target=_blank} *Chaines de caractères* ;
-        - [Mme Tortue et M. Lièvre font la course](https://codex.forge.apps.education.fr/exercices/lievre_tortue/){target=_blank} *Structure linéaire* ;
-        - [Jeu de la ronde (2)](https://codex.forge.apps.education.fr/en_travaux/ronde_2/){target=_blank} *Structure linéaire* ;
-        - [Évaluation d'une expression postfixe](https://codex.forge.apps.education.fr/exercices/eval_postfixe/){target=_blank} *Piles* ;
-        - [Filtre des nombres positifs d'une pile](https://codex.forge.apps.education.fr/exercices/filtre_pile/){target=_blank} *Piles* ;
-        - [Parenthésage correct](https://codex.forge.apps.education.fr/en_travaux/parentheses/){target=_blank} *Piles* ;
-        - [Expression bien parenthésée (2)](https://codex.forge.apps.education.fr/exercices/expression_bien_parenthesee_2/){target=_blank} *Piles*;
-        - [File avec deux piles](https://codex.forge.apps.education.fr/en_travaux/file_deux_piles/){target=_blank} *Structure linéaire* ; 
-        - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
-        - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;
+     
 
  
         
