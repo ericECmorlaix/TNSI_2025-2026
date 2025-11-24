@@ -668,17 +668,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **Proposer** une version récursive pour la fonction `longueur(liste)` qui renvoie la longueur de la liste chaînée `liste` telle que définie dans [le DM sur les listes chainées](./SD/DM_POO_Liste.pdf){target=_blank} [Capytale n° 747d-4440073](https://capytale2.ac-paris.fr/web/c/747d-4440073){target=_blank .md-button .md-button--primary} ;    
 
-    - **Appliquer** la récursivité aux exercices pratiques listés ci-dessous en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} :
-        
-        - [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/exercices/fib_1/#suite-de-fibonacci-1){target=_blank} ;
-        - [Algorithme de rendu de monnaie](https://codex.forge.apps.education.fr/en_travaux/rendu_monnaie/#algorithme-de-rendu-de-monnaie){target=_blank} ;
-        - [Percolation](https://codex.forge.apps.education.fr/exercices/percolation/#percolation){target=_blank} ;
-        - [Anagrammes](https://codex.forge.apps.education.fr/exercices/anagrammes/#anagrammes){target=_blank} ;
-        - [Rechercher un élément dans un tableau trié](https://codex.forge.apps.education.fr/en_travaux/recherche_tab_trie/#rechercher-un-element-dans-un-tableau-trie){target=_blank} ;
-        - [Permutations des éléments d'une liste](https://codex.forge.apps.education.fr/en_travaux/permutations/#permutations-des-elements-dune-liste){target=_blank} ;
-        - [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} ;
-        - [Mots de Dyck](https://codex.forge.apps.education.fr/en_travaux/mots_dyck/#mots-de-dyck){target=_blank} ;
-
+    - **Appliquer** la récursivité aux exercices pratiques [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/en_travaux/fib_1/){target=_blank}, [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} et [Codex/Capytale n°`8216508`](https://capytale2.ac-paris.fr/p/app/?mode=create&id=8216508) en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
 
 === "TRAVAIL À FAIRE"
 
@@ -688,7 +678,6 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [File](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-File.ipynb){target=_blank} [Capytale n° 48d0-4226569](https://capytale2.ac-paris.fr/web/c/48d0-4226569){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-File.ipynb){ .md-button .md-button--primary} ;
 
     - **S'entrainer** en réalisant des [exercices pratiques de Codex via Capytale n°`00d9-7948274`](https://capytale2.ac-paris.fr/web/c/00d9-7948274){target=_blank} tout en conservant une trace de vos développements dans le notebook [Exos-structures_linéaires-POO Capytale n°`8337-8033909`](https://capytale2.ac-paris.fr/web/c/8337-8033909){target=_blank}  ;     
-    
 
 ***
 
