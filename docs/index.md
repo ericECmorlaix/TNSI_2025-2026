@@ -659,6 +659,37 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
         - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;   
 -->        
+
+## Du 24/11
+
+=== "CONTENU DE SÉANCE"    
+
+    - **Découvrir** la [programmation récursive](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/Recursif.ipynb){target=_blank} [Capytale n° 1101-4437530](https://capytale2.ac-paris.fr/web/c/1101-4437530){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/Recursif.ipynb){ .md-button .md-button--primary} ;
+
+    - **Proposer** une version récursive pour la fonction `longueur(liste)` qui renvoie la longueur de la liste chaînée `liste` telle que définie dans [le DM sur les listes chainées](./SD/DM_POO_Liste.pdf){target=_blank} [Capytale n° 747d-4440073](https://capytale2.ac-paris.fr/web/c/747d-4440073){target=_blank .md-button .md-button--primary} ;    
+
+    - **Appliquer** la récursivité aux exercices pratiques listés ci-dessous en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} :
+        
+        - [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/exercices/fib_1/#suite-de-fibonacci-1){target=_blank} ;
+        - [Algorithme de rendu de monnaie](https://codex.forge.apps.education.fr/en_travaux/rendu_monnaie/#algorithme-de-rendu-de-monnaie){target=_blank} ;
+        - [Percolation](https://codex.forge.apps.education.fr/exercices/percolation/#percolation){target=_blank} ;
+        - [Anagrammes](https://codex.forge.apps.education.fr/exercices/anagrammes/#anagrammes){target=_blank} ;
+        - [Rechercher un élément dans un tableau trié](https://codex.forge.apps.education.fr/en_travaux/recherche_tab_trie/#rechercher-un-element-dans-un-tableau-trie){target=_blank} ;
+        - [Permutations des éléments d'une liste](https://codex.forge.apps.education.fr/en_travaux/permutations/#permutations-des-elements-dune-liste){target=_blank} ;
+        - [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} ;
+        - [Mots de Dyck](https://codex.forge.apps.education.fr/en_travaux/mots_dyck/#mots-de-dyck){target=_blank} ;
+
+
+=== "TRAVAIL À FAIRE"
+
+    - **Rendre** Structure Linéaire de Données :
+        - [Liste](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){target=_blank} [Capytale n° f652-4226408](https://capytale2.ac-paris.fr/web/c/f652-4226408){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){ .md-button .md-button--primary} ;
+        - [Pile](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Pile.ipynb){target=_blank} [Capytale n° 39ef-4226515](https://capytale2.ac-paris.fr/web/c/39ef-4226515){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Pile.ipynb){ .md-button .md-button--primary} ;
+        - [File](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-File.ipynb){target=_blank} [Capytale n° 48d0-4226569](https://capytale2.ac-paris.fr/web/c/48d0-4226569){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-File.ipynb){ .md-button .md-button--primary} ;
+
+    - **S'entrainer** en réalisant des [exercices pratiques de Codex via Capytale n°`00d9-7948274`](https://capytale2.ac-paris.fr/web/c/00d9-7948274){target=_blank} tout en conservant une trace de vos développements dans le notebook [Exos-structures_linéaires-POO Capytale n°`8337-8033909`](https://capytale2.ac-paris.fr/web/c/8337-8033909){target=_blank}  ;     
+    
+
 ***
 
 ## Du 03/11
