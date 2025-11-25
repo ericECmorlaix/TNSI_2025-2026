@@ -668,7 +668,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **Proposer** une version récursive pour la fonction `longueur(liste)` qui renvoie la longueur de la liste chaînée `liste` telle que définie dans [le DM sur les listes chainées](./SD/DM_POO_Liste.pdf){target=_blank} [Capytale n° 747d-4440073](https://capytale2.ac-paris.fr/web/c/747d-4440073){target=_blank .md-button .md-button--primary} ;    
 
-    - **Appliquer** la récursivité aux exercices pratiques [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/en_travaux/fib_1/){target=_blank}, [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} et [Codex/Capytale n°`8216508`](https://capytale2.ac-paris.fr/p/app/?mode=create&id=8216508) en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
+    - **Appliquer** la récursivité aux exercices pratiques [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/en_travaux/fib_1/){target=_blank}, [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} et [Codex/Capytale n°`f002-8216508`](https://capytale2.ac-paris.fr/web/c/f002-8216508){target=_blank} en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
 
 === "TRAVAIL À FAIRE"
 
