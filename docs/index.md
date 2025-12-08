@@ -542,31 +542,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
         - [https://sqlzoo.net](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;
 
-***
-## Du 06/12
 
-=== "CONTENU DE SÉANCE"
-
-    - **S'inscrire** sur la Khan Academy et **rejoindre** [la classe TNSI_2025-2026 code YBURZUB9](https://fr.khanacademy.org/join/YBURZUB9){target=_blank} pour faire les activités d'initiation à la programmation en langage [SQL](https://fr.khanacademy.org/computing/computer-programming/sql){target=_blank} ;
-    - **Faire** les activités ​du notebook [SQL-Structured_Query_Language](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/SQL-Structured_Query_Language.ipynb){target=_blank}
-    [Capytale n° 4799-4903658](https://capytale2.ac-paris.fr/web/c/4799-4903658){target=_blank .md-button .md-button--primary}
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/SQL-Structured_Query_Language.ipynb){ .md-button .md-button--primary} ;
-    - **Lire** le notebook [BDR-Bases_de_Donnees_Relationnelles](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){target=_blank}
-    [Capytale n° 0d17-4903819](https://capytale2.ac-paris.fr/web/c/0d17-4903819){target=_blank .md-button .md-button--primary}
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){ .md-button .md-button--primary} ;
-    - **Regarder** les vidéos :
-        - [Qu'est ce qu'une base de donnees relationnelle ?](https://www.lumni.fr/video/qu-est-ce-qu-une-base-de-donnees-relationnelle){target=_blank} ;
-        - [Interrogation d'une base de donnees relationnelle](https://www.lumni.fr/video/interrogation-d-une-base-de-donnees-relationnelle){target=_blank} ;
-    - **Faire** [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
-
-=== "TRAVAIL À FAIRE"
-
-    - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
-
-    - **S'entrainer** encore sur les sites :
-        - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
-        - [https://sqlzoo.net](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;
-      
     - **Finir** les tours de Hanoï en pratique [Partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){target=_blank} [Capytale n° 8da6-4807042](https://capytale2.ac-paris.fr/web/c/8da6-4807042){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){ .md-button .md-button--primary} ;
     - **S'entrainer** en réalisant des [exercices pratiques](https://codex.forge.apps.education.fr){target=_blank} ;     
         
@@ -605,60 +581,38 @@ Liens utiles pour des révisions de l'épreuve écrite :
         
 ***
 
+-->
 
-## Du 05/11
+***
+## Du 08/12
 
-=== "CONTENU DE SÉANCE"    
+=== "CONTENU DE SÉANCE"
 
-    - Correction de l'évaluation POO, Liste [partie 1](./SD/Eval_1p1_POO_Liste.pdf){target=_blank} ;
-
-    - **Découvrir** la [programmation récursive](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/Recursif.ipynb){target=_blank} [Capytale n° 1101-4437530](https://capytale2.ac-paris.fr/web/c/1101-4437530){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/Recursif.ipynb){ .md-button .md-button--primary} ;
-
-    - **Proposer** une version récursive pour la fonction `longueur(liste)` qui renvoie la longueur de la liste chaînée `liste` telle que définie dans [l'évaluation 1 partie 1](./SD/Eval_1p1_POO_Liste.pdf){target=_blank} [Capytale n° 747d-4440073](https://capytale2.ac-paris.fr/web/c/747d-4440073){target=_blank .md-button .md-button--primary} ;    
-
-    - **Appliquer** la récursivité aux exercices pratiques listés ci-dessous en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} :
-        
-        - [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/exercices/fib_1/#suite-de-fibonacci-1){target=_blank} ;
-        - [Algorithme de rendu de monnaie](https://codex.forge.apps.education.fr/en_travaux/rendu_monnaie/#algorithme-de-rendu-de-monnaie){target=_blank} ;
-        - [Percolation](https://codex.forge.apps.education.fr/exercices/percolation/#percolation){target=_blank} ;
-        - [Anagrammes](https://codex.forge.apps.education.fr/exercices/anagrammes/#anagrammes){target=_blank} ;
-        - [Rechercher un élément dans un tableau trié](https://codex.forge.apps.education.fr/en_travaux/recherche_tab_trie/#rechercher-un-element-dans-un-tableau-trie){target=_blank} ;
-        - [Permutations des éléments d'une liste](https://codex.forge.apps.education.fr/en_travaux/permutations/#permutations-des-elements-dune-liste){target=_blank} ;
-        - [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} ;
-        - [Mots de Dyck](https://codex.forge.apps.education.fr/en_travaux/mots_dyck/#mots-de-dyck){target=_blank} ;
-
+    - **S'inscrire** sur la Khan Academy et **rejoindre** [la classe TNSI_2025-2026 code 9VCB7ZF9](https://www.khanacademy.org/join/9VCB7ZF9){target=_blank} pour faire les activités d'initiation à la programmation en langage [SQL](https://fr.khanacademy.org/computing/computer-programming/sql){target=_blank} ;
+    - **Faire** les activités ​du notebook [SQL-Structured_Query_Language](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/SQL-Structured_Query_Language.ipynb){target=_blank}
+    [Capytale n° 4799-4903658](https://capytale2.ac-paris.fr/web/c/4799-4903658){target=_blank .md-button .md-button--primary}
+    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/SQL-Structured_Query_Language.ipynb){ .md-button .md-button--primary} ;
+    - **Lire** le notebook [BDR-Bases_de_Donnees_Relationnelles](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){target=_blank}
+    [Capytale n° 0d17-4903819](https://capytale2.ac-paris.fr/web/c/0d17-4903819){target=_blank .md-button .md-button--primary}
+    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){ .md-button .md-button--primary} ;
+    - **Regarder** les vidéos :
+        - [Qu'est ce qu'une base de donnees relationnelle ?](https://www.lumni.fr/video/qu-est-ce-qu-une-base-de-donnees-relationnelle){target=_blank} ;
+        - [Interrogation d'une base de donnees relationnelle](https://www.lumni.fr/video/interrogation-d-une-base-de-donnees-relationnelle){target=_blank} ;
+    - **Faire** [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
 
 === "TRAVAIL À FAIRE"
 
-    - **Finir** Structure Linéaire de Données :
-        - [Liste](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){target=_blank} [Capytale n° f652-4226408](https://capytale2.ac-paris.fr/web/c/f652-4226408){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste.ipynb){ .md-button .md-button--primary} ;
-        - [Pile](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Pile.ipynb){target=_blank} [Capytale n° 39ef-4226515](https://capytale2.ac-paris.fr/web/c/39ef-4226515){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Pile.ipynb){ .md-button .md-button--primary} ;
-        - [File](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-File.ipynb){target=_blank} [Capytale n° 48d0-4226569](https://capytale2.ac-paris.fr/web/c/48d0-4226569){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-File.ipynb){ .md-button .md-button--primary} ;
-    
-    - **Faire** le [DM](./SD/DM_Pile_File.pdf) et la [partie 3](./SD/Eval_1p3_POO_Liste_Pile.pdf){target=_blank} de l'évaluation 1 POO, Liste et Pile ;
+    - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
 
-    - **Corriger** la [partie 2](./SD/Eval_1p2_POO_Pile.pdf){target=_blank} de l'évaluation 1 POO et Pile sur [Capytale n° f73d-4596721](https://capytale2.ac-paris.fr/web/c/f73d-4596721){target=_blank} ;    
-      
-    - **S'entrainer** en réalisant des exercices pratiques :
-        
-        - [`programmeur.saisit(code)`](https://codex.forge.apps.education.fr/exercices/syntaxe_poo/#programmeursaisitcode){target=_blank} ;
-        - [La classe Chien](https://codex.forge.apps.education.fr/exercices/poo_chien/#la-classe-chien){target=_blank} ;
-        - [Géométrie vectorielle en POO](https://codex.forge.apps.education.fr/en_travaux/geometrie_vectorielle_POO/){target=_blank} *Maths* ;
-        - [La domotique (I)](https://codex.forge.apps.education.fr/en_travaux/domotique/){target=_blank} ;
-        - [La domotique (II)](https://codex.forge.apps.education.fr/en_travaux/domotique_II/){target=_blank} ;
-        - [Carrés semi-magiques (POO)](https://codex.forge.apps.education.fr/exercices/carre_semi_magiques/){target=_blank} *Tableaux* ;
-        - [La Belote](https://codex.forge.apps.education.fr/en_travaux/belote/#la-belote){target=_blank} *Dictionnaires*;
-        - [Programmer un robot (2)](https://codex.forge.apps.education.fr/en_travaux/robot_2/){target=_blank} *Chaines de caractères* ;
-        - [Mme Tortue et M. Lièvre font la course](https://codex.forge.apps.education.fr/exercices/lievre_tortue/){target=_blank} *Structure linéaire* ;
-        - [Jeu de la ronde (2)](https://codex.forge.apps.education.fr/en_travaux/ronde_2/){target=_blank} *Structure linéaire* ;
-        - [Évaluation d'une expression postfixe](https://codex.forge.apps.education.fr/exercices/eval_postfixe/){target=_blank} *Piles* ;
-        - [Filtre des nombres positifs d'une pile](https://codex.forge.apps.education.fr/exercices/filtre_pile/){target=_blank} *Piles* ;
-        - [Parenthésage correct](https://codex.forge.apps.education.fr/en_travaux/parentheses/){target=_blank} *Piles* ;
-        - [Expression bien parenthésée (2)](https://codex.forge.apps.education.fr/exercices/expression_bien_parenthesee_2/){target=_blank} *Piles*;
-        - [File avec deux piles](https://codex.forge.apps.education.fr/en_travaux/file_deux_piles/){target=_blank} *Structure linéaire* ; 
-        - [Autour des files](https://codex.forge.apps.education.fr/exercices/autour_des_files/){target=_blank} *Files* ;
-        - [File à partir d'une liste chainée](https://codex.forge.apps.education.fr/exercices/file_avec_liste/){target=_blank} *Files* ;   
--->        
+    - **S'entrainer** encore sur les sites :
+        - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
+        - [https://sqlzoo.net](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;
+
+    - **Appliquer** la récursivité aux exercices pratiques [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/en_travaux/fib_1/){target=_blank}, [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} et [Codex/Capytale n°`f002-8216508`](https://capytale2.ac-paris.fr/web/c/f002-8216508){target=_blank} en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
+
+    - **Finir** les [exercices pratiques de Codex via Capytale n°`00d9-7948274`](https://capytale2.ac-paris.fr/web/c/00d9-7948274){target=_blank} tout en conservant une trace de vos développements dans le notebook [Exos-structures_linéaires-POO Capytale n°`8337-8033909`](https://capytale2.ac-paris.fr/web/c/8337-8033909){target=_blank}  ; 
+       
+***       
 
 ## Du 24/11
 
