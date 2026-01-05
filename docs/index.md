@@ -533,10 +533,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
     
     - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)
 
-=== "TRAVAIL À FAIRE"
 
-    - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
-    - **Se préparer** pour une évaluation sur les BDR et le SQL ;
     - **S'entrainer** encore sur les sites :
         - [https://nreveret.forge.apps.education.fr/exercices_bdd/](https://nreveret.forge.apps.education.fr/exercices_bdd/){target=_blank} ;
         - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
@@ -559,29 +556,38 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [Partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){target=_blank} [Capytale n° 8da6-4807042](https://capytale2.ac-paris.fr/web/c/8da6-4807042){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){ .md-button .md-button--primary} ;
 
     
-
-=== "TRAVAIL À FAIRE"       
-      
-    - **S'entrainer** en réalisant des [exercices pratiques](https://codex.forge.apps.education.fr){target=_blank} ;     
+ 
         
-***
+ 
 
-## Du 27/11
-
-=== "CONTENU DE SÉANCE"    
-
-    - Evaluation [écrite](./SD/Hanoi/HANOI_Ecrit.pdf) avec les tours de Hanoï et pratique :
-
-        - [Partie A](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_A.ipynb){target=_blank} [Capytale n° be71-4786809](https://capytale2.ac-paris.fr/web/c/be71-4786809){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_A.ipynb){ .md-button .md-button--primary} ;
     
-
-=== "TRAVAIL À FAIRE"       
-      
-    - **S'entrainer** en réalisant des [exercices pratiques](https://codex.forge.apps.education.fr){target=_blank} ;     
+    
+    
         
 ***
 
 -->
+***
+## Du 05/01
+
+=== "CONTENU DE SÉANCE"
+
+    - Reprendre en pratique l'exercice 5 de l'évaluation [écrite](./SU/Eval_Recursif-SQL.pdf) autour des tours de Hanoï :
+
+        - [Partie A](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_A.ipynb){target=_blank} [Capytale n° be71-4786809](https://capytale2.ac-paris.fr/web/c/be71-4786809){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_A.ipynb){ .md-button .md-button--primary} ;
+
+=== "TRAVAIL À FAIRE"
+
+    - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
+
+    - **S'entrainer** encore sur les sites :
+        - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
+        - [https://sqlzoo.net](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;
+
+    - **Appliquer** la récursivité aux exercices pratiques [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/en_travaux/fib_1/){target=_blank}, [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} et [Codex/Capytale n°`f002-8216508`](https://capytale2.ac-paris.fr/web/c/f002-8216508){target=_blank} en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
+
+    - **Finir** les [exercices pratiques de Codex via Capytale n°`00d9-7948274`](https://capytale2.ac-paris.fr/web/c/00d9-7948274){target=_blank} tout en conservant une trace de vos développements dans le notebook [Exos-structures_linéaires-POO Capytale n°`8337-8033909`](https://capytale2.ac-paris.fr/web/c/8337-8033909){target=_blank}  ; 
+       
 
 ***
 ## Du 08/12
