@@ -505,25 +505,14 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - Eléments de correction de [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque_COR.pdf){target=_blank} ;
 
-    - Evaluation SGBD-BDR-SQL ;    
-    
 
-=== "TRAVAIL À FAIRE"
 
-    - **Finir** les activités ​du notebook [Protocoles de routage](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){target=_blank}
-    [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){ .md-button .md-button--primary} ;
-    
-    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)
 
 ***
 ## Du 06/01
 
 === "CONTENU DE SÉANCE"
 
-    - **Bilan** du notebook [BDR-Bases_de_Donnees_Relationnelles](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){target=_blank}
-    [Capytale n° 0d17-4903819](https://capytale2.ac-paris.fr/web/c/0d17-4903819){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){ .md-button .md-button--primary} ;
     
     - **Revoir** la partie **"Comprendre"** du notebook [Network-TP1](https://nbviewer.org/urls/ericecmorlaix.github.io/TSI-NSI_2025-2026/CR/Network-Un_BN_pour_la_communication_en_reseau-TP1.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TSI-NSI_2025-2026/CR/Network-Un_BN_pour_la_communication_en_reseau-TP1.ipynb){ .md-button .md-button--primary } [Capytale e7c0-3876579](https://capytale2.ac-paris.fr/web/c/e7c0-3876579){target=_blank .md-button .md-button--primary } ;
     
@@ -531,42 +520,46 @@ Liens utiles pour des révisions de l'épreuve écrite :
     [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} 
     [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){ .md-button .md-button--primary} ;
     
-    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)
-
-
-    - **S'entrainer** encore sur les sites :
-        - [https://nreveret.forge.apps.education.fr/exercices_bdd/](https://nreveret.forge.apps.education.fr/exercices_bdd/){target=_blank} ;
-        - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
-        - [https://sqlzoo.net](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;
-
-
-    - **Finir** les tours de Hanoï en pratique [Partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){target=_blank} [Capytale n° 8da6-4807042](https://capytale2.ac-paris.fr/web/c/8da6-4807042){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){ .md-button .md-button--primary} ;
-    - **S'entrainer** en réalisant des [exercices pratiques](https://codex.forge.apps.education.fr){target=_blank} ;     
+    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)   
         
-
 ***
-## Du 02/12
 
-=== "CONTENU DE SÉANCE"    
+-->
+***
+## Du 08/01 
 
-    - Correction des évaluations [écrite](./SD/Hanoi/HANOI_Ecrit-correction-rouge.pdf) avec les tours de Hanoï et pratique :
+=== "CONTENU DE SÉANCE"
+
+    - **Lire** et **Faire** les activités ​du notebook [Structure_Arborescente](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){target=_blank} 
+    [Capytale n° 6973-5257312](https://capytale2.ac-paris.fr/web/c/6973-5257312){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){ .md-button .md-button--primary} ;
+
+    - **faire** l'[exercice 1](./SD/Exercice_1-arbres.pdf){target=_blank} ;
+    - **faire** l'[exercice 2](./SD/Exercice_2-arbres.pdf){target=_blank} ; 
+
+     > **Revoir** les [dictionnaires](https://mcoilhac.forge.apps.education.fr/dictionnaires/dictionnaires/05_bilan/){target=_blank} ;
+
+    - **Finir** en pratique l'exercice 5 de l'évaluation [écrite](./SU/Eval_Recursif-SQL.pdf) autour des tours de Hanoï :
 
         - [Partie A](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_A.ipynb){target=_blank} [Capytale n° be71-4786809](https://capytale2.ac-paris.fr/web/c/be71-4786809){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_A.ipynb){ .md-button .md-button--primary} ;
         - [Partie B](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_B.ipynb){target=_blank} [Capytale n° 61cd-4789652](https://capytale2.ac-paris.fr/web/c/61cd-4789652){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_B.ipynb){ .md-button .md-button--primary} ;
         - [Partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){target=_blank} [Capytale n° 8da6-4807042](https://capytale2.ac-paris.fr/web/c/8da6-4807042){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){ .md-button .md-button--primary} ;
 
-    
- 
-        
- 
 
+=== "TRAVAIL À FAIRE"
     
-    
-    
-        
-***
+    - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
 
--->
+    - **S'entrainer** encore sur les sites :
+        - [https://nreveret.forge.apps.education.fr/exercices_bdd/](https://nreveret.forge.apps.education.fr/exercices_bdd/){target=_blank} ;
+        - [https://colibri.unistra.fr](https://colibri.unistra.fr/fr/course/list/notions-de-base-en-sql){target=_blank} ;
+        - [https://sqlzoo.net](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;    
+
+    - **Appliquer** la récursivité aux exercices pratiques [Suite de Fibonacci (1)](https://codex.forge.apps.education.fr/en_travaux/fib_1/){target=_blank}, [Répertoires sous Linux](https://codex.forge.apps.education.fr/en_travaux/repertoire_linux_POO/#repertoires-sous-linux){target=_blank} et [Codex/Capytale n°`f002-8216508`](https://capytale2.ac-paris.fr/web/c/f002-8216508){target=_blank} en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
+
+    - **Finir** les [exercices pratiques de Codex via Capytale n°`00d9-7948274`](https://capytale2.ac-paris.fr/web/c/00d9-7948274){target=_blank} tout en conservant une trace de vos développements dans le notebook [Exos-structures_linéaires-POO Capytale n°`8337-8033909`](https://capytale2.ac-paris.fr/web/c/8337-8033909){target=_blank}  ; 
+
+    - **Faire** des [exercices pratiques sur les structures arborescentes](https://pratique.forge.apps.education.fr/arbre/) ;
+
 ***
 ## Du 05/01
 
