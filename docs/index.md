@@ -545,9 +545,9 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [Partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){target=_blank} [Capytale n° 8da6-4807042](https://capytale2.ac-paris.fr/web/c/8da6-4807042){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Hanoi/HANOI_Pratique_C.ipynb){ .md-button .md-button--primary} ;
 
     - Correction de [l'évaluation écrite](./SU/Eval_Recursif-SQL.pdf){target=_blank} :
-        - [récursif ex1 et ex2](./SU/Correction_evaluation_recursif.pdf),
-        - [SQL ex3 et ex4](./SU/SQL-ex3&ex4-COR.pdf),
-        - [Hanoï ex5](./SD/Hanoi/HANOI_Ecrit-correction-rouge.pdf).
+        - [récursif ex1 et ex2](./SU/Recursif-ex1&ex2-COR.pdf){target=_blank},
+        - [SQL ex3 et ex4](./SU/SQL-ex3&ex4-COR.pdf){target=_blank},
+        - [Hanoï ex5](./SD/Hanoi/HANOI_Ecrit-correction-rouge.pdf){target=_blank}.
 
 === "TRAVAIL À FAIRE"
     
