@@ -533,8 +533,8 @@ Liens utiles pour des révisions de l'épreuve écrite :
     - **Lire** et **Faire** les activités ​du notebook [Structure_Arborescente](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){target=_blank} 
     [Capytale n° 6973-5257312](https://capytale2.ac-paris.fr/web/c/6973-5257312){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){ .md-button .md-button--primary} ;
 
-    - **faire** l'[exercice 1](./SD/Exercice_1-arbres.pdf){target=_blank} ;
-    - **faire** l'[exercice 2](./SD/Exercice_2-arbres.pdf){target=_blank} ; 
+    - **faire** l'[exercice 1](./SD/Exercice_1-arbres.pdf){target=_blank} [;](./SD/Correction-Exercice_1-arbres.pdf){target=_blank}
+    - **faire** l'[exercice 2](./SD/Exercice_2-arbres.pdf){target=_blank} [;](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Correction-Exercice_2-arbres.ipynb){target=_blank}
 
      > **Revoir** les [dictionnaires](https://mcoilhac.forge.apps.education.fr/dictionnaires/dictionnaires/05_bilan/){target=_blank} ;
 
@@ -550,7 +550,6 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - [Hanoï ex5](./SD/Hanoi/HANOI_Ecrit-correction-rouge.pdf){target=_blank}.
 
 === "TRAVAIL À FAIRE"
-    
     - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
 
     - **S'entrainer** encore sur les sites :
