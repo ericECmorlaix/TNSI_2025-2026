@@ -535,6 +535,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **faire** l'[exercice 1](./SD/Exercice_1-arbres.pdf){target=_blank} [Correction](./SD/Correction-Exercice_1-arbres.pdf){target=_blank} ;
     - **faire** l'[exercice 2](./SD/Exercice_2-arbres.pdf){target=_blank} [Correction](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Correction-Exercice_2-arbres.ipynb){target=_blank} ;
+    - **faire** le [DM](./SU/DM-POO-Arbre-Récursif.pdf){target=_blank} ;
 
      > **Revoir** les [dictionnaires](https://mcoilhac.forge.apps.education.fr/dictionnaires/dictionnaires/05_bilan/){target=_blank} ;
 
