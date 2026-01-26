@@ -396,14 +396,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
 === "CONTENU DE SÉANCE"
 
-    - **Faire** les activités ​du notebook [SoC_Processus](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){target=_blank}
-    [Capytale n° 47b0-5553542](https://capytale2.ac-paris.fr/web/c/47b0-5553542){target=_blank .md-button .md-button--primary}
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){ .md-button .md-button--primary} ;
-    - **appliquer** à l'exercice écrit [l'OS et les Processus](./MR/ExerciceProcessus.pdf) ;
-    - **appliquer** aux exercices pratiques :
-        - [Processus et tourniquet](https://codex.forge.apps.education.fr/en_travaux/tourniquet/){target=_blank} ;
-        - [Etat d'un processus](https://codex.forge.apps.education.fr/en_travaux/etat_processus/){target=_blank} ;
-        - [Temps d'exécution de processus](https://codex.forge.apps.education.fr/en_travaux/ordonnancement/){target=_blank} ;
+    
 
 === "TRAVAIL À FAIRE"
 
@@ -525,6 +518,28 @@ Liens utiles pour des révisions de l'épreuve écrite :
 ***
 
 -->
+
+***
+## Du 26/01
+
+=== "CONTENU DE SÉANCE"
+
+    - **Cliquer** sur ce lien <https://codespaces.new/phyver/GameShell> pour ouvrir un CodeSpace puis saisir dans le terminal `bash start.sh -L fr`, **réaliser** les différentes missions afin de **compléter** votre memo de ligne de commande [Capytale n° `1436-5369350`](https://capytale2.ac-paris.fr/web/c/1436-5369350) ;
+
+    - **Faire** les activités ​du notebook [SoC_Processus](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){target=_blank}
+        [Capytale n° 47b0-5553542](https://capytale2.ac-paris.fr/web/c/47b0-5553542){target=_blank .md-button .md-button--primary}
+        [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){ .md-button .md-button--primary} ;
+    
+    - **Faire** l'exercice écrit [l'OS et les Processus](./MR/ExerciceProcessus.pdf) ;
+        
+
+=== "TRAVAIL À FAIRE"
+   
+    - **Appliquer** aux exercices pratiques :
+        - [Processus et tourniquet](https://codex.forge.apps.education.fr/en_travaux/tourniquet/){target=_blank} ;
+        - [Etat d'un processus](https://codex.forge.apps.education.fr/en_travaux/etat_processus/){target=_blank} ;
+        - [Temps d'exécution de processus](https://codex.forge.apps.education.fr/en_travaux/ordonnancement/){target=_blank} ; 
+
 ***
 ## Du 08/01 
 
