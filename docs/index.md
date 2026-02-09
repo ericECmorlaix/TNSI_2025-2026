@@ -498,26 +498,32 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - Eléments de correction de [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque_COR.pdf){target=_blank} ;
 
+***
 
-
+-->
 
 ***
-## Du 06/01
+## Du 09/02
 
 === "CONTENU DE SÉANCE"
 
-    
-    - **Revoir** la partie **"Comprendre"** du notebook [Network-TP1](https://nbviewer.org/urls/ericecmorlaix.github.io/TSI-NSI_2025-2026/CR/Network-Un_BN_pour_la_communication_en_reseau-TP1.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TSI-NSI_2025-2026/CR/Network-Un_BN_pour_la_communication_en_reseau-TP1.ipynb){ .md-button .md-button--primary } [Capytale e7c0-3876579](https://capytale2.ac-paris.fr/web/c/e7c0-3876579){target=_blank .md-button .md-button--primary } ;
+    - **Revoir** la partie **"Comprendre"** du notebook [Network-TP1](https://nbviewer.org/urls/ericecmorlaix.github.io/TSI-NSI_2025-2026/CR/Network-Un_BN_pour_la_communication_en_reseau-TP1.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TSI-NSI_2025-2026/CR/Network-Un_BN_pour_la_communication_en_reseau-TP1.ipynb){ .md-button .md-button--primary } [Capytale n° `e30a-6969721`](https://capytale2.ac-paris.fr/web/c/e30a-6969721){target=_blank .md-button .md-button--primary } ;
     
     - **Faire** les activités ​du notebook [Protocoles de routage](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){target=_blank}
     [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} 
     [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){ .md-button .md-button--primary} ;
     
-    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)   
-        
-***
+    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf){target=_blank} ;
 
--->
+=== "TRAVAIL À FAIRE"
+   
+    - **Se préparer** pour une évaluation sur les processus ;
+    - **Rendre** l'exercice écrit [l'OS et les Processus](./MR/ExerciceProcessus.pdf){target=_blank} et le notebook [Capytale n° 47b0-5553542](https://capytale2.ac-paris.fr/web/c/47b0-5553542){target=_blank .md-button .md-button--primary} ;
+    - **Appliquer** aux exercices pratiques :
+        - [Processus et tourniquet](https://codex.forge.apps.education.fr/en_travaux/tourniquet/){target=_blank} ;
+        - [Etat d'un processus](https://codex.forge.apps.education.fr/en_travaux/etat_processus/){target=_blank} ;
+        - [Temps d'exécution de processus](https://codex.forge.apps.education.fr/en_travaux/ordonnancement/){target=_blank} ;
+    - **Poursuivre** [GameShell](https://codespaces.new/phyver/GameShell){target=_blank} et **réaliser** les différentes missions afin de **compléter** votre memo de ligne de commande [Capytale n° `1436-5369350`](https://capytale2.ac-paris.fr/web/c/1436-5369350) ;
 
 ***
 ## Du 26/01
