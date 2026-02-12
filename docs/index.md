@@ -366,16 +366,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
         [Capytale n° a2e8-5722835](https://capytale2.ac-paris.fr/web/c/a2e8-5722835){target=_blank .md-button .md-button--primary} 
         [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){ .md-button .md-button--primary} ;
 
-=== "TRAVAIL À FAIRE"
 
-    - **Rendre** les activités ​du notebook [SoC_Processus](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){target=_blank} 
-    [Capytale n° 47b0-5553542](https://capytale2.ac-paris.fr/web/c/47b0-5553542){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){ .md-button .md-button--primary} ;
-    - **Rendre** l'exercice écrit [l'OS et les Processus](./MR/ExerciceProcessus.pdf) ;
-    - **appliquer** aux exercices pratiques suivants en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary}
-        - [Processus et tourniquet](https://codex.forge.apps.education.fr/en_travaux/tourniquet/){target=_blank} ;
-        - [Etat d'un processus](https://codex.forge.apps.education.fr/en_travaux/etat_processus/){target=_blank} ;
-        - [Temps d'exécution de processus](https://codex.forge.apps.education.fr/en_travaux/ordonnancement/){target=_blank} ;
     
     - Piste de projet support de [Grand Oral](https://eduscol.education.fr/729/presentation-du-grand-oral){target=_blank} :
         - Un site de consultation d'une base de données référençant des sujets annales de NSI écrits et pratiques...
@@ -427,49 +418,15 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **S'entrainer** en réalisant des [exercices pratiques concernant les arbres](https://codex.forge.apps.education.fr/recherche/){target=_blank} ;
 
-=== "TRAVAIL À FAIRE"
-
-    - **Finir** les activités ​du notebook [Protocoles de routage](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){target=_blank}
-    [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){ .md-button .md-button--primary} ;
-    
-    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)
 
     - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
 
-    - Cybersécurité :
-        - [https://www.cyber-ninja-ctf.fr/](https://www.cyber-ninja-ctf.fr/){target=_blank},
-        - [CTF challenges-kids](https://www.challenges-kids.fr/index.php){target=_blank},
-        - [https://www.root-me.org/](https://www.root-me.org/){target=_blank},
-        - [https://hackropole.fr/fr/](https://hackropole.fr/fr/){target=_blank},
-        - [Passe-ton-hack](https://www.defense.gouv.fr/comcyber/actualites/passe-ton-hack-dabord-2e-edition-elargie-lensemble-du-territoire-francais){target=_blank},
-        - [Red Team Competition](https://esisar.grenoble-inp.fr/fr/recherche/red-team){target=_blank},
-        - [France Cybersecurity Challenge (FCSC)](https://cyber.gouv.fr/france-cybersecurity-challenge-2024){target=_blank},
-        
-        - [Cybersecurite Challenges](https://cybersecurite.forge.apps.education.fr/cyber/3.Challenges/presentation/)... ;
+   
 
-***
-## Du 13/01 
 
-=== "CONTENU DE SÉANCE"
 
-    - **Lire** et **Faire** les activités ​du notebook [Structure_Arborescente](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){target=_blank} 
-    [Capytale n° 6973-5257312](https://capytale2.ac-paris.fr/web/c/6973-5257312){target=_blank .md-button .md-button--primary} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){ .md-button .md-button--primary} ;
-
-    - **faire** l'[exercice 1](./SD/Exercice_1-arbres.pdf){target=_blank} ;
-    - **faire** l'[exercice 2](./SD/Exercice_2-arbres.pdf){target=_blank} ; 
-
-     > **Revoir** les [dictionnaires](https://mcoilhac.forge.apps.education.fr/dictionnaires/dictionnaires/05_bilan/){target=_blank} ;
-
-    - **faire** des [exercices pratiques sur les structures arborescentes](https://pratique.forge.apps.education.fr/arbre/) ;
-
-=== "TRAVAIL À FAIRE"
-
-    - **Finir** les activités ​du notebook [Protocoles de routage](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){target=_blank}
-    [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){ .md-button .md-button--primary} ;
     
-    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)
+
 
     - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
 
@@ -481,13 +438,7 @@ Liens utiles pour des révisions de l'épreuve écrite :
     - [Correction Exercice 1](./BD/EX1-COR_Eval_SQL.pdf) de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;        
     
 
-=== "TRAVAIL À FAIRE"
 
-    - **Finir** les activités ​du notebook [Protocoles de routage](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){target=_blank}
-    [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} 
-    [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/ProtocolesDeRoutage.ipynb){ .md-button .md-button--primary} ;
-    
-    - **Appliquer** aux [Exercices sur le Routage](./MR/ExercicesRoutage.pdf)
 
     - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
 
@@ -501,7 +452,26 @@ Liens utiles pour des révisions de l'épreuve écrite :
 ***
 
 -->
+## Du 13/02
 
+=== "CONTENU DE SÉANCE"
+  
+    - **S'entrainer** pour l'épreuve pratique en réalisant sur Codex les sujets :
+        -  [Le chiffre de Vernam](https://codex.forge.apps.education.fr/exercices/codage_vernam_ep/){target=_blank} ;
+        -  [Calcul des pensions de retraite](https://codex.forge.apps.education.fr/en_travaux/calcul_retraite/){target=_blank} ;
+        -  [Camping](https://codex.forge.apps.education.fr/en_travaux/camping/){target=_blank} ;
+        -  [Tickets gagnants](https://codex.forge.apps.education.fr/exercices/tickets_gagnants/){target=_blank} ;
+
+=== "TRAVAIL À FAIRE"
+   
+    - **Se préparer** pour une évaluation sur les processus et le routage les 06 et 09/03 ;
+    - **Rendre** l'exercice écrit [Routage](./MR/ExercicesRoutage.pdf){target=_blank} et le notebook [Capytale n° d941-5158450](https://capytale2.ac-paris.fr/web/c/d941-5158450){target=_blank .md-button .md-button--primary} ;
+    - **Rendre** l'exercice écrit [l'OS et les Processus](./MR/ExerciceProcessus.pdf){target=_blank} et le notebook [Capytale n° 47b0-5553542](https://capytale2.ac-paris.fr/web/c/47b0-5553542){target=_blank .md-button .md-button--primary} ;
+    - **Appliquer** aux exercices pratiques :
+        - [Processus et tourniquet](https://codex.forge.apps.education.fr/en_travaux/tourniquet/){target=_blank} ;
+        - [Etat d'un processus](https://codex.forge.apps.education.fr/en_travaux/etat_processus/){target=_blank} ;
+        - [Temps d'exécution de processus](https://codex.forge.apps.education.fr/en_travaux/ordonnancement/){target=_blank} ;
+    - **Poursuivre** [GameShell](https://codespaces.new/phyver/GameShell){target=_blank} et **réaliser** les différentes missions afin de **compléter** votre memo de ligne de commande [Capytale n° `1436-5369350`](https://capytale2.ac-paris.fr/web/c/1436-5369350) ;
 ***
 ## Du 09/02
 
