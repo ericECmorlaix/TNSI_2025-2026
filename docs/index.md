@@ -290,27 +290,12 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} ;
 
-=== "TRAVAIL À FAIRE"
 
-    - Piste de projet support de [Grand Oral](https://eduscol.education.fr/729/presentation-du-grand-oral){target=_blank} :
-        - Un site de consultation d'une base de données référençant des sujets annales de NSI écrits et pratiques...
-        - Un jeu de sensibilisation à la cybersécurité à destination d'élèves de secondes :
-            - [https://www.cyber-ninja-ctf.fr/](https://www.cyber-ninja-ctf.fr/){target=_blank},
-            - [CTF challenges-kids](https://www.challenges-kids.fr/index.php){target=_blank},
-            - [https://www.root-me.org/](https://www.root-me.org/){target=_blank},
-            - [https://hackropole.fr/fr/](https://hackropole.fr/fr/){target=_blank},
-            - [Passe-ton-hack](https://www.defense.gouv.fr/comcyber/actualites/passe-ton-hack-dabord-2e-edition-elargie-lensemble-du-territoire-francais){target=_blank},
-            - [Red Team Competition](https://esisar.grenoble-inp.fr/fr/recherche/red-team){target=_blank},
-            - [France Cybersecurity Challenge (FCSC)](https://cyber.gouv.fr/france-cybersecurity-challenge-2024){target=_blank},     
-            - [Cybersecurite Challenges](https://cybersecurite.forge.apps.education.fr/cyber/3.Challenges/presentation/)... ;
-        - Des tutoriels d'entrainement à la Nuit du Code avec et sans POO...
 
 ***
 ## Le 03/03
 
 === "CONTENU DE SÉANCE"
-
-    - Correction du [BB1](./SU/NSI_BB1_24-25.pdf) => [Proposition de corrigé](./SU/NSI_BB1_24-25_COR.pdf)
 
     - Les graphes :
 
@@ -335,61 +320,11 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
     - **Rendre** le [DM sur les graphes](./SD/DM_graphes_2025.pdf) ;
     
-    - Piste de projet support de [Grand Oral](https://eduscol.education.fr/729/presentation-du-grand-oral){target=_blank} :
-        - Un site de consultation d'une base de données référençant des sujets annales de NSI écrits et pratiques...
-        - Un jeu de sensibilisation à la cybersécurité à destination d'élèves de secondes :
-            - [https://www.cyber-ninja-ctf.fr/](https://www.cyber-ninja-ctf.fr/){target=_blank},
-            - [CTF challenges-kids](https://www.challenges-kids.fr/index.php){target=_blank},
-            - [https://www.root-me.org/](https://www.root-me.org/){target=_blank},
-            - [https://hackropole.fr/fr/](https://hackropole.fr/fr/){target=_blank},
-            - [Passe-ton-hack](https://www.defense.gouv.fr/comcyber/actualites/passe-ton-hack-dabord-2e-edition-elargie-lensemble-du-territoire-francais){target=_blank},
-            - [Red Team Competition](https://esisar.grenoble-inp.fr/fr/recherche/red-team){target=_blank},
-            - [France Cybersecurity Challenge (FCSC)](https://cyber.gouv.fr/france-cybersecurity-challenge-2024){target=_blank},     
-            - [Cybersecurite Challenges](https://cybersecurite.forge.apps.education.fr/cyber/3.Challenges/presentation/)... ;
-        - Des tutoriels d'entrainement à la Nuit du Code avec et sans POO...
-
-***
-## Du 24/02
-
-=== "CONTENU DE SÉANCE"
-
-    - Point d'avancement concernant SoC et Processus ;
-    
-    - Les graphes :
-
-        - **regarder** la vidéo suivante :
-        
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YYv2R1cCTa0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c9c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c9a/){target=_blank} proposés par David ROCHE ;
-        - **faire** les activités du notebook [Graphes_avec_networkx](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){target=_blank} 
-        [Capytale n° a2e8-5722835](https://capytale2.ac-paris.fr/web/c/a2e8-5722835){target=_blank .md-button .md-button--primary} 
-        [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){ .md-button .md-button--primary} ;
 
 
     
     - Piste de projet support de [Grand Oral](https://eduscol.education.fr/729/presentation-du-grand-oral){target=_blank} :
-        - Un site de consultation d'une base de données référençant des sujets annales de NSI écrits et pratiques...
-        - Un jeu de sensibilisation à la cybersécurité à destination d'élèves de secondes :
-            - [https://www.cyber-ninja-ctf.fr/](https://www.cyber-ninja-ctf.fr/){target=_blank},
-            - [CTF challenges-kids](https://www.challenges-kids.fr/index.php){target=_blank},
-            - [https://www.root-me.org/](https://www.root-me.org/){target=_blank},
-            - [https://hackropole.fr/fr/](https://hackropole.fr/fr/){target=_blank},
-            - [Passe-ton-hack](https://www.defense.gouv.fr/comcyber/actualites/passe-ton-hack-dabord-2e-edition-elargie-lensemble-du-territoire-francais){target=_blank},
-            - [Red Team Competition](https://esisar.grenoble-inp.fr/fr/recherche/red-team){target=_blank},
-            - [France Cybersecurity Challenge (FCSC)](https://cyber.gouv.fr/france-cybersecurity-challenge-2024){target=_blank},     
-            - [Cybersecurite Challenges](https://cybersecurite.forge.apps.education.fr/cyber/3.Challenges/presentation/)... ;
-        - Des tutoriels d'entrainement à la Nuit du Code avec et sans POO...
-***
 
-## Du 03/02
-
-
-=== "CONTENU DE SÉANCE"
-
-    
-
-=== "TRAVAIL À FAIRE"
 
     - Piste de projet support de GO :
         - Un site de consultation d'une base de données référençant des sujets annales de NSI écrits et pratiques...
@@ -405,53 +340,51 @@ Liens utiles pour des révisions de l'épreuve écrite :
             - [Cybersecurite Challenges](https://cybersecurite.forge.apps.education.fr/cyber/3.Challenges/presentation/)... ;
         - Des tutoriels d'entrainement à la Nuit du Code avec et sans POO...
 
-***
-## Du 23/01 
-
-=== "CONTENU DE SÉANCE"
-
-    - **finir** l'[exercice 2 : structures de données du type arbre binaire](./SD/Exercice_2-arbres.pdf){target=_blank} ; 
-
-     > **Revoir** les [dictionnaires](https://mcoilhac.forge.apps.education.fr/dictionnaires/dictionnaires/05_bilan/){target=_blank} ;
-
-    - **Réviser** et **faire** des [exercices sur les structures arborescentes](https://pratique.forge.apps.education.fr/arbre/) ;
-
-    - **S'entrainer** en réalisant des [exercices pratiques concernant les arbres](https://codex.forge.apps.education.fr/recherche/){target=_blank} ;
 
 
-    - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
 
    
 
 
-
-    
-
-
-    - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
-
-***
-## Le 10/01
-
-=== "CONTENU DE SÉANCE"
-
     - [Correction Exercice 1](./BD/EX1-COR_Eval_SQL.pdf) de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;        
     
 
-
-
     - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
 
-***
-## Le 09/01
-
-=== "CONTENU DE SÉANCE"
 
     - Eléments de correction de [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque_COR.pdf){target=_blank} ;
 
 ***
 
 -->
+***
+## Du 16/03
+
+=== "CONTENU DE SÉANCE"
+
+    - Les graphes :
+
+        - **regarder** la vidéo suivante :
+        
+        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YYv2R1cCTa0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        - **lire** le [cours](https://pixees.fr/informatiquelycee/term/c9c.html){target=_blank} et **faire** les [activités](https://pixees.fr/informatiquelycee/term/c9a.html){target=_blank} proposés par David ROCHE ;
+        - **faire** les activités du notebook [Graphes_avec_networkx](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){target=_blank} 
+        [Capytale n° a2e8-5722835](https://capytale2.ac-paris.fr/web/c/a2e8-5722835){target=_blank .md-button .md-button--primary} 
+        [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){ .md-button .md-button--primary} ;
+
+        - **faire** les activités du notebook [Graphes_avec_graphviz](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){ .md-button .md-button--primary};
+        - **lire** le [cours](https://pixees.fr/informatiquelycee/term/c10c.html){target=_blank} et **faire** les [activités](https://pixees.fr/informatiquelycee/term/c10a.html){target=_blank} puis les [exercices](https://pixees.fr/informatiquelycee/term/c10e.html){target=_blank} proposés par David ROCHE ;
+
+        - **faire** les activités du notebook [Graphes_parcours_applications](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){ .md-button .md-button--primary} ;
+
+        - **faire** le [DM sur les graphes](./SD/DM_graphes_2026.pdf) ;
+
+
+=== "TRAVAIL À FAIRE"
+
+    - **Rendre** le [DM sur les graphes](./SD/DM_graphes_2025.pdf) ;
+***
 ## Du 13/02
 
 === "CONTENU DE SÉANCE"
