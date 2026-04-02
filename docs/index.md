@@ -381,9 +381,24 @@ Liens utiles pour des révisions de l'épreuve écrite :
         - **faire** le [DM sur les graphes](./SD/DM_graphes_2026.pdf) ;
 
 
-=== "TRAVAIL À FAIRE"
-
+=== "TRAVAIL À FAIRE"    
+    
     - **Rendre** le [DM sur les graphes](./SD/DM_graphes_2025.pdf) ;
+
+    - **Se préparer** pour l'évaluation du 09/04 portant sur les graphes ;        
+
+    - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} ;
+
+     - **S'entrainer** pour le concours [Geipi Polytech](https://www.geipi-polytech.org/annales-du-concours-geipi-polytech/){target=_blank}...
+    
+    - **S'entrainer** pour l'[épreuve écrite](https://toutmonexam.fr/annee.php){target=_blank}...
+
+    - **S'entrainer** pour l'[épreuve pratique](https://sujets.examens-concours.gouv.fr/delos/public/bgt/nsi){target=_blank} en réalisant sur Codex les sujets :
+        -  [Le chiffre de Vernam](https://codex.forge.apps.education.fr/exercices/codage_vernam_ep/){target=_blank} ;
+        -  [Calcul des pensions de retraite](https://codex.forge.apps.education.fr/en_travaux/calcul_retraite/){target=_blank} ;
+        -  [Camping](https://codex.forge.apps.education.fr/en_travaux/camping/){target=_blank} ;
+        -  [Tickets gagnants](https://codex.forge.apps.education.fr/exercices/tickets_gagnants/){target=_blank} ;
+        -  [Colorier un graphe](https://codex.forge.apps.education.fr/en_travaux/colorier_un_graphe_ep/){target=_blank} ;
 ***
 ## Du 13/02
 
