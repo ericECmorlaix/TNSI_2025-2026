@@ -357,6 +357,10 @@ Liens utiles pour des révisions de l'épreuve écrite :
 ***
 
 -->
+## MISE EN AVANT
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/svkQLQTrU8E?si=bbq91Djr_BcKtwkK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ***
 ## Du 16/03
 
