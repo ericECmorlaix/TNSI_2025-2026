@@ -16,181 +16,6 @@
 
 ***
 <!-- 
-**A LIRE :**
-
-- [ChatGPT : « Non, le métier de développeur informatique n’est pas mort ! ](https://www.nouvelobs.com/opinions/20230321.OBS71149/chatgpt-non-le-metier-de-developpeur-informatique-n-est-pas-mort.html){target=_blank}
-
-- [Sortir de sa zone de confort pour apprendre afin de se réaliser](https://static.wixstatic.com/media/557f79_7cbdd28074e84e4882ec9314f46d5fb0~mv2.jpeg/v1/fill/w_1024,h_768,al_c,q_90/557f79_7cbdd28074e84e4882ec9314f46d5fb0~mv2.webp){target=_blank} ;
-     source : <https://www.jeromefrugere.com/post/pourquoi-dit-on-qu-il-faut-se-faire-violence-pour-sortir-de-sa-zone-de-confort>
-
-***
-
-## Du 28/03 :
-
-=== "CONTENU DE SÉANCE"
-
-    - Les graphes :
-
-        - **regarder** la vidéo suivante :
-        
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YYv2R1cCTa0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c9c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c9a/){target=_blank} proposés par David ROCHE ;
-        - **faire** les activités du notebook [Graphes_avec_networkx](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){ .md-button .md-button--primary} ;
-        - **faire** les activités du notebook [Graphes_avec_graphviz](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){ .md-button .md-button--primary};
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c10c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c10a/){target=_blank} puis les [exercices](https://dav74.github.io/site_nsi_term/c10e/){target=_blank} proposés par David ROCHE ;
-        - **faire** les activités du notebook [Graphes_parcours_applications](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){ .md-button .md-button--primary} ;
-
-       
-
-
-***
-Liens utiles pour des révisions de l'épreuve écrite :
-
-- [https://pixees.fr/informatiquelycee/term/](https://pixees.fr/informatiquelycee/term/){target=_blank}
-- [https://e-nsi.forge.aeif.fr/-/ecrit/ _/!\ préversion_](https://e-nsi.forge.aeif.fr/-/ecrit/-/jobs/9986/artifacts/public/2023/index.html){target=_blank}
-- [https://toutmonexam.fr/](https://toutmonexam.fr/){target=_blank}
-
-***
-## Du 15/03
-
-=== "Révisions à partir des sujets 2023"
-
-    - [Centres étranger J1](./SE/spe_numerique_informatique_2023_centres_etranger_1_sujet_officiel.pdf){target=_blank}
-    - [Centres étranger J2](./SE/spe_numerique_informatique_2023_centres_etranger_2_sujet_officiel.pdf){target=_blank}
-    - [Polynésie J1](./SE/spe_numerique_informatique_2023_polynesie_1_sujet_officiel.pdf){target=_blank}
-    - [Polynésie J2](./SE/spe_numerique_informatique_2023_polynesie_2_sujet_officiel.pdf){target=_blank}
-
-
-=== "Propositions de correction partagées"
-
-    - [Centres étranger J1](){target=_blank}
-    - [Centres étranger J2](){target=_blank}
-    - [Polynésie J1](){target=_blank}
-    - [Polynésie J2](){target=_blank}
-
-***
-## Du 19/01 
-
-=== "CONTENU DE SÉANCE"
-    
-    - **Faire** les activités ​du notebook [SoC_Processus](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/MR/SoC_Processus.ipynb){ .md-button .md-button--primary} ;
-    - **appliquer** à l'[Exercice sur l'OS et les Processus)](./MR/ExerciceProcessus.pdf)
-    
-
-    !!! info "Epreuve Pratique"
-
-        ==L'épreuve pratique aura lieu au lycée dans la matinée du mercredi 15 mars.==
-
-        Les 45 sujets officiels publics sont visibles à l'adresse : [https://cyclades.education.gouv.fr/delos/public/listPublicECE](https://cyclades.education.gouv.fr/delos/public/listPublicECE){target=_blank}. 
-
-=== "TRAVAIL À FAIRE"
-
-    - **Réaliser** dans Obsidian avec le module complémentaire [Spaced Repetition](https://www.stephenmwangi.com/obsidian-spaced-repetition/){target=_blank} des[flashcards partagées](https://codimd.apps.education.fr/0UgUuDUrTE-V9cVZ046x9Q){target=_blank} pour réviser...
-    - S'entrainer (==conserver des traces de tous vos exercices dans des `note.md` et/ou des `notebook.ipynb`==) : 
-        - encore [sur les bases de données et le langage SQL](https://e-nsi.forge.aeif.fr/exercices_bdd/){target=_blank} ;
-        - à la programmation en Python pour l'[épreuve pratique](https://e-nsi.forge.aeif.fr/pratique/){target=_blank} et au-delà...;
-
-***
-## Du 04 au 13/01 
-
-=== "CONTENU DE SÉANCE"
-
-    - Réalisation dans Obsidian avec le module complémentaire [Spaced Repetition](https://www.stephenmwangi.com/obsidian-spaced-repetition/){target=_blank} de [flashcards partagées](https://codimd.apps.education.fr/0UgUuDUrTE-V9cVZ046x9Q){target=_blank} pour réviser...
-
-    - Pour s'entrainer encore [sur les bases de données et le langage SQL](https://e-nsi.forge.aeif.fr/exercices_bdd/){target=_blank} ;
-
-    - **Regarder** la vidéo [les arbres binaires de recherche](https://revoir.tv5monde.com/toutes-les-videos/culture/les-cours-lumni-lycee-cours-du-11-12-2020-3){target=_blank} ;
-
-    - **Lire** et **Faire** les activités ​du notebook [Structure_Arborescente](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Arborescente.ipynb){ .md-button .md-button--primary} ;
-
-    - **faire** l'[exercice 1](./SD/Exercice_1-arbres.pdf) ;
-
-    - **faire** l'[exercice 2](./SD/Exercice_2-arbres.pdf) ; 
-
-    - en prévision du Bac Blanc, **faire** les exercices 3, 4 et 5 [extraits du bac blanc 2022](./SE/extraits_bac-blanc-2022.pdf) ;
-
-
-=== "TRAVAIL À FAIRE"
-    - **Rendre** les travaux de mémo SQL et [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
-   
-
-***
- 
-## Du 02 au 16/12
-
-=== "CONTENU DE SÉANCE"
-
-    - **Regarder** la vidéo et **répondre** aux questions de cette [introduction aux BDR](http://colbert.bzh/sql/tp.html?html=intro){target=_blank} ;
-    - **S'inscrire** sur la Khan Academy et **rejoindre** [la classe TNSI_2025-2026 code VG34RDPG](https://fr.khanacademy.org/join/VG34RDPG){target=_blank} pour faire les activités d'initiation à la programmation en langage [SQL](https://fr.khanacademy.org/computing/computer-programming/sql){target=_blank} ;
-    - **Faire** les activités ​du notebook [SQL-Structured_Query_Language](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/SQL-Structured_Query_Language.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/SQL-Structured_Query_Language.ipynb){ .md-button .md-button--primary} ;
-    - **Lire** le notebook [BDR-Bases_de_Donnees_Relationnelles](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026//BD/BDR-Bases_de_Donnees_Relationnelles.ipynb){ .md-button .md-button--primary} ;
-    - **Regarder** les vidéos :
-        - [Qu'est ce qu'une base de donnees relationnelle ?](https://www.lumni.fr/video/qu-est-ce-qu-une-base-de-donnees-relationnelle){target=_blank} ;
-        - [Interrogation d'une base de donnees relationnelle](https://www.lumni.fr/video/interrogation-d-une-base-de-donnees-relationnelle){target=_blank} ;
-    - **Faire** [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque.pdf){target=_blank} ;
-    - **S'entrainer** encore sur les sites :
-        - [https://fxjollois.github.io/cours-sql/](https://fxjollois.github.io/cours-sql/){target=_blank} ;
-        - [https://sqlzoo.net/wiki/SQL_Tutorial](https://sqlzoo.net/wiki/SQL_Tutorial){target=_blank} ;
-
-
-## Le 01/12
-
-=== "CONTENU DE SÉANCE"
-    
-    - Correction [tours de Hanoï partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_C-Complet.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_C-Complet.ipynb){ .md-button .md-button--primary} ;
-    - **Finir de compléter** la proposition de correction pour [l'évaluation pratique : une tortue récursive](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/Une_tortue_recursive-Correction_et_Plus.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/Une_tortue_recursive-Correction_et_Plus.ipynb){ .md-button .md-button--primary} ;
-
-
-## Du 21 au 29/11
-
-=== "CONTENU DE SÉANCE"
-
-    - Evaluation pratique appliquées aux [tours de Hanoï partie B](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_B.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_B.ipynb){ .md-button .md-button--primary} ;
-    - Evaluation pratique appliquées aux [tours de Hanoï partie C](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_C.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_C.ipynb){ .md-button .md-button--primary} ;
-
-=== "TRAVAIL À FAIRE"
-
- 
-    - **Rendre** progressivement par [mail] le travail réalisé sur les tours de Hanoï...
-    
-## Le 18/11
-
-=== "CONTENU DE SÉANCE"
-
-    - Evaluation pratique appliquées aux [tours de Hanoï partie A](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_A.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/ds2-Partie_Pratique_A.ipynb){ .md-button .md-button--primary} ;
-    - Evaluation pratique : [une tortue récursive](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/Une_tortue_recursive.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/Une_tortue_recursive.ipynb){ .md-button .md-button--primary} ;
-
-=== "TRAVAIL À FAIRE"
-
-
-
-
-    
-
-    
-
-***
-## Le 15/11
-
-=== "CONTENU DE SÉANCE"
-
-    - **Finir** la [programmation récursive](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/LP/Recursif.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/LP/Recursif.ipynb){ .md-button .md-button--primary} ;
-    - **Analyser** la proposition de correction du notebook [Liste](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste-Complet.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Structure_Lineaire-Liste-Complet.ipynb){ .md-button .md-button--primary} ;    
-    - **Lire** la [proposition de correction](./SD/Corrections-Evaluation_POO-DM_Liste) de l'évaluation de POO et **Compléter** celle sur les listes chainées ;
-    - **Lire** la [correction](./SD/Correction-DM_Pile_File.pdf) du DM sur les Piles et Files ;
-    - Synthèse [programmation récursive](https://glassus.github.io/terminale_nsi/T2_Programmation/2.2_Recursivite/cours/){target=_blank} et [structure linéaire Liste, Pile et File](https://glassus.github.io/terminale_nsi/T1_Structures_de_donnees/1.1_Listes_Piles_Files/cours/){target=_blank} ;
-
-***
-## Les 20 et 21/10 (2h + 1h)
-
-=== "CONTENU DE SÉANCE"
-
-    - Synthèse de [Liste](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Lucien_Structure_Lineaire-Liste.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Lucien_Structure_Lineaire-Liste.ipynb){ .md-button .md-button--primary} ;
-    
-    - [Evaluation sur la POO et les listes chainées](./SD/Eval_POO_Liste.pdf){target=_blank}  le 20/10.
-
-***
 
 !!! info "Informations pour le bac"
 
@@ -201,55 +26,17 @@ Liens utiles pour des révisions de l'épreuve écrite :
 
 ***
 
-## Le 28/05 
 
-=== "CONTENU DE SÉANCE"
-    
-    - Correction du [BB2](./SU/BB2_NSI_23-24.pdf){target=_blank} ;
-
-    - **Revoir** la [notion de complexité et les algorithmes de tris](https://e-nsi.forge.aeif.fr/tris/){target=_blank} ;
-
-    - **Travailler** la notion de programmation dynamique à l'[écrit](./SU/bac_nsi_2024_sujet0b.pdf){target=_blank} et en [pratique](https://codex.forge.apps.education.fr/recherche/){target=_blank} ;
     
   
-=== "TRAVAIL À FAIRE"
 
-   - **S'entrainer** (==conserver des traces de tous vos exercices dans des `note.md` et/ou des `notebook.ipynb`==) : 
-        - encore [sur les bases de données et le langage SQL](https://e-nsi.forge.aeif.fr/exercices_bdd/){target=_blank} ;
-        - à la programmation en Python pour l'[épreuve pratique](https://codex.forge.apps.education.fr/){target=_blank} et [au-delà](https://e-nsi.forge.aeif.fr/pratique){target=_blank} ;
-        - pour l'[épreuve écrite](https://toutmonexam.fr/annee.php){target=_blank} : [24-NSIJ1AN1](./SU/spe_numerique_informatique_2024_amerique_nord_1_sujet_officiel.pdf){target=_blank} , [24-NSIJ2AN1](./SU/spe_numerique_informatique_2024_amerique_nord_2_sujet_officiel__1_.pdf){target=_blank}...
 
 ***
 
-## Du 09/04 
 
-=== "CONTENU DE SÉANCE"
-    
-    - **Faire** les activités ​du notebook [Algorithmique-Complexite](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Complexite.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Complexite.ipynb){ .md-button .md-button--primary} ;
 
-    - **Faire** les activités ​du notebook [Algorithmique-Tri](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Tri.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Tri.ipynb){ .md-button .md-button--primary} ;
 
-    - **Préparer** une présentation à l'oral de vos sujets respectifs pour le 07/05 ;
-***
 
-## Du 08/02 :
-
-=== "CONTENU DE SÉANCE"
-
-    - Les graphes :
-
-        - **regarder** la vidéo suivante :
-        
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YYv2R1cCTa0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c9c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c9a/){target=_blank} proposés par David ROCHE ;
-        - **faire** les activités du notebook [Graphes_avec_networkx](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){ .md-button .md-button--primary} ;
-        - **faire** les activités du notebook [Graphes_avec_graphviz](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){ .md-button .md-button--primary};
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c10c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c10a/){target=_blank} puis les [exercices](https://dav74.github.io/site_nsi_term/c10e/){target=_blank} proposés par David ROCHE ;
-        - **faire** les activités du notebook [Graphes_parcours_applications](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){ .md-button .md-button--primary} ;
-
-***
-    - Correction [Exercices sur le Routage](./MR/ExercicesRoutage.pdf) ;
 
     - **Reprendre** en main [ipycanvas](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/ipycanvas-Le_BN_pour_dessiner.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/ipycanvas-Le_BN_pour_dessiner.ipynb){ .md-button .md-button--primary} ;
     - **Faire** les activités de [Fractals_trees_avec_ipycanvas](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/Fractals_trees_avec_ipycanvas.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/Fractals_trees_avec_ipycanvas.ipynb){ .md-button .md-button--primary} ;
@@ -260,65 +47,18 @@ Liens utiles pour des révisions de l'épreuve écrite :
     - **S'entrainer avec Pyxel pour la Nuit du c0de** : [POOng-Le_TP_qui_fait_des_bonds](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/POOng/POOng-Le_TP_qui_fait_des_bonds.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/POOng/POOng-Le_TP_qui_fait_des_bonds.ipynb){ .md-button .md-button--primary} ;
 
 
--> [Correction-Exercice_1-arbres](./SD/Correction-Exercice_1-arbres.pdf){target=_blank} ;
--> [Correction-Exercice_2-arbres](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Correction-Exercice_2-arbres.ipynb){target=_blank}
 
 
 ***
 
-- [Programmation dynamique](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/Dynamique.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/Dynamique.ipynb){ .md-button .md-button--primary};
-
-
-***
-## Le 15/05
-
-=== "CONTENU DE SÉANCE"
-
-    - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} ;
-
-=== "TRAVAIL À FAIRE"
-
-    - **s'entrainer** pour l'épreuve écrite avec des [annales](https://toutmonexam.fr/annee.php?y=2024&m=05&xid=1&fid=12&sid=1){target=_blank} ;
-    - **s'entrainer** pour l'épreuve pratique sur [Codex](https://codex.forge.apps.education.fr/exam/){target=_blank} en conservant une trace de vos codes sur [Capytale n° ffd8-4491748](https://capytale2.ac-paris.fr/web/c/ffd8-4491748){target=_blank .md-button .md-button--primary} ;
-***
-
-## Le 25/04
-
-=== "CONTENU DE SÉANCE"
-
-    - **Rendre** en PJ d'un mail l'ensemble de vos travaux réalisés sur les graphes ;
-
-    - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} ;
 
 
 
-***
-## Le 03/03
-
-=== "CONTENU DE SÉANCE"
-
-    - Les graphes :
-
-        - **regarder** la vidéo suivante :
-        
-        <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/YYv2R1cCTa0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c9c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c9a/){target=_blank} proposés par David ROCHE ;
-        - **faire** les activités du notebook [Graphes_avec_networkx](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){target=_blank} 
-        [Capytale n° a2e8-5722835](https://capytale2.ac-paris.fr/web/c/a2e8-5722835){target=_blank .md-button .md-button--primary} 
-        [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_networkx.ipynb){ .md-button .md-button--primary} ;
-
-        - **faire** les activités du notebook [Graphes_avec_graphviz](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_avec_graphviz.ipynb){ .md-button .md-button--primary};
-        - **lire** le [cours](https://dav74.github.io/site_nsi_term/c10c/){target=_blank} et **faire** les [activités](https://dav74.github.io/site_nsi_term/c10a/){target=_blank} puis les [exercices](https://dav74.github.io/site_nsi_term/c10e/){target=_blank} proposés par David ROCHE ;
-
-        - **faire** les activités du notebook [Graphes_parcours_applications](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/SD/Graphes_parcours_applications.ipynb){ .md-button .md-button--primary} ;
-
-        - **faire** le [DM sur les graphes](./SD/DM_graphes_2025.pdf) ;
 
 
-=== "TRAVAIL À FAIRE"
 
-    - **Rendre** le [DM sur les graphes](./SD/DM_graphes_2025.pdf) ;
+
+
     
 
 
@@ -340,19 +80,15 @@ Liens utiles pour des révisions de l'épreuve écrite :
             - [Cybersecurite Challenges](https://cybersecurite.forge.apps.education.fr/cyber/3.Challenges/presentation/)... ;
         - Des tutoriels d'entrainement à la Nuit du Code avec et sans POO...
 
+## Le 28/05 
 
+=== "CONTENU DE SÉANCE"
+    
+    - Correction du [BB2](./SU/BB2_NSI_23-24.pdf){target=_blank} ;
 
-
-   
-
-
-    - [Correction Exercice 1](./BD/EX1-COR_Eval_SQL.pdf) de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;        
     
 
-    - **Finir** l'exercice 2 de [l'évaluation SGBD-BDR-SQL](./BD/EX12_Eval_SQL.pdf){target=_blank} ;
-
-
-    - Eléments de correction de [SQL-Exercice_Bibliotheque](./BD/SQL-Exercice_Bibliotheque_COR.pdf){target=_blank} ;
+    - **Travailler** la notion de programmation dynamique à l'[écrit](./SU/bac_nsi_2024_sujet0b.pdf){target=_blank} et en [pratique](https://codex.forge.apps.education.fr/recherche/){target=_blank} ;
 
 ***
 
@@ -360,6 +96,38 @@ Liens utiles pour des révisions de l'épreuve écrite :
 ## MISE EN AVANT
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/svkQLQTrU8E?si=bbq91Djr_BcKtwkK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+***
+## Du 27/04
+
+=== "CONTENU DE SÉANCE"
+    
+    - **Faire** les activités ​du notebook [Algorithmique-Complexite](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Complexite.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Complexite.ipynb){ .md-button .md-button--primary} ;
+
+    - **Faire** les activités ​du notebook [Algorithmique-Tri](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Tri.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Tri.ipynb){ .md-button .md-button--primary} ;
+
+    - **Faire** les activités ​du notebook [Programmation dynamique](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/Dynamique.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/Dynamique.ipynb){ .md-button .md-button--primary} ;
+
+    - **Approfondir** [la notion de complexité et les algorithmes de tris](https://nreveret.forge.apps.education.fr/tris/){target=_blank} ainsi que la [programmation dynamique](https://nreveret.forge.apps.education.fr/programmation_dynamique/){target=_blank} ;
+
+=== "TRAVAIL À FAIRE"    
+    
+    - **Rendre** les travaux réalisés sur les graphes ;
+
+    - **Se préparer** pour le BB2 ;        
+
+    - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} et **préparer** une présentation à l'oral de vos sujets respectifs ;
+
+     - **S'entrainer** pour le concours [Geipi Polytech](https://www.geipi-polytech.org/annales-du-concours-geipi-polytech/){target=_blank}...
+    
+    - **S'entrainer** pour l'[épreuve écrite](https://toutmonexam.fr/annee.php){target=_blank}...
+
+    - **S'entrainer** pour l'[épreuve pratique](https://sujets.examens-concours.gouv.fr/delos/public/bgt/nsi){target=_blank} en réalisant sur Codex les sujets :
+        -  [Le chiffre de Vernam](https://codex.forge.apps.education.fr/exercices/codage_vernam_ep/){target=_blank} ;
+        -  [Calcul des pensions de retraite](https://codex.forge.apps.education.fr/en_travaux/calcul_retraite/){target=_blank} ;
+        -  [Camping](https://codex.forge.apps.education.fr/en_travaux/camping/){target=_blank} ;
+        -  [Tickets gagnants](https://codex.forge.apps.education.fr/exercices/tickets_gagnants/){target=_blank} ;
+        -  [Colorier un graphe](https://codex.forge.apps.education.fr/en_travaux/colorier_un_graphe_ep/){target=_blank} ;
 
 ***
 ## Du 16/03
