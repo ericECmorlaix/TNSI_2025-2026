@@ -96,7 +96,34 @@
 ## MISE EN AVANT
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/svkQLQTrU8E?si=bbq91Djr_BcKtwkK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+***
+***
+## Du 07/05
 
+=== "CONTENU DE SÉANCE"
+    
+    - Correction des évaluations [Processus](./SU/Processus.pdf){target=_blank}, [Réseaux](./SU/Réseaux.pdf){target=_blank}, [Graphes](./SU/Graphes.pdf){target=_blank} pour le [BB2](./SU/bb2.pdf){target=_blank} ;
+    
+    - **Finir** les activités ​du notebook [Algorithmique-Complexite](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Complexite.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Complexite.ipynb){ .md-button .md-button--primary} ;
+
+    - **Finir** les activités ​du notebook [Algorithmique-Tri](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Tri.ipynb){target=_blank}  [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/AL/Algorithmique-Tri.ipynb){ .md-button .md-button--primary} ;
+
+    - **Faire** les activités ​du notebook [Programmation dynamique](https://nbviewer.org/urls/ericecmorlaix.github.io/TNSI_2025-2026/Dynamique.ipynb){target=_blank} [:fontawesome-solid-download:](https://ericecmorlaix.github.io/TNSI_2025-2026/Dynamique.ipynb){ .md-button .md-button--primary} ;
+
+    - **Approfondir** [la notion de complexité et les algorithmes de tris](https://nreveret.forge.apps.education.fr/tris/){target=_blank} ainsi que la [programmation dynamique](https://nreveret.forge.apps.education.fr/programmation_dynamique/){target=_blank} ;
+
+=== "TRAVAIL À FAIRE"    
+    
+    - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} et **préparer** une présentation à l'oral de vos sujets respectifs ;
+        
+    - **S'entrainer** pour l'[épreuve écrite](https://toutmonexam.fr/annee.php){target=_blank}...
+
+    - **S'entrainer** pour l'[épreuve pratique](https://sujets.examens-concours.gouv.fr/delos/public/bgt/nsi){target=_blank} en réalisant sur Codex les sujets :
+        -  [Le chiffre de Vernam](https://codex.forge.apps.education.fr/exercices/codage_vernam_ep/){target=_blank} ;
+        -  [Calcul des pensions de retraite](https://codex.forge.apps.education.fr/en_travaux/calcul_retraite/){target=_blank} ;
+        -  [Camping](https://codex.forge.apps.education.fr/en_travaux/camping/){target=_blank} ;
+        -  [Tickets gagnants](https://codex.forge.apps.education.fr/exercices/tickets_gagnants/){target=_blank} ;
+        -  [Colorier un graphe](https://codex.forge.apps.education.fr/en_travaux/colorier_un_graphe_ep/){target=_blank} ;
 ***
 ## Du 27/04
 
