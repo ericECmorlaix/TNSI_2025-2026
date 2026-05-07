@@ -114,6 +114,8 @@
 
 === "TRAVAIL À FAIRE"    
     
+    - **Faire** en DM l'exercice de [programmation dynamique](./LP/Dynamique.pdf){target=_blank} ;
+    
     - **Mettre à jour** progressivement vos problématiques, recherches et réalisations de préparation au Grand Oral sur [Capytale n° 3263-6425743](https://capytale2.ac-paris.fr/web/c/3263-6425743){target=_blank .md-button .md-button--primary} et **préparer** une présentation à l'oral de vos sujets respectifs ;
         
     - **S'entrainer** pour l'[épreuve écrite](https://toutmonexam.fr/annee.php){target=_blank}...
