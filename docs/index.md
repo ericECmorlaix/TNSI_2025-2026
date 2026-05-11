@@ -17,19 +17,6 @@
 ***
 <!-- 
 
-!!! info "Informations pour le bac"
-
-    - ==L'épreuve pratique aura lieu au lycée dans la matinée du mercredi 12 juin.==
-    - [Banque des sujets d'Epreuve Pratique 2024](https://cyclades.education.gouv.fr/delos/public/listPublicECE){target=_blank} ;
-    - [Nouveau site pour s'exercer à l'épreuve pratique](https://codex.forge.apps.education.fr/){target=_blank} sans oublier pour autant [l'ancien](https://e-nsi.forge.aeif.fr/pratique){target=_blank} ;
-    - [Et toujours pour se préparer à l'érit](https://e-nsi.forge.aeif.fr/ecrit/){target=_blank}.
-
-***
-
-
-    
-  
-
 
 ***
 
@@ -97,6 +84,13 @@
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/svkQLQTrU8E?si=bbq91Djr_BcKtwkK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 ***
+
+!!! info "Informations pour le bac"
+
+    - ==L'épreuve pratique aura lieu au lycée dans la matinée du mercredi 03 juin.== ;
+    - [Les sujets d'Epreuve Pratique 2026](https://sujets.examens-concours.gouv.fr/delos/public/bgt/nsi){target=_blank} ont été mis à jour ;
+    - Vous devrez impérativement utiliser l'IDE [Thonny](./Thonny.pdf){target=_blank}.
+
 ***
 ## Du 07/05
 
