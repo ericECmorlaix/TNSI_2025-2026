@@ -39,6 +39,24 @@
 
 ## Des parcours animés
 
+### Arbre
+
+<center><iframe src="https://ericecmorlaix.github.io/TNSI_2025-2026/Fiches/Parcours/BFS&DFS-A.html" name="" title="" style="width: 80%; height: 800px; border: 1px solid #ddd;" allowfullscreen></iframe></center>
+
+<center><iframe src="https://ericecmorlaix.github.io/TNSI_2025-2026/Fiches/Parcours/BFS&DFS-A-backtrack.html" name="" title="" style="width: 80%; height: 800px; border: 1px solid #ddd;" allowfullscreen></iframe></center>
+
+### Graphe
+
+<center><iframe src="https://ericecmorlaix.github.io/TNSI_2025-2026/Fiches/Parcours/BFS-GNO.html" name="" title="" style="width: 80%; height: 800px; border: 1px solid #ddd;" allowfullscreen></iframe></center>
+
+<center><iframe src="https://ericecmorlaix.github.io/TNSI_2025-2026/Fiches/Parcours/DFS-GNO.html" name="" title="" style="width: 80%; height: 800px; border: 1px solid #ddd;" allowfullscreen></iframe></center>
+
+<center><iframe src="https://ericecmorlaix.github.io/TNSI_2025-2026/Fiches/Parcours/BFS-GO.html" name="" title="" style="width: 80%; height: 800px; border: 1px solid #ddd;" allowfullscreen></iframe></center>
+
+<center><iframe src="https://ericecmorlaix.github.io/TNSI_2025-2026/Fiches/Parcours/DFS-GO.html" name="" title="" style="width: 80%; height: 800px; border: 1px solid #ddd;" allowfullscreen></iframe></center>
+
+
+
 
 
 
