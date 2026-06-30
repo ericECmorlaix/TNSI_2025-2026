@@ -1,0 +1,2301 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Les arbres</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <style>
+/* ── Google Font accessibilité ───────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Andika:wght@400;700&display=swap');
+
+/* ── Base ────────────────────────────────────────────────────────── */
+body {
+    font-family: Cantarell, Roboto, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    transition: background-color 0.3s, color 0.3s;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+}
+
+/* ── Pour barre de défilement ────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: #6b46c1;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  z-index: 2000;
+}
+
+/* ── Cycle polices dyslexie ──────────────────────────────── */
+body.police-1 { font-family: 'Andika', sans-serif !important; }
+body.police-2 { font-family: 'Atkinson Hyperlegible', sans-serif !important; }
+body.police-3 { font-family: 'Ubuntu', sans-serif !important; }
+body.police-1, body.police-2, body.police-3 {
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.8 !important;
+}
+
+/* ── H1 ──────────────────────────────────────────────────── */
+body h1 {
+    color: #6b46c1;
+    border: 0.15em solid #6b46c1;
+    border-radius: 0.5em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    background: none;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* ── H2 / H3 / H4 : dégradé via ::after, pas de boîte ───── */
+body h2, body h3, body h4 {
+    position: relative;
+    z-index: 0;
+    background: none;
+    border-radius: 0;
+    padding: 0.15em 0 0.15em 0.2em;
+}
+
+body h2 { font-size: 1.75rem; color: #2d3748; margin-top: 1.5em; }
+body h3 { font-size: 1.4rem;  color: #2d3748; margin-top: 1.2em; }
+body h4 { font-size: 1.2rem;  color: #2d3748; margin-top: 0.9em; }
+
+/* Premier titre : pas d'espace parasite en haut de page */
+body > :is(h2, h3, h4):first-child { margin-top: 0.5em; }
+
+body h2 em, body h2 i {
+    font-style: italic !important;
+    font-weight: 600 !important;
+    font-synthesis: none;
+    font-family: Georgia, 'Times New Roman', serif !important;
+}
+
+/* Dégradé vertical via ::after (texte jamais affecté) */
+body h2::after, body h3::after, body h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 4px 4px 0 0;
+}
+
+body h2::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(262, 52%, 65%, 0.28) 0%,
+        hsla(262, 52%, 65%, 0.10) 33%,
+        transparent 100%
+    );
+    border-bottom: 4px solid hsla(262, 52%, 65%, 0.55);
+}
+
+body h3::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(35, 95%, 58%, 0.22) 0%,
+        transparent 33%
+    );
+    border-bottom: 3px solid hsla(35, 95%, 58%, 0.45);
+}
+
+body h4::after {
+    height: 0;
+    border-bottom: 2px solid hsla(100, 56%, 55%, 0.40);
+}
+
+    /* Listes */
+    body ul, body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    body li {
+        margin: 0.5rem 0;
+    }
+
+    /* Code inline */
+    body code {
+        background-color: #edf2f7;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c7254e;
+    }
+
+    /* Annuler padding pour code dans pre (évite espace initial) */
+    body pre code,
+    body .highlight pre code {
+        padding: 0;
+        background: none;
+    }
+
+    /* Blocs de code */
+    body .highlight {
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0
+        overflow-x: auto;
+        margin: 1rem 0;
+        /* Forcer le scrollbar visible sur WebKit (Chrome/Safari) */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .highlight pre {
+        margin: 0;
+        background: none;
+        padding: 1rem;
+        overflow-x: auto;  /* ← ajouter aussi ici par sécurité */
+        white-space: pre;  /* ← garantir le non-wrap */
+    }
+
+    /* Masquer les spans vides de Pygments qui créent un espace initial */
+    body .highlight pre span:empty {
+        display: none !important;
+    }
+    body.dark-mode .highlight pre span:empty {
+        display: none !important;
+    }
+
+    /* Tableaux */
+    body table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        background-color: white;
+    }
+
+    body th, body td {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    body th {
+        background-color: #9f7aea;
+        color: white;
+        font-weight: 600;
+    }
+
+    body tr:nth-child(even) {
+        background-color: #f7fafc;
+    }
+
+
+
+/* ── Texte à lignes numérotées (pour littéraires) ────────────────── */
+.texte-numerote,
+.texte-numerote * {
+    text-align: left !important;
+}
+
+.texte-numerote {
+    margin: 1.2em 0;
+    font-family: Andika, sans-serif;
+    font-size: 1em;
+}
+
+.texte-lignes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.texte-ligne {
+    display: flex;
+    flex-direction: row;           /* ← row, pas row-reverse */
+    align-items: baseline;
+    padding: 0;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.texte-ligne::before {
+    content: attr(data-num);
+    min-width: 2.5em;
+    text-align: right;
+    padding-right: 0.6em;
+    margin-right: 0.8em;
+    border-right: 1px solid #d0dae6;
+    color: #999;
+    font-size: 0.82em;
+    font-family: ui-monospace, monospace;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.dark-mode .texte-ligne::before {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+
+
+
+
+.highlight [data-linenos]::before {
+    content: attr(data-linenos);
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+
+
+
+    /* ── Bloc contrôles haut-droite ───────────────────────────── */
+    #controls {
+        position: fixed;
+        top: 0.8rem;
+        display: flex;
+        font-size: clamp(0.6rem, 1.5vw, 1rem); /* ajuster la taille des boutons selon le zoom */
+        flex-direction: row;
+        align-items: center;
+        gap: 0.2em;
+        background: var(--ctrl-bg, #ccc);
+        border: 1px solid var(--ctrl-border, #ccc);
+        border-radius: 2em;
+        padding: 0.2em 0.5em;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        box-sizing: border-box;
+        overflow: visible;
+        width: auto;
+        max-width: none;
+        /* Positionner les boutons à droite dans le bloc de texte */
+        /* right: max(0.8rem, calc(50% - 450px + 0.8rem)); */
+        /* right: 0.8rem; */
+        right: max(0.8rem, calc(50vw - 450px - 7.5rem));
+    }
+
+    #controls button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        width: 1.8em;
+        height: 1.8em;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border-radius: 50%;
+        transition: background 0.15s;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    #controls button:hover {
+        background: var(--ctrl-hover, rgba(0,0,0,0.08));
+    }
+
+    /* Tooltip natif amélioré : on s'appuie sur [title] + pseudo CSS */
+    #controls button[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        top: 2.8em;
+        right: 0;
+        background: var(--tooltip-bg, #333);
+        color: var(--tooltip-fg, #fff);
+        font-size: 0.75rem;
+        font-family: sans-serif;
+        white-space: nowrap;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 1100;
+    }
+
+    #controls {
+        position: fixed; /* redéclaré pour que ::after soit relatif au bouton */
+    }
+
+    #controls button {
+        position: relative;
+    }
+
+    /* ── Overlay sommaire ─────────────────────────────────────── */
+    #toc-overlay {
+        display: none;
+        position: fixed;
+        top: 3.8rem;
+        right: 1rem;
+        width: clamp(200px, 25vw, 340px);
+        max-height: 70vh;
+        overflow-y: auto;
+        background: var(--toc-bg, #fafafa);
+        border: 1px solid var(--toc-border, #ddd);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        z-index: 999;
+        padding: 0.6em 0;
+        font-size: 0.9rem;
+    }
+    #toc-overlay.open {
+        display: block;
+    }
+    #toc-overlay a {
+        display: block;
+        padding: 0.3em 1em;
+        color: var(--toc-link, #1a1a1a);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        transition: background 0.12s, border-color 0.12s;
+    }
+    #toc-overlay a:hover {
+        background: var(--toc-hover, #e8f0fe);
+        border-left-color: #448aff;
+    }
+    #toc-overlay a.toc-h2 {
+        font-weight: bold;
+        padding-left: 1em;
+    }
+    #toc-overlay a.toc-h3 {
+        padding-left: 2em;
+        font-weight: normal;
+        color: var(--toc-link-h3, #444);
+    }
+    #toc-overlay a.toc-h4 {
+        padding-left: 3em;
+        font-weight: normal;
+        font-size: 0.85em;
+        color: var(--toc-link-h4, #666);
+    }
+
+    /* ── Variables thème clair ────────────────────────────────── */
+    :root {
+        --ctrl-bg:       #ccc;
+        --ctrl-border:   #eee;
+        --ctrl-hover:    rgba(0,0,0,0.08);
+        --tooltip-bg:    #ccc;
+        --tooltip-fg:    #fff;
+        --toc-bg:        #fafafa;
+        --toc-border:    #ddd;
+        --toc-link:      #1a1a1a;
+        --toc-link-h3:   #444;
+        --toc-link-h4:   #666;
+        --toc-hover:     #e8f0fe;
+    }
+    
+/* ── Liens lisibles (thème clair) ────────────────────────────────── */
+body a               { color: #0066cc; }
+body a:hover         { color: #004499; text-decoration: underline; }
+body a:visited       { color: #6b46c1; }
+
+/* ── Liens lisibles (thème sombre) ───────────────────────────────── */
+body.dark-mode a         { color: #90cdf4; }
+body.dark-mode a:hover   { color: #63b3ed; }
+body.dark-mode a:visited { color: #d6bcfa; }
+
+/* ── Variables thème sombre ──────────────────────────────────────── */
+body.dark-mode {
+    background-color: #1a202c;
+    color: #e2e8f0;
+    --ctrl-bg:       #888;
+    --ctrl-border:   #ddd;
+    --ctrl-hover:    rgba(255,255,255,0.4);
+    --tooltip-bg:    #eee;
+    --tooltip-fg:    #111;
+    --toc-bg:        #1e1e1e;
+    --toc-border:    #444;
+    --toc-link:      #ddd;
+    --toc-link-h3:   #aaa;
+    --toc-link-h4:   #888;
+    --toc-hover:     #1a2a3a;
+}
+
+    /* dark-mode h1 : voir section dark-mode titres */
+
+    /* ── Dark-mode H1 ────────────────────────────────────────────── */
+    body.dark-mode h1  { color: #b794f4; border-color: #b794f4; }
+    body.dark-mode h2  { color: #e2e8f0; }
+    body.dark-mode h3  { color: #e2e8f0; }
+    body.dark-mode h4  { color: #e2e8f0; }
+
+    /* ── Dark-mode ::after dégradés ──────────────────────────────── */
+    body.dark-mode h2::after {
+        background: linear-gradient(
+            to top,
+            hsla(262, 70%, 75%, 0.35) 0%,
+            hsla(262, 70%, 75%, 0.12) 33%,
+            transparent 100%
+        );
+        border-bottom: 4px solid hsla(262, 70%, 75%, 0.60);
+    }
+    body.dark-mode h3::after {
+        background: linear-gradient(
+            to top,
+            hsla(35, 90%, 68%, 0.28) 0%,
+            transparent 33%
+        );
+        border-bottom: 3px solid hsla(35, 90%, 68%, 0.50);
+    }
+    body.dark-mode h4::after {
+        border-bottom: 2px solid hsla(100, 56%, 65%, 0.45);
+    }
+
+    body.dark-mode code {
+        background-color: #2d3748;
+        color: #fc8181;
+    }
+    
+    body.dark-mode a:visited {
+        color: #d6bcfa !important;
+    }
+
+    body.dark-mode table {
+        background-color: #2d3748;
+    }
+
+    body.dark-mode th {
+        background-color: #6b46c1;
+    }
+
+    body.dark-mode tr:nth-child(even) {
+        background-color: #374151;
+    }
+
+    body.dark-mode td {
+        border-color: #4a5568;
+    }
+    
+    body.dark-mode .admonition,
+    body.dark-mode details {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    body.dark-mode .admonition a,
+    body.dark-mode details a {
+        color: #90cdf4;
+    }
+    
+    body.dark-mode .admonition a:hover,
+    body.dark-mode details a:hover {
+        color: #63b3ed;
+    }
+
+    body.dark-mode .admonition a:visited,
+    body.dark-mode details a:visited {
+        color: #d6bcfa !important;
+    }
+
+
+    /* ── Coloration syntaxique mode clair — thème "vs" (Visual Studio) */
+    /* Fond légèrement bleuté ajouté pour délimiter visuellement le bloc */
+    td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    .highlight .hll { background-color: #ffffcc }
+    .highlight  { background: #f0f4f8; }
+    .highlight .c  { color: #008000 }                      /* Comment */
+    .highlight .err { border: 1px solid #F00 }             /* Error */
+    .highlight .k  { color: #0000FF; font-weight: bold }   /* Keyword */
+    .highlight .ch { color: #008000 }                      /* Comment.Hashbang */
+    .highlight .cm { color: #008000 }                      /* Comment.Multiline */
+    .highlight .cp { color: #0000FF }                      /* Comment.Preproc */
+    .highlight .cpf { color: #008000 }                     /* Comment.PreprocFile */
+    .highlight .c1 { color: #008000 }                      /* Comment.Single */
+    .highlight .cs { color: #008000 }                      /* Comment.Special */
+    .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    .highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+    .highlight .gh { font-weight: bold }                   /* Generic.Heading */
+    .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    .highlight .gu { color: #800080; font-weight: bold }   /* Generic.Subheading */
+    .highlight .kc { color: #0000FF; font-weight: bold }   /* Keyword.Constant */
+    .highlight .kd { color: #0000FF; font-weight: bold }   /* Keyword.Declaration */
+    .highlight .kn { color: #0000FF; font-weight: bold }   /* Keyword.Namespace */
+    .highlight .kp { color: #0000FF }                      /* Keyword.Pseudo */
+    .highlight .kr { color: #0000FF; font-weight: bold }   /* Keyword.Reserved */
+    .highlight .kt { color: #2B91AF }                      /* Keyword.Type */
+    .highlight .s  { color: #A31515 }                      /* Literal.String */
+    .highlight .na { color: #FF0000 }                      /* Name.Attribute */
+    .highlight .nb { color: #00F }                         /* Name.Builtin */
+    .highlight .nc { color: #2B91AF }                      /* Name.Class */
+    .highlight .no { color: #2B91AF }                      /* Name.Constant */
+    .highlight .nd { color: #2B91AF }                      /* Name.Decorator */
+    .highlight .nf { color: #000000 }                      /* Name.Function */
+    .highlight .nt { color: #800000 }                      /* Name.Tag */
+    .highlight .nv { color: #000000 }                      /* Name.Variable */
+    .highlight .ow { color: #0000FF; font-weight: bold }   /* Operator.Word */
+    .highlight .sa { color: #A31515 }                      /* Literal.String.Affix */
+    .highlight .sb { color: #A31515 }                      /* Literal.String.Backtick */
+    .highlight .sc { color: #A31515 }                      /* Literal.String.Char */
+    .highlight .dl { color: #A31515 }                      /* Literal.String.Delimiter */
+    .highlight .sd { color: #A31515 }                      /* Literal.String.Doc */
+    .highlight .s2 { color: #A31515 }                      /* Literal.String.Double */
+    .highlight .se { color: #A31515 }                      /* Literal.String.Escape */
+    .highlight .sh { color: #A31515 }                      /* Literal.String.Heredoc */
+    .highlight .si { color: #A31515 }                      /* Literal.String.Interpol */
+    .highlight .sx { color: #A31515 }                      /* Literal.String.Other */
+    .highlight .sr { color: #A31515 }                      /* Literal.String.Regex */
+    .highlight .s1 { color: #A31515 }                      /* Literal.String.Single */
+    .highlight .ss { color: #A31515 }                      /* Literal.String.Symbol */
+    .highlight .vc { color: #000000 }                      /* Name.Variable.Class */
+    .highlight .vg { color: #000000 }                      /* Name.Variable.Global */
+    .highlight .vi { color: #000000 }                      /* Name.Variable.Instance */
+    .highlight .il { color: #098658 }                      /* Literal.Number.Integer.Long */
+    .highlight .m  { color: #098658 }                      /* Literal.Number */
+    .highlight .mb { color: #098658 }                      /* Literal.Number.Bin */
+    .highlight .mf { color: #098658 }                      /* Literal.Number.Float */
+    .highlight .mh { color: #098658 }                      /* Literal.Number.Hex */
+    .highlight .mi { color: #098658 }                      /* Literal.Number.Integer */
+    .highlight .mo { color: #098658 }                      /* Literal.Number.Oct */
+
+    /* ── Coloration syntaxique mode sombre — thème "one-dark" ────── */
+    body.dark-mode .highlight { background: #282C34; color: #ABB2BF; }
+    body.dark-mode .highlight .hll { background-color: #3E4451; }
+    body.dark-mode .highlight .c  { color: #7F848E; font-style: italic } /* Comment */
+    body.dark-mode .highlight .err { color: #E06C75 }                    /* Error */
+    body.dark-mode .highlight .esc { color: #ABB2BF }                    /* Escape */
+    body.dark-mode .highlight .k  { color: #C678DD }                     /* Keyword */
+    body.dark-mode .highlight .l  { color: #ABB2BF }                     /* Literal */
+    body.dark-mode .highlight .n  { color: #E06C75 }                     /* Name */
+    body.dark-mode .highlight .o  { color: #56B6C2 }                     /* Operator */
+    body.dark-mode .highlight .p  { color: #ABB2BF }                     /* Punctuation */
+    body.dark-mode .highlight .ch { color: #7F848E; font-style: italic } /* Comment.Hashbang */
+    body.dark-mode .highlight .cm { color: #7F848E; font-style: italic } /* Comment.Multiline */
+    body.dark-mode .highlight .cp { color: #7F848E; font-style: italic } /* Comment.Preproc */
+    body.dark-mode .highlight .cpf { color: #7F848E; font-style: italic }/* Comment.PreprocFile */
+    body.dark-mode .highlight .c1 { color: #7F848E; font-style: italic } /* Comment.Single */
+    body.dark-mode .highlight .cs { color: #7F848E; font-style: italic } /* Comment.Special */
+    body.dark-mode .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    body.dark-mode .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    body.dark-mode .highlight .kc { color: #C678DD }                     /* Keyword.Constant */
+    body.dark-mode .highlight .kd { color: #C678DD }                     /* Keyword.Declaration */
+    body.dark-mode .highlight .kn { color: #C678DD }                     /* Keyword.Namespace */
+    body.dark-mode .highlight .kp { color: #C678DD }                     /* Keyword.Pseudo */
+    body.dark-mode .highlight .kr { color: #C678DD }                     /* Keyword.Reserved */
+    body.dark-mode .highlight .kt { color: #E5C07B }                     /* Keyword.Type */
+    body.dark-mode .highlight .ld { color: #98C379 }                     /* Literal.Date */
+    body.dark-mode .highlight .m  { color: #D19A66 }                     /* Literal.Number */
+    body.dark-mode .highlight .s  { color: #98C379 }                     /* Literal.String */
+    body.dark-mode .highlight .na { color: #E06C75 }                     /* Name.Attribute */
+    body.dark-mode .highlight .nb { color: #61AFEF }                     /* Name.Builtin */
+    body.dark-mode .highlight .nc { color: #E5C07B }                     /* Name.Class */
+    body.dark-mode .highlight .no { color: #E06C75 }                     /* Name.Constant */
+    body.dark-mode .highlight .nd { color: #61AFEF }                     /* Name.Decorator */
+    body.dark-mode .highlight .ni { color: #ABB2BF }                     /* Name.Entity */
+    body.dark-mode .highlight .ne { color: #E06C75 }                     /* Name.Exception */
+    body.dark-mode .highlight .nf { color: #61AFEF }                     /* Name.Function */
+    body.dark-mode .highlight .nl { color: #E06C75 }                     /* Name.Label */
+    body.dark-mode .highlight .nn { color: #E5C07B }                     /* Name.Namespace */
+    body.dark-mode .highlight .nt { color: #E06C75 }                     /* Name.Tag */
+    body.dark-mode .highlight .nv { color: #E06C75 }                     /* Name.Variable */
+    body.dark-mode .highlight .ow { color: #56B6C2 }                     /* Operator.Word */
+    body.dark-mode .highlight .sa { color: #98C379 }                     /* Literal.String.Affix */
+    body.dark-mode .highlight .sb { color: #98C379 }                     /* Literal.String.Backtick */
+    body.dark-mode .highlight .sc { color: #98C379 }                     /* Literal.String.Char */
+    body.dark-mode .highlight .dl { color: #98C379 }                     /* Literal.String.Delimiter */
+    body.dark-mode .highlight .sd { color: #7F848E; font-style: italic } /* Literal.String.Doc */
+    body.dark-mode .highlight .s2 { color: #98C379 }                     /* Literal.String.Double */
+    body.dark-mode .highlight .se { color: #56B6C2 }                     /* Literal.String.Escape */
+    body.dark-mode .highlight .sh { color: #98C379 }                     /* Literal.String.Heredoc */
+    body.dark-mode .highlight .si { color: #D19A66 }                     /* Literal.String.Interpol */
+    body.dark-mode .highlight .sx { color: #98C379 }                     /* Literal.String.Other */
+    body.dark-mode .highlight .sr { color: #56B6C2 }                     /* Literal.String.Regex */
+    body.dark-mode .highlight .s1 { color: #98C379 }                     /* Literal.String.Single */
+    body.dark-mode .highlight .ss { color: #98C379 }                     /* Literal.String.Symbol */
+    body.dark-mode .highlight .mb { color: #D19A66 }                     /* Literal.Number.Bin */
+    body.dark-mode .highlight .mf { color: #D19A66 }                     /* Literal.Number.Float */
+    body.dark-mode .highlight .mh { color: #D19A66 }                     /* Literal.Number.Hex */
+    body.dark-mode .highlight .mi { color: #D19A66 }                     /* Literal.Number.Integer */
+    body.dark-mode .highlight .mo { color: #D19A66 }                     /* Literal.Number.Oct */
+    body.dark-mode .highlight .il { color: #D19A66 }                     /* Literal.Number.Integer.Long */
+    body.dark-mode .highlight .vc { color: #E06C75 }                     /* Name.Variable.Class */
+    body.dark-mode .highlight .vg { color: #E06C75 }                     /* Name.Variable.Global */
+    body.dark-mode .highlight .vi { color: #E06C75 }                     /* Name.Variable.Instance */
+    body.dark-mode .highlight .bp { color: #61AFEF }                     /* Name.Builtin.Pseudo */
+    body.dark-mode .highlight .fm { color: #61AFEF }                     /* Name.Function.Magic */
+
+/* ── Numérotation de lignes — style inline (pymdownx.highlight défaut) */
+/* Les numéros ne se copient pas avec le code — meilleur pour les élèves */
+.highlight .linenos {
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+body.dark-mode .highlight .linenos {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+    
+    /* ── ONGLETS — pymdownx.tabbed (alternate_style) ────────────────── 
+       Structure : .tabbed-set > input[radio]
+                               > .tabbed-labels > label
+                               > .tabbed-content > .tabbed-block */
+    .tabbed-set {
+      margin: 1.2em 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* Cacher les radio buttons */
+    .tabbed-set > input { display: none; }
+
+    /* Barre d'onglets */
+    .tabbed-labels {
+      display: flex;
+      flex-wrap: wrap;
+      background: #f7fafc;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tabbed-labels > label {
+      display: inline-block;
+      padding: 0.5em 1.2em;
+      cursor: pointer;
+      font-size: 0.92em;
+      font-weight: 600;
+      color: #4a5568;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      margin: 0;
+      user-select: none;
+    }
+
+    .tabbed-labels > label:hover {
+      color: #6b46c1;
+      background: #ede9fe;
+    }
+
+    /* Contenu : tous les blocs cachés par défaut */
+    .tabbed-content { padding: 0; }
+
+    .tabbed-block {
+      display: none;
+      padding: 1em 1.2em;
+    }
+
+    /* Afficher le bon bloc selon l'onglet actif */
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #6b46c1;
+      border-bottom: 2px solid #6b46c1;
+      background: white;
+    }
+
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-content > .tabbed-block:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-content > .tabbed-block:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-content > .tabbed-block:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-content > .tabbed-block:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-content > .tabbed-block:nth-child(5) {
+      display: block;
+    }
+
+    /* ---- Dark mode ---- */
+    body.dark-mode .tabbed-set { border-color: #4a5568; }
+
+    body.dark-mode .tabbed-labels {
+      background: #2d3748;
+      border-bottom-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label {
+      color: #a0aec0;
+      border-right-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label:hover {
+      color: #b794f4;
+      background: #3d2d5e;
+    }
+
+    body.dark-mode .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    body.dark-mode .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    body.dark-mode .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    body.dark-mode .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    body.dark-mode .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #b794f4;
+      border-bottom-color: #b794f4;
+      background: #1a202c;
+    }
+
+    body.dark-mode .tabbed-block { background: #1a202c; }
+
+
+    /* ── CSS bouton "copier" des blocs de code sur écrans tactiles ─ */
+    @media (hover: none) {
+      .highlight button[title="Copier le code"] {
+        opacity: 0.5 !important;
+      }
+    }
+    
+    /* ── Indicateur de progression CSS pur ───────────────────────── */
+    @keyframes grow-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── Figures GeoGebra ────────────────────────────────────────── */
+    .ggb-container {
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    body.dark-mode .ggb-container {
+      border-color: #4a5568;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ── Notes "de bas de page" -> infobulles ────────────────────── */
+    .infobulle-note {
+        position: relative;
+        cursor: help;
+    }
+    .infobulle-note sup {
+        color: #6b46c1;
+        font-weight: bold;
+    }
+    .infobulle-contenu {    /* Il faut éviter qu'elles soient coupées dans
+        un bloc, donc plus de bottom/left/transform : ce sera géré en JS */
+        display: none;
+        position: fixed;   /* ← Et plus d'absolute non plus */
+        background: #2d3748;
+        color: #e2e8f0;
+        font-size: 0.82em;
+        line-height: 1.5;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        width: max-content;
+        max-width: 28em;
+        white-space: normal;
+        z-index: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        pointer-events: none;
+    }
+    /* Cacher les footnotes en affichage écran, afficher en impression */
+    .footnote-impression { display: none; }
+    
+    /* ── Gestion des légendes / titres d'images ──────────────────── */
+    figure {
+        margin: 1.5em auto;
+        text-align: center;
+    }
+    figure img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    figcaption {
+        font-size: 0.85em;
+        color: #718096;
+        font-style: oblique 8deg;
+        margin-top: 0.4em;
+    }
+    body.dark-mode figcaption {
+        color: #a0aec0;
+    }
+
+
+    /* ── CSS pour impression sur feuille A4 ──────────────────────── */
+    @media print {
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        /* Pour les textes à lignes numérotées */
+        .texte-ligne::after { color: #666; }
+
+        /* Gestion des légendes */
+        figcaption {
+            color: #444 !important;
+            font-size: 0.8em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px 8px;
+        }
+
+        body {
+            background-color: white !important;
+            color: black !important;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            padding-top: 0.5cm !important;  /* tentative pour impression PDF */
+            padding-bottom: 0.5cm !important;
+        }
+
+        #controls {
+            display: none !important;
+        }
+
+        /* Définitions et propriétés : encadrées, sans couleur */
+        .admonition.def, details.def,
+        .admonition.prop, details.prop {
+            border: 1.5px solid #000 !important;
+            background: white !important;
+            border-left-width: 1.5px !important;
+        }
+        .admonition.def > .admonition-title,
+        details.def > summary,
+        .admonition.prop > .admonition-title,
+        details.prop > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+            border-bottom: 1px solid #000;
+        }
+        /* Toutes admonitions : fond blanc à l'impression */
+        .admonition, details {
+            background: white !important;
+            border-color: #888 !important;
+        }
+        .admonition-title, details > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+        }
+        /* Exemples et remarques : forcer l'affichage déplié */
+        details.ex, details.rem {
+            display: block !important;
+        }
+        details.ex > summary,
+        details.rem > summary {
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            background: none !important;
+            color: black !important;
+            border-color: black !important;
+        }
+
+        /* ── Traits sous les titres à l'impression ───────────────── */
+        /* Modifié le 18/02/2026 par intégration aux règles principales
+        h2::after { border-bottom-width: 4px !important; }
+        h3::after { border-bottom-width: 3px !important; }
+        h4::after { border-bottom-width: 2px !important; } */
+
+        pre, blockquote, table {
+            page-break-inside: avoid;
+        }
+
+        img {
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+
+        * {
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        /* APRÈS */
+        .highlight, pre {
+            background-color: #f5f5f5 !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* Code inline : fond léger, sans bordure */
+        code {
+            background-color: #f0f0f0 !important;
+            color: black !important;
+            border: none !important;
+            padding: 0.1em 0.2em !important;
+        }
+
+        /* Annuler le fond pour code dans pre (évite double fond) */
+        pre code {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        table, th, td {
+            border-color: black !important;
+        }
+
+        th {
+            background-color: #ddd !important;
+            color: black !important;
+        }
+
+        a {
+            color: #000 !important;
+            text-decoration: underline !important;
+        }
+
+        a[href^="http"]:after {
+            content: none !important;
+            font-size: 0.8em;
+        }
+        
+        /* Onglets à l'impression */
+        .tabbed-set { border: 1px solid #aaa !important; }
+        .tabbed-labels { display: flex !important; background: #eee !important; border-bottom: 1px solid #aaa !important; }
+        .tabbed-labels > label { display: inline-block !important; padding: 0.3em 0.8em !important; font-weight: bold !important; color: black !important; border-right: 1px solid #aaa !important; font-size: 0.85em !important; }
+        .tabbed-block { display: block !important; border-top: 1px dashed #ccc !important; padding: 0.5em 0.8em !important; }
+
+        .tabbed-print-label {
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #444;
+            background: #eee;
+            padding: 0.2em 0.6em;
+            margin-bottom: 0.4em;
+            border-left: 3px solid #aaa;
+        }
+        
+        .tabbed-labels { display: none !important; }
+        .tabbed-set { border: none !important; }
+        
+        /* Notes de bas de page à la fin */
+        .infobulle-contenu  { display: none !important; }
+        .footnote-impression {
+            display: block !important;
+            border-top: 1px solid #000;
+            margin-top: 2em;
+            font-size: 0.85em;
+        }
+    }
+
+    /* ── Admonitions (!!! et ???) ─────────────────────────────────── */
+    .admonition, details {
+        margin: 1.2em 0;
+        /* padding: 0 0 0.6em; */
+        padding: 0 0 0.6em;
+        border-left: 4px solid #999;
+        border-radius: 4px;
+        background: #f8f8f8;
+        /* overflow: hidden; */
+    }
+    .admonition-title, details > summary {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        padding: 0.45em 0.8em;
+        background: #e0e0e0;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+    }
+    details > summary { justify-content: space-between; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* Flèche droite / bas selon état */
+    details > summary::after {
+        content: '▶';
+        font-size: 0.75em;
+        transition: transform 0.2s;
+        margin-left: auto;
+        padding-left: 0.8em;
+        flex-shrink: 0;
+    }
+    details[open] > summary::after {
+        content: '▼';
+    }
+
+    /* Corps du contenu */
+    .admonition > *:not(.admonition-title),
+    details > *:not(summary) {
+        margin: 0.5em 0.9em;
+    }
+    
+    /* Annuler l'espace entre bandeau et premier contenu */
+    .admonition > .admonition-title + * {
+        margin-top: 0;
+    }
+
+    details > summary + * {
+        margin-top: 0 !important;
+    }
+
+    /* ── Icônes par type ──────────────────────────────────────────── */
+    .admonition-title::before,
+    details > summary .admonition-icon {
+        font-style: normal;
+    }
+
+    /* note */
+    .admonition.note, details.note {
+        border-color: #448aff;
+    }
+    .admonition.note > .admonition-title,
+    details.note > summary {
+        background: #e3ecff;
+        color: #1a4ab5;
+    }
+    .admonition.note > .admonition-title::before,
+    details.note > summary::before {
+        content: '📝';
+    }
+
+    /* abstract / summary / tldr */
+    .admonition.abstract, details.abstract,
+    .admonition.summary,  details.summary,
+    .admonition.tldr,     details.tldr {
+        border-color: #00b0ff;
+    }
+    .admonition.abstract > .admonition-title,
+    details.abstract > summary,
+    .admonition.summary > .admonition-title,
+    details.summary > summary,
+    .admonition.tldr > .admonition-title,
+    details.tldr > summary {
+        background: #e1f5fe;
+        color: #0060a0;
+    }
+    .admonition.abstract > .admonition-title::before,
+    details.abstract > summary::before,
+    .admonition.summary > .admonition-title::before,
+    details.summary > summary::before,
+    .admonition.tldr > .admonition-title::before,
+    details.tldr > summary::before {
+        content: '📋';
+    }
+
+    /* info */
+    .admonition.info, details.info {
+        border-color: #26c6da;
+    }
+    .admonition.info > .admonition-title,
+    details.info > summary {
+        background: #e0f7fa;
+        color: #006270;
+    }
+    .admonition.info > .admonition-title::before,
+    details.info > summary::before {
+        content: 'ℹ️';
+    }
+
+    /* tip / hint / important */
+    .admonition.tip,       details.tip,
+    .admonition.hint,      details.hint,
+    .admonition.important, details.important {
+        border-color: #00bfa5;
+    }
+    .admonition.tip > .admonition-title,
+    details.tip > summary,
+    .admonition.hint > .admonition-title,
+    details.hint > summary,
+    .admonition.important > .admonition-title,
+    details.important > summary {
+        background: #e0f7f4;
+        color: #007a6a;
+    }
+    .admonition.tip > .admonition-title::before,
+    details.tip > summary::before,
+    .admonition.hint > .admonition-title::before,
+    details.hint > summary::before,
+    .admonition.important > .admonition-title::before,
+    details.important > summary::before {
+        content: '💡';
+    }
+
+    /* success / check / done */
+    .admonition.success, details.success,
+    .admonition.check,   details.check,
+    .admonition.done,    details.done {
+        border-color: #4caf50;
+    }
+    .admonition.success > .admonition-title,
+    details.success > summary,
+    .admonition.check > .admonition-title,
+    details.check > summary,
+    .admonition.done > .admonition-title,
+    details.done > summary {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .admonition.success > .admonition-title::before,
+    details.success > summary::before,
+    .admonition.check > .admonition-title::before,
+    details.check > summary::before,
+    .admonition.done > .admonition-title::before,
+    details.done > summary::before {
+        content: '✅';
+    }
+
+    /* question / help / faq */
+    .admonition.question, details.question,
+    .admonition.help,     details.help,
+    .admonition.faq,      details.faq {
+        border-color: #64dd17;
+    }
+    .admonition.question > .admonition-title,
+    details.question > summary,
+    .admonition.help > .admonition-title,
+    details.help > summary,
+    .admonition.faq > .admonition-title,
+    details.faq > summary {
+        background: #f1f8e9;
+        color: #387002;
+    }
+    .admonition.question > .admonition-title::before,
+    details.question > summary::before,
+    .admonition.help > .admonition-title::before,
+    details.help > summary::before,
+    .admonition.faq > .admonition-title::before,
+    details.faq > summary::before {
+        content: '❓';
+    }
+
+    /* warning / caution / attention */
+    .admonition.warning,   details.warning,
+    .admonition.caution,   details.caution,
+    .admonition.attention, details.attention {
+        border-color: #ff9100;
+    }
+    .admonition.warning > .admonition-title,
+    details.warning > summary,
+    .admonition.caution > .admonition-title,
+    details.caution > summary,
+    .admonition.attention > .admonition-title,
+    details.attention > summary {
+        background: #fff3e0;
+        color: #b35e00;
+    }
+    .admonition.warning > .admonition-title::before,
+    details.warning > summary::before,
+    .admonition.caution > .admonition-title::before,
+    details.caution > summary::before,
+    .admonition.attention > .admonition-title::before,
+    details.attention > summary::before {
+        content: '⚠️';
+    }
+
+    /* failure / fail / missing */
+    .admonition.failure, details.failure,
+    .admonition.fail,    details.fail,
+    .admonition.missing, details.missing {
+        border-color: #ff5252;
+    }
+    .admonition.failure > .admonition-title,
+    details.failure > summary,
+    .admonition.fail > .admonition-title,
+    details.fail > summary,
+    .admonition.missing > .admonition-title,
+    details.missing > summary {
+        background: #fde8e8;
+        color: #b00020;
+    }
+    .admonition.failure > .admonition-title::before,
+    details.failure > summary::before,
+    .admonition.fail > .admonition-title::before,
+    details.fail > summary::before,
+    .admonition.missing > .admonition-title::before,
+    details.missing > summary::before {
+        content: '❌';
+    }
+
+    /* danger / error */
+    .admonition.danger, details.danger,
+    .admonition.error,  details.error {
+        border-color: #e53935;
+    }
+    .admonition.danger > .admonition-title,
+    details.danger > summary,
+    .admonition.error > .admonition-title,
+    details.error > summary {
+        background: #fde8e8;
+        color: #a00;
+    }
+    .admonition.danger > .admonition-title::before,
+    details.danger > summary::before,
+    .admonition.error > .admonition-title::before,
+    details.error > summary::before {
+        content: '🛑';
+    }
+
+    /* bug */
+    .admonition.bug, details.bug {
+        border-color: #f50057;
+    }
+    .admonition.bug > .admonition-title,
+    details.bug > summary {
+        background: #fce4ec;
+        color: #9b0039;
+    }
+    .admonition.bug > .admonition-title::before,
+    details.bug > summary::before {
+        content: '🐛';
+    }
+
+    /* example */
+    .admonition.example, details.example {
+        border-color: #7c4dff;
+    }
+    .admonition.example > .admonition-title,
+    details.example > summary {
+        background: #ede7f6;
+        color: #4a148c;
+    }
+    .admonition.example > .admonition-title::before,
+    details.example > summary::before {
+        content: '🔬';
+    }
+
+    /* quote / cite */
+    .admonition.quote, details.quote,
+    .admonition.cite,  details.cite {
+        border-color: #9e9e9e;
+    }
+    .admonition.quote > .admonition-title,
+    details.quote > summary,
+    .admonition.cite > .admonition-title,
+    details.cite > summary {
+        background: #f5f5f5;
+        color: #424242;
+    }
+    .admonition.quote > .admonition-title::before,
+    details.quote > summary::before,
+    .admonition.cite > .admonition-title::before,
+    details.cite > summary::before {
+        content: '💬';
+    }
+    
+    .admonition.quote em, .admonition.quote i, details.quote em, 
+    details.quote i {
+        font-family: Andika, sans-serif;
+        font-style: oblique 8deg;  /* inclinaison légère, non cursive */
+    }
+
+
+    /* Correction mode sombre : titres d'admonition */
+    body.dark-mode .admonition.algo > .admonition-title {
+        color: #1a202c !important;
+    }
+
+    
+    /* ── Définitions (def) ────────────────────────────────────── */
+    .admonition.def, details.def {
+        border-color: #2b6cb0;
+        background: #ebf8ff;
+    }
+    .admonition.def > .admonition-title,
+    details.def > summary {
+        background: #bee3f8;
+        color: #1a365d;
+    }
+    .admonition.def > .admonition-title::before,
+    details.def > summary::before {
+        content: '🎓';
+    }
+
+    /* ── Propriétés (prop) ────────────────────────────────────── */
+    .admonition.prop, details.prop {
+        border-color: #276749;
+        background: #f0fff4;
+    }
+    .admonition.prop > .admonition-title,
+    details.prop > summary {
+        background: #c6f6d5;
+        color: #1c4532;
+    }
+    .admonition.prop > .admonition-title::before,
+    details.prop > summary::before {
+        content: '⚙️';
+    }
+
+    /* ── Exemples (ex) : filet droit, zéro boîte ────────────── */
+    .admonition.ex, details.ex {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        margin-left: 0;
+        padding-right: 0.8em;
+        border-right: 2px solid #a0aec0;
+    }
+    .admonition.ex > .admonition-title,
+    details.ex > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .admonition.ex > .admonition-title::before,
+    details.ex > summary::before { content: '✏️ Exemple : '; }
+
+    /* ── Remarques (rem) : filet droit pointillé, zéro boîte ── */
+    .admonition.rem, details.rem {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        position: relative;
+        padding-right: 0.8em;
+        border-right: 2px dashed #cbd5e0;
+    }
+    details.rem[open]::after { display: none; }
+    .admonition.rem > .admonition-title,
+    details.rem > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px dotted #e2e8f0;
+    }
+    .admonition.rem > .admonition-title::before,
+    details.rem > summary::before { content: '💭 Remarque : '; }
+
+    /* dark-mode ex + rem */
+    body.dark-mode .admonition.ex,
+    body.dark-mode details.ex       { border-right-color: #4a5568; }
+    body.dark-mode .admonition.ex > .admonition-title,
+    body.dark-mode details.ex > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+    body.dark-mode .admonition.rem,
+    body.dark-mode details.rem      { border-right-color: #4a5568; }
+    body.dark-mode .admonition.rem > .admonition-title,
+    body.dark-mode details.rem > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+
+    /* ── Défi (defi) ──────────────────────────────────────────── */
+    .admonition.defi, details.defi {
+        border-color: #e53e3e;
+        background: linear-gradient(
+            135deg,
+            #fff5f5 0%,
+            #fffaf0 40%,
+            #fefcbf 100%
+        );
+    }
+    .admonition.defi > .admonition-title,
+    details.defi > summary {
+        background: linear-gradient(
+            135deg,
+            #fc8181 0%,
+            #f6ad55 50%,
+            #f6e05e 100%
+        );
+        color: #7b341e;
+        font-weight: bold;
+    }
+    .admonition.defi > .admonition-title::before,
+    details.defi > summary::before {
+        content: '💪';
+    }
+
+    /* Admonitions imbriquées */
+    .admonition .admonition,
+    details details {
+        margin: 0.8em 0.4em;
+        font-size: 0.97em;
+    }
+
+    </style>
+    <!-- MathJax pour le rendu LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [["$", "$"]],
+                displayMath: [["$$", "$$"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: false, theme: "neutral" });
+  var _mermaidEnCours = false;
+  function renderMermaidVisible() {
+    if (_mermaidEnCours) return;
+    _mermaidEnCours = true;
+    var nodes = Array.from(
+      document.querySelectorAll("div.mermaid:not([data-queued])")
+    ).filter(el => el.offsetParent !== null);
+    nodes.forEach(function(el, idx) {
+      if (!el.id) el.id = "mermaid-" + Date.now() + "-" + idx;
+      el.setAttribute("data-queued", "true");
+    });
+    if (nodes.length > 0) {
+      mermaid.run({ nodes: nodes });
+    }
+    setTimeout(function() { _mermaidEnCours = false; }, 500);
+  }
+  document.addEventListener("DOMContentLoaded", renderMermaidVisible);
+  document.addEventListener("click", function(e) {
+    if (e.target.matches(".tabbed-labels > label")) {
+      setTimeout(renderMermaidVisible, 50);
+    }
+  });
+  document.addEventListener("toggle", function(e) {
+    if (window._impressionEnCours) return;     // ← ignorer pendant l’impression
+    if (e.target.tagName === "DETAILS" && e.target.open) {
+      setTimeout(renderMermaidVisible, 100);
+    }
+  }, true);
+</script>
+
+</head>
+<body>
+    <div id="controls">
+        <button id="btn-police" title="Police standard / Polices pour dys (double-clic pour annuler)" onclick="basculerPolice()">Aa</button>
+        <button id="theme-btn"  title="Thème clair / thème sombre"                                    onclick="basculerTheme()">🌓</button>
+        <button id="btn-toc"    title="Sommaire"                                                      onclick="basculerSommaire()">📑</button>
+    </div>
+    <div id="toc-overlay"></div>
+
+    <h1>Les arbres</h1>
+<h2>Idée générale et analogie</h2>
+<p>Un arbre en informatique, c’est une façon d’organiser des données « en famille » : un élément de départ (la racine), qui peut avoir des « enfants », qui eux-mêmes peuvent avoir des enfants, etc.</p>
+<p>Peupler ou explorer un arbre, c’est créer ou partir de la racine, puis créer ou suivre de proche en proche les liens qui mènent à d’autres éléments.</p>
+<p><strong>Exemples :</strong></p>
+<ul>
+<li>dans la vie courante, les humains peuvent être placés dans un arbre généalogique (il y a un ancêtre commun au départ, tout en haut ; puis des branches qui se divisent en descendants) ;</li>
+<li>les fichiers d’un ordinateur sont organisés sous forme d’une structure arborescente de dossiers et (sous-)dossiers.</li>
+</ul>
+<h2>Définition et représentation</h2>
+<div class="admonition def">
+<p class="admonition-title">Arbre (structure de données <em>hiérarchique</em>)</p>
+<p>Un arbre est :</p>
+<ul>
+<li>soit vide, que l’on représente parfois par le symbole ∅ ;</li>
+<li>soit il est constitué d’un nœud, appelé <em>racine</em> (qui « contient » une valeur), et de (sous-)arbres (qui sont eux-mêmes des arbres).</li>
+</ul>
+<p>On appelle <strong>enfants</strong> d’un nœud <strong>N</strong> les <em>racines</em> de ses sous-arbres (ce sont donc des <em>nœuds</em>, pas des arbres).
+On dit réciproquement que <strong>N</strong> est le <strong>parent</strong> de ces nœuds.</p>
+</div>
+<details class="rem">
+<summary>est-ce la seule définition ?</summary>
+<p><strong>Non</strong>. En réalité, <strong>un arbre est un <em>cas particulier</em> de graphe</strong> (voir la fiche concernée).
+Cette définition <strong>récursive</strong> est la plus naturelle pour écrire des algorithmes en Python — on la rencontre souvent lors des parcours d’arbre.</p>
+</details>
+<details class="ex">
+<summary>diverses représentations d’arbres</summary>
+<p>Les définitions des notions de <strong>taille</strong> et <strong>hauteur</strong> figurent juste après.</p>
+<p><div style="text-align:center">
+<table>
+<tr>
+<th style="text-align:center">Arbre vide</th>
+<th style="text-align:center">Arbre filiforme</th>
+<th style="text-align:center">Arbre quelconque</th>
+<th style="text-align:center"><a id="arbre_binaire_complet"></a>Arbre binaire complet</th>
+</tr>
+<tr>
+<td style="text-align:center">
+∅
+<br><br>
+<em style="font-size:80%">
+<strong>Note :</strong> le plus<br>
+souvent&nbsp;on&nbsp;ne<br>
+dessine pas<br>
+l’arbre vide</em>
+</td>
+<td style="text-align:center">
+<div class="mermaid">flowchart TD
+    classDef default fill:#f3f0f9,stroke:#7c3aed,stroke-width:1.5px,color:#2d1b5e,font-size:14px,font-family:sans-serif;
+    classDef phantom fill:#f7fafc,stroke:#f7fafc,color:#eee;
+    classDef empty fill:none,stroke:none,color:#ccc;
+    A((A))
+    A --&gt; B((B))
+    A --&gt; C((∅)):::empty
+    B --&gt; D((∅)):::phantom
+    B --&gt; E((C))
+    linkStyle 1 stroke:#9ca3af,stroke-width:1px,stroke-dasharray:4 2;
+    linkStyle 2 stroke:#f7fafc,stroke-dasharray:4 2;</div>
+</td>
+<td style="text-align:center">
+<div class="mermaid">flowchart TD
+    classDef default fill:#f3f0f9,stroke:#7c3aed,stroke-width:1.5px,color:#2d1b5e,font-size:14px,font-family:sans-serif;
+    A((A))
+    A --&gt; B((B))
+    A --&gt; C((C))
+    A --&gt; D((D))
+    B --&gt; E((E))
+    B --&gt; F((F))
+    D --&gt; G((G))
+    D --&gt; H((H))
+    D --&gt; I((&amp;thinsp;I&amp;nbsp;))
+</div>
+</td>
+<td style="text-align:center">
+<div class="mermaid">flowchart TD
+    classDef default fill:#f3f0f9,stroke:#7c3aed,stroke-width:1.5px,color:#2d1b5e,font-size:14px,font-family:sans-serif;
+    AA((A))
+    BB((B))
+    CC((C))
+    DD((D))
+    EE((E))
+    FF((F))
+    GG((G))
+    HH((H))
+    II((&amp;thinsp;I&amp;nbsp;))
+    AA --&gt; CC
+    AA --&gt; BB
+    BB --&gt; EE
+    BB --&gt; DD
+    CC --&gt; GG
+    CC --&gt; FF
+    DD --&gt; HH
+    DD --&gt; II</div>
+</td>
+</tr>
+<tr>
+<td style="text-align:center">Hauteur : 0</td>
+<td style="text-align:center">Hauteur : 3</td>
+<td style="text-align:center">Hauteur : 3</td>
+<td style="text-align:center">Hauteur : 4</td>
+</tr>
+<tr>
+<td style="text-align:center">Taille : 0</td>
+<td style="text-align:center">Taille : 3</td>
+<td style="text-align:center">Taille : 9</td>
+<td style="text-align:center">Taille : 9</td>
+</tr>
+</table>
+</div></p>
+</details>
+<details class="rem" open="open">
+<summary>précisions importantes</summary>
+<ul>
+<li>Chaque sous-arbre est <em>lui-même un arbre</em>, construit de la <em>même manière</em> — c’est ce qui rend la définition <em>récursive</em>.</li>
+<li>Tout nœud a donc <em>au moins</em> un sous-arbre : l’arbre vide. Mais il peut en avoir plus !</li>
+<li>Tout nœud a <em>au plus</em> un parent (le nœud racine n’en a pas ; tout <em>autre</em> nœud en a <strong>exactement un</strong>).</li>
+<li>Entre la racine et n’importe quel nœud, il existe <em>un seul chemin</em>, souvent appelé branche.
+    Un arbre est donc <em>dépourvu de <strong>cycle</strong></em> : on ne peut pas « sauter » d’une branche à une autre.</li>
+<li>L’ensemble des descendants d’un nœud est souvent <em>ordonné</em> (stocké dans une liste, par exemple).</li>
+</ul>
+</details>
+<div class="admonition success">
+<p class="admonition-title">Vocabulaire associé aux propriétés d’un arbre</p>
+<ul>
+<li><strong>Feuille :</strong> un nœud qui n’a pas de descendance.</li>
+<li><strong>Nœud interne :</strong> nœud qui n’est pas une feuille.</li>
+<li><strong>Taille de l’arbre :</strong> nombre de nœuds.</li>
+<li><strong>Profondeur d’un nœud :</strong> mesure de l’éloignement entre un nœud et le nœud racine.
+    C’est la longueur du chemin depuis la racine jusqu’à ce nœud (on compte le nombre de liaisons).</li>
+<li><strong>Hauteur de l’arbre :</strong> nombre de nœuds sur le chemin le plus long depuis la racine jusqu’à une feuille. <em>Par convention</em>, l’arbre vide a <code>0</code> pour hauteur.</li>
+<li><strong>Chemin :</strong> pour un nœud <strong>N</strong> donné, c’est la suite de nœuds qui mène de la racine <strong>R</strong> à ce nœud <strong>N</strong>.
+    Pour tout nœud <strong>N</strong>, il existe un <strong>unique</strong> chemin menant de la racine <strong>R</strong> à ce nœud <strong>N</strong>.</li>
+<li><strong>Longueur d’un chemin :</strong> c’est le nombre de liaisons présentes dans ce chemin.</li>
+</ul>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Danger</p>
+<p><strong>La définition de la hauteur est sujette à <em>variations</em></strong>, selon les besoins ou les habitudes.</p>
+<p><strong>L’arbre vide aura le plus souvent <code>0</code> pour hauteur</strong> : un arbre ayant <em>un seul nœud</em> aura donc une hauteur de <strong><code>1</code></strong>.</p>
+<p>On peut toutefois rencontrer des situations où un arbre ayant un seul nœud aura une hauteur nulle.
+C’est un peu comme si le premier nœud (la racine) était « au niveau de la mer », le « niveau 0 ».
+Dans cette situation, d’aucuns considèrent que l’arbre vide a une hauteur de $-1$, voire de $-\infty$.</p>
+</div>
+<details class="ex">
+<summary>hauteur d’un arbre <em>vs</em> longueur d’un chemin maximal</summary>
+<ul>
+<li><strong>On convient que la hauteur de l’arbre vide est <code>0</code>.</strong><br />
+    L’<a href="#arbre_binaire_complet">exemple ci-dessus</a> d’arbre binaire complet a pour hauteur <strong><code>4</code></strong>.
+    Le nœud <strong>H</strong> est « le plus profond » de l’arbre : le chemin menant de <strong>A</strong> à <strong>H</strong> est <strong>A → B → D → H</strong>, et sa longueur est <strong><code>3</code></strong>.
+    Dans cette situation, la hauteur d’un arbre vaut 1 de plus que la longueur du plus long chemin.</li>
+<li><strong>On convient que la hauteur d’un arbre d’un seul nœud est <code>0</code>.</strong><br />
+    Dans ce cas, la hauteur de <a href="#arbre_binaire_complet">cet arbre</a> est <strong><code>3</code></strong> : la <em>même</em> valeur que celle de la longueur du plus long chemin.</li>
+</ul>
+</details>
+<div style="color:red;font-weight:bold;font-size:120%;text-align:center">
+⚠️ <span style="text-decoration:underline">RÈGLE ABSOLUE</span> : <em>bien lire le sujet</em>, pour savoir quelle définition est choisie ⚠️
+</div>
+
+<h2>Variantes importantes</h2>
+<h3>Arbre binaire</h3>
+<p>Un <strong>arbre binaire</strong> est un arbre avec la contrainte que <strong>chaque nœud a <em>au plus</em> deux enfants</strong>.
+Les descendants (quand ils existent) sont nommés « <strong>enfant <em>gauche</em></strong> » et « <strong>enfant <em>droit</em></strong> ».</p>
+<details class="rem">
+<summary>précisions</summary>
+<ul>
+<li>Un enfant peut être absent : on parle alors de « sous-arbre gauche vide » ou « sous-arbre droit vide ».</li>
+<li>Pour abréger, on écrit souvent « SAG » pour « sous-arbre gauche » et « SAD » pour « sous-arbre droit ».</li>
+<li>On retrouve la même définition <em>récursive</em> : un arbre binaire est soit vide, soit un nœud, un (sous-)arbre binaire gauche et un (sous-)arbre binaire droit (ces sous-arbres pouvant être vides).</li>
+</ul>
+</details>
+<div class="admonition success">
+<p class="admonition-title">Encadrement de la taille en fonction de la hauteur</p>
+<p>On compte la hauteur à partir de <strong><code>0</code></strong> pour l’<em>arbre <strong>vide</strong></em> (donc un arbre à un nœud a une hauteur de <strong><code>1</code></strong>).</p>
+<p>Pour un arbre binaire $\mathcal A$ de hauteur $h$, on a :</p>
+<p>$$h \leqslant T(\mathcal A) \leqslant 2^h-1$$</p>
+</div>
+<h3>Arbre binaire de recherche</h3>
+<p>On définit un <strong>arbre binaire de recherche</strong> (souvent abrégé en <strong>ABR</strong> ou <strong>BST</strong> en anglais, pour <em><strong>B</strong>inary <strong>S</strong>earch <strong>Tree</strong></em>) en ajoutant à la définition de base d’arbre binaire deux contraintes.</p>
+<p>Pour tout nœud d’un arbre binaire de recherche : </p>
+<ul>
+<li>toutes les valeurs du <em>sous-arbre gauche</em> sont <em>inférieures</em> à la valeur du nœud ;</li>
+<li>toutes celles du <strong>sous-arbre droit</strong> sont <strong>supérieures</strong> à la valeur du nœud.</li>
+</ul>
+<details class="rem">
+<summary>doublons ou pas ?</summary>
+<p>On rencontre souvent des ABRs <em>sans doublons</em> : impossible d’y trouver plusieurs fois la <em>même</em> valeur.</p>
+</details>
+<details class="ex">
+<summary>un ABR</summary>
+<p><div style="text-align:center" id="abr">
+ <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAApAAAAGqCAYAAAC8vHQGAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAIABJREFUeJzs3Xl8FPX9P/DXe2Z3s0lIgEBAQUBEURHFtp4IFo96n/Vof9Z6tqaQQ8gBciTDJCBHSEJzoGgVrbX9Fo/aetV6VsGrrYJavBAVQQRCEkJCkj3m/fsDsIhcSTaZ3eT1fNSHbXb3M699NNl57cx85iOqCiIiar2pY7f2Np3QmYbIGFWMEOAIBfoDSNz5lEYBNiqwRgSrHNVlXp/5T+vlXnVu5iYiai9hgSQiOnhZFyEuub72aqj+UoBzAZi7HvPGiSb0hvjiBAAQaFFsr4UGW1R2GyIMwfPiyEN1vXo/Vv4MWjr5LRARtRsLJBHRQbDP+sIfCiaPFyBXFQMAIHWIgSNOMjHoBA9ShxpI7it7fW19tWLz5w6+ei+Ez/4VRvVaBwAggq8dB8XeuPq7rZcPb+68d0NE1D4skEREB5A/uuYCGFIJ1WEeD3TkeV458UIv+g8z2jTexs8crHg2iA/+EdRQCCIiq8XRDPv1lOciHJ2IqEOwQBIR7UPWRYjrWV9bAtV0MYATzvNizPU+9EjZ+5HG1tq2RbHsoQDefz4IVUBVKut79c7laW0iinYskEREezHtzIZUMxx4GsDJvQ8RvSTPLwOONQ/4urZYvyqMp4pbtG6jIwDeDpu+S+58tcfmDtkYEVEEsEASEe3BHls7OOzo8woMHz7ag4uz4+BLiMxRx31paVQ8XdKCT98MQQSfOCbOnfXPlK86dKNERG3EAklEtBv7rG19w8HgMlUcffxPvLggKw5Gxxx4/B7HAZ5f1IIVzwQBkc88GhhtLe+/qXO2TkR08Np2BTgRURdkj4QvFAg+qYqjR13oxUWTOq88AoBhAOdnxGHUhV5AdVgI3r+knQRv5yUgIjo4LJBERDuFkmvmAjjtyFNMnJce51qO89LjMOwUEwBG94urmeNaECKifeApbCIiAPljq8fBMV7q2U9wU2WC+Ht07DWPB9K8TfFAxnbdulmhMMbNWt7rVVcDERHthkcgiajbSzsJXgkbVSKQi7L9rpdHAPAnCS7M9gsAEThVPJVNRNGEBZKIur3+/pobVTBixDgPBp/QiRc9HsCQUSZGjPMAwMh+/pob3M5DRLQLCyQRdWvXXgtTFZNFgDG/8Lkd53vOvCEOYkAFmGafBY/beYiIABZIIurmjlpfewGAo44d50GvAdH3kdjzEMGxP/aIKo4IBGrPdzsPERHAAklE3ZwpeiMAjLogei8xPOG8HdkM6PUuRyEiAsACSUTdWNZFiFPgkqS+gkHHtf3ax3AojA3rqvf6WCgUxqcff4WPV30Jx2nbXS8GH28iqa+hAlxmj0T0nWcnom6H19MQUbeVvLXuVADxQ3/ogbTx63Ttlm0oyF2MD1Z+jpffqfrOYxvWVWNi2kJsq98OVSClTxLK7pmIfv17t2obYgCH/8CU9593EsK9ak8Fer/WtrRERJHBI5BE1H2pjgaAQce37aPwgxWf4eZritC7T/JeH59f+BCOPnYwnn61BE+/WoIhQw9BVcmjbdrW4BN2ZHQcnNGmAYiIIogFkoi6LTFwLACkDm3b6ev166px+x0/w9XXnfW9x7bVN+Lt1z/EdTefDxGBYQh+eesFePWFd9HY0NTqbaUeviOjQI9pU1gioghigSSibkyHAUDKgLbdOPz8S07FWef9CHtb0evz1RsAAEcdfdi3Pzvq2MEIBEJYt3ZTq7eVMnBnRgNHtiksEVEEsUASUbclDnp740S9/sivPNPQ0ISERD9Mz/+Obno8JhIS/dhSXd/q8bx+gdcnKg5adwElEVEHYIEkom5LBT28fnTIuoX++DiEQ+Hv/TwUDEOkbZv0JUBUsPcLLomIOhELJBF1Wwo42sZb6xxISkoSmpsDaGkJfPuzXf+7V0qPNo3phBUAvt9KiYg6GQskEXVbAjQEmjqmQB42pB969k7CByvWfPuz995ZDZ/PgyOOHNCmMXdm3RaZhEREbccCSUTdl0p1OCRoboh8ifR4TFx46am4q/QxrFu7CevWbsJdZY/j/EtPR1xc6+8F3tygCIcEUNn7HcuJiDoRCyQRdVsq+gkA1K532jWOaZpISo7/3s9vy7oCgw7vj+svt/DLK2wMHtofE++4tk3bqFm3M6OhH7cnKxFRJHAlGiLqtkSxCgJs/MzBoUe3fSnDkScOw99eWfC9n/vj42DN+xUK5t66Y3ttnDwDAJvW7CyQDj5s8yBERBHCI5BE1G056rwGAGvf69h5KSLSrvIIAF+u3JHREeOfkchERNQeLJBE1G353uy7QgQ1n78T1lDQ7TT7FgoCX7wTVgBbfK/3es/tPERELJBE1G1ZCkeBR5obVNb8K+R2nH367O0QmhtVAF1qKdp3wSYRUQSwQBJRtyaKBwHg3aej9xDkimd2ZBPIQy5HISICwAJJRN1c4fKUN6B464t3w9jwcfTdo3vDx2F88W4YAN4sXJ7yhtt5iIgAFkgi6uYyMub02T70tXUA8PJ9AWjH3Fe8TVSBl+7dsZJN47DnPZk5hVdJe2fjEBFFgGg0fVoSEXWStDQ7wdtDbgd0CoCtye/evM1s6XHcRTlxOP4cr9vxAADvPx/EM2UtgDgv1Z5atQbAzRC8rYrcqhLrdbfzEVH3xQJJRN2KbdtGdb1cpdD5AHoCMs+nSeX+N28YYhrGCp8fvpsr4qXXAHdP0NSud/BAZpMGWhAIS/iEO1/r+0lmrn2MKgoBXKOCFxzBpLuKrQ9cDUpE3RILJBF1G1nZ9rmOYAGAEVAsCZvIv6vY2rTr8YIzaicotKrfUAO/KI6HL8Gds8WB7Yo/5DVh8+cORGR84bLed+/+eHqOPVqAYgAnQ7FEPbCq5lvfuBKWiLolFkgi6vIm5Bb9yHCc+RCcBeBRwzSnls+f8dnenps/ZsvDULluyCgTV9t+eHydWyJDAcUjBc07b26ufyha3ueXe3ueiEhGtn21QucC6A+gsskTP/u+eZO3dWpgIuqWWCCJqMtKz5k9SDQ0A4JfAXgZDiZXllnv7O81aSfBmxpX86QA5w863sRVBX7EJXZOiQw2Kx4vat416/qlrT1TLip/Bi37e41t277qbbhJFbMABERQuHHtiPuWLr0m+qaUE1GXwQJJRF1OdradEhBMBnA7gM8FYlWUFDxysK/PG7Ux0d/D+ziA81KHGLh8mh99BnXsNZFb1jp44s5mVK91oMBzLQ3Bq4pX9m882NdPmDq3txFomYI2vmciotZggSSiLmPH0TgZr6ozATS252icPRK+UHLNPRDc6I0TPfvXPhl1gRcS4R6pDrDi2SBeuTeggYCKAg9sbkm5bfG/0aY7m7flqCsRUWuxQBJRzNttZvU8AKkClHg1eV5p6aSm9o6dP6bmVgAVUMQfOtzEj2/2Ycgos/2hAXy5IoxXlgTwzadhQNAkDjIKX0+5PxJjT8gt+pGhTjGAcQAedRR3LCq11kRibCIiFkgiimlZ2fa5YcF8AUZCscTjeAsWLpy2MZLbyP/x1qEIhcoBuQQABhxj4sQLPTj6DE+rZ2oHtis+Xh7Cu8+Edlv5Rv7mceR2641eX0QyN7Bz5jlQAsExAO72OrDKyqy6SG+HiLoXFkgiikkZ2UXHQZy5AC4G8KgqplWVWqs7cpv5Y6vHqWPMEOAcAPD6RAceZ8jg4030O8JEn8ME8T3l20k3LY2Kpq2KLesUmz4PY+17Yaz7wNFQUAUAFHjRUKOo8PVe/+zI3LZtG5vqcb0AcwD4AZnfmKy/XWJZzR25XSLqulggiSimZE2xD3OCyIfgVgjeVmBy1QJrWWdmKBhTc5yq/lIh1whwROterZ8BeFREHipclvLfDgm4DztX38kEdBqAOhHM7puE31mW5XRmDiKKfSyQRBQTdptlnAXgS4EURMMsY/v0usODRnisqHGsiA53gF4C6QUACq0zgDpV+UTF+dDrmK91xGnq1krLtft6FbkAJgF4TwzkVRRbr7gci4hiCAskEUW1Pe5zGBSB3TcJ91uWFXI7W6ybMHHW0YYZLgJwtQpeVEHOomLrPbdzEVH0Y4EkoqjElVY6z4Qc+zRjx9KIo6F4OKjeKYvLpm1wOxcRRS8WSCKKOhk5hecAOh/A8VzrufOkZxdeKqKlAA4FUGkEcWd5uVXvdi4iij4skEQUNdInzTpWjLAN4BoVvCCOMbGyNL9TJ5p0d2lp93h9SRtuVkURAENEZvVN0ipeMkBEu2OBJCLXjc+ePdBEqACCW6H4twEjr7w0/zW3c3Vn6el2D8OPXAUmQ7BWVPKjYdISEUUHFkgics3eSkplqfWo8oMpaux+2yQF/mU4Rm5FWf5yt3MRkbtYIImo0+12mrQQgAnIgtRkLbMsK+B2Ntq7rFx7hKOYh503bjdMc2r5/BmfuZ2LiNzBAklEnWa3mdV3ghM1YlJWtn2uY6AYiuOgWBI2kX9XsbXJ7VxE1LlYIImoU2RMKjodhlMM4HTeKia22bZtVNfLVbpjpnxfAUq8mjyvtHRSk9vZiKhzsEASUYfKzLWP2Xmq+hoVvGA4RnZFaf77buei9svOLosPyLYsQKdCsU0MFG1cO+K+pUuvCbudjYg6FgskEXWIzCn2AA3CguAWAO84akxeVJr/T7dzUeRlZMzpg7hAHoCJAFY7hkxZVFzwtNu5iKjjsEASUUTl5S1IbHK2ZwA6HUCNAgWLSmc+xJnVXV9G7uwhcEJFEFyvghdNNXLLS/JXup2LiCKPBZKIImK3mdU2BF6oFBvB3gvLyzNb3M5GnSsr2z7FERQDGAPgsbCDyXeVWV+4HIuIIogFkojaLT278FJAS0QwEEBF0Oufs3julK1u5yJ3ZWXb56qgTIEjwN8Loi6FBZKI2iwjr+hUdZxiAc4A8BjEk1e5YPqXbuei6GHbtqd6G27hkWmiroUFkohabcLEWUcbZrgIwNUqeFEFOYuKrffczkXRa49rYzcIZAZXHSKKXSyQRHTQ0nLtvl5FPoAJAFYoZHJVScHLbuei2LHb7Hyue04Uw1ggieiAdjt6NA1AnQhm903C7yzLctzORrEpfdKsY8UI2wCuAfCUaZrZv50/41O3cxHRwWGBJKJ9sm3b2FSP6w1grgJxgMxvTNbfLrGsZrezUdeQmWefrQ6KARwPxRKP4y1YuHDaRrdzEdH+sUAS0V5lZdvnOoJSAEcDuNvrwCors+rczkVdz25rpM8F0A9AlTZjVlWV1eB2NiLaOxZIIvqOrGz7FBXMV2AseA8/6kS2bfuqt+EmVcwCEBBBIZdGJIpOLJBEMcYeCd/XfujifyMYyXH3XEUEYeRVlVkrIrkNooORnW2nBASTAdwO4HOBWBUlBY+4nYuI/ocFkijKFZyx5WTTa1xtxsmV4aAeEg5pAgCYHtlueLE+HNBHgwHjsdnLe7Wp7HEdY4pW6TmzB4mGZkDwKwAvw8HkyjLrHbdzERELJFHUmjGm5rS4eFnkjZejhp0dF3f46V5v8iEG/L0MAEBTrYOtGxx8uTwQWP1SSzAUwsqWRkk/2CKZlmYneHtIJqBTAdSLYBZPF1I0ysy2T1LBfADjADwqhjmlonjG5y7HIurWWCCJoowtMOTsmlLDJ78+7dcJ8UeeFSdi7P81Thj4+O8tzr8e2N7shHTBzJdTZqpir3/ctm0b1fVylUKLASQDMo8zqykWZGXb5zpACQTHgBO7iFzFAkkURbIuQlxqqOaZXkM8p55vJSXGJUmrXt9U4+DZgm2NDd84L77fu/dPly7Fd44mfmcHrHjACPlmlJdP3RzRN0HUgfZ2aykujUjU+VggiaJI4Tm1fzzkeM9lPylISjTMto0RDgLPTq9vrP4s/KD1Qu904PunAB3FHYtKrTURC07UyXa7BGMagDoF8heVznyISyMSdQ4WSKIoYZ1ZOz5pgBRf8dueiV5/64487inQqHh8/NbG+qZNU7aO/NMJEPxKBS9JGFM4CYG6kj2W13xXDEyuKLZecTkWUZfHAkkUBaaMqU5KjDO/urQsuWfKkDYeetzD5o9DeHLGJmw57v73xXTyKhYUPBeRgYmi0ISJs442zHARgGtU8ILhGNkVpfnvu52LqKtigSSKAvY5NUWHnx6XPS4vMSGS4/69oL7lm5WhadYrKaWRHJcoWk3IsU8zgAUATofi4aB6pywum7bB7VxEXc0B5nYSUWcwDLl55JVxrSqPX65eh7Kp96B6Y80+n3PCT+PjPH65td0BiWLEohLrzarSmWMF8nMIRnuN4KcZOfbcrCw72e1sRF0JCySRy6aNrR5umOjVZ5jnoJ7/+cdrMef2CmReMQNrPloLf3zcPp97yEgvQkE9YvqZ1YdGKi9RtFNVrSgpeCTYcOixIsgGcLPjxWeZuYW327Z9cH9oRLRfLJBELvOocWK/Yz2OHGDezK4jjhOvLkBdzVbMqLwd5Y8XoUdy4j5fY3iAPkd4mj0h44QIxyaKeosX3xasWGDdo80YJkCVqs7ZXI/3M3MKr3E7G1Gs4zcxIpcpMDDpENO3v+es/Ww9Mq+YAcM0cPusX+Hsy8cc9PhJ/Q3PxlUY0O6gRDGqqspqADAza4r9OyeIfBX9U0auPUnCRl5FWf5yt/MRxSIegSRymQH09veU/RbIgUMOwcTZv8LgYQOxcPrvMP2WeVj23NsIhw686qC/p+EDkBKpvESxqnyeta6y1EqDGqPEQY0azmsZOfbSrMmzhrmdjSjWsEASuUyhmxq36H5X0TA9Js6+fAzKHy/CrPsmwx8fh+LcRbjl3GzU12zb7/iN1U6LQjdFNDRRDKsszf9vRal1iaE4D4KjnHD4w4xse3FW1pxUt7MRxQoWSCKXKfD1to3hwME+/4RTRyC/aiLuemoeTv/JSQiF938UsmGzExYHvI0J0R7KS60XUpPwI4H8AoLzHG/g44ycwik327bf7WxE0Y73gSRy2YzRWwZ642X1DY+k+Nu6fOG+hAKKh66tbW4JmQPmvNazNrKjE3Uduy2NOBVAvQhmbVw74r6lS6858HUiRN0Qj0ASuWzW633WG6bx1aYPQxEfe/2KEDw+4wOWR6L9W7zY2l5ZUjAPLb5hAP6oivL+g1a9lZlnn+12NqJoxAJJFAUCoaYlK/68/aBPYx+sFX/a3hBoCldFelyirqqycuqWyhLrDtM0j1dgjTp4IT3Xfj4rp2iU29mIoglPYRO5yLZtX/U2SdOwafVddXPvC61+xiHHRebuWl++HcQ/5zd8/n7v3kctXQqehiNqg6xs+xRHUAxgDIDHIJ68ygXTv3Q7F5HbWCCJXJKeXXipiJYCGACgIuXdm97zxyffe9VdvRL8PQ9wV/EDaKx28Hj61u3BhvAl9rK+L0ckMFE3lpVtn+sIFgIYCqAi6PXPWTx3yla3cxG5hQWSqJNNyLFPM4BiAKOheDio3imLy6ZtAAD7nNq5PQ8zMi6Zm5zoTWhbiWyuVzyZt7WxfpMWFr7Ue34ksxN1Z2lp93h9SRtuVkUhBB6oFKcma5llWRG//IQo2rFAEnWSzFz7GFUUArhGBS+oIGdRsfXe7s8Rgdjn1N3rT8LPL5yTnJh8aOsuU65dG8az0+q3B5rkbuuFXjmRzE9EO+TlLUhscrZnADodwAaBzKgstR5V7lCpG2GBJOpgWVlzUh1vYAaACQDeddTIW1Sa/8/9vcY6s3a84dEFI6+M94661u/1+vd/NLKlQfHuH5sCHz3bHHQCkmYv6/1wBN8CEe3F+OzZA02ECiC4FYp/GzDyykvzX3M7F1FnYIEk6iB7HKWoUaBgUenMhw72KMWMH9cM8vuMknDYufSwH3lDQ8fE9UgeYCCxrwFVYHu1g7p1YXz+WmDb+hVBr5j4M+rDd1hvp37TwW+NiHaTPmnWsWKEbQDXAHhKFZOqSq3Vbuci6kgskEQRttt1UjYEXqgUG8HeC8vLM/e7XOG+2Gds7BcW72VxSXK1qhwRDmqqAGp4sQnAp4F655FQ2Pf0nW8lbYnwWyGiVsjIKTwH0PkAjodiicfxFixcOG2j27mIOgILJFEEZWXb56qgTIEjwJmaRN2OiEhGtn21QucBSBWgxKvJ80pLJzW5nY0oklggiSIgI6/oVDjOfPBecUSEb+/xOl5VZwJoFEEhl0akroQFkqgdMnLs4QBmAbhaBS+aauSWl+SvdDsXEUWH7Gw7JSCYDOB2AGsEMrOipOARt3MRtRcLJFEbpOXafb2KXACTALynkMlVJQW8YTcR7dXEifbgkIFZEFy/88vm5PKS/HfdzkXUViyQRK2QlmYneHtIJqDTANSJYHbfJPzOsizH7WxEFP3Sc4tOFseZD8GZAB4Tw5xSUTzjc7dzEbUWCyTRQbBt29hUj+sNYK4CcYDMb0zW3y6xrGa3sxFR7Nm5NGIpgKMB3O11YJWVWXVu5yI6WCyQRAfAD3oi6gh7+2Lanlt+EXUmFkiifUjPLTrZUKdYgbHgqSYi6iC7LTowDUCdAvmtWXSAyA0skER7yMidPQROqGjXxe4II6+qzFrhdi4i6tp2Ts7LRyuWPSVyCwsk0U4ZGXP6IC6QB2AigNWOIVMWFRc87XYuIupeMnPtY1RRCOAaFbzgCCbdVWx94HYuot2xQFK3t9vM6qkA6kUwizf8JSK3ZUwqOh2GUwzgVCjuVw+sqvkW17qnqMACSd2WbdtGdb1cpdBiAMmAzOPMaiKKJrstjTgHwCEAKps88bPvmzd5m9vZqHtjgaRuaefM6gUAjoXiASPkm1FePnWz27mIiPYmLe0ery9pw82qKAIQEoHdNwn3W5YVcjsbdU8skNStZGbbJ6lgPoBxAB51FHcsKrXWuByLiOigTJg6t7cRaJmCHUsjfiGQAi6NSG5ggaRuYecyYtMh+BWAl+FgcmWZ9Y7buYiI2iI9Z/Yg0dAMCG4F8JYCeVUl1utu56LugwWSurTsbDslIJiMHd/W1whkJr+tE1FXkZFddBzEmQ/gQvCsCnUiFkjqkmzb9lVvk/GqOhOKBjFQxJnVRNRV8bpu6mwskNSl7Dazeh6AVAFKvJo8r7R0UpPb2YiIOhLvLEGdiQWSuoysbPtcx0AxFMdBsSRsIv+uYmuT27mIiDrT3u5t2zcJv7Msy3E7G3UdLJAU8zKyi44TOPNUcBGARw3TnFo+f8ZnbuciInLT7qtrCfCBA8mrKil42e1c1DWwQFLM+s4sRMHbEjbyKsryl7udi4gommTk2MMBzAJwtQpeVEHOomLrPbdzUWxjgaSYw/ugERG1XkZe0anqOMUCnAHFw+LFHRXzrK/dzkWxiQWym8obtTExIdE7xjFwhgDHqGI4FMkQ9AKgCtQJUAPRT6BYpTBf827t9ab1AQJuZd4xsxo3qWIWgIAICrkSAxFR66RnF14KaIkIBgKoMIK4s7zcqncrT9ZFiEveWneqIDwWghFQGa5AigC9AAgUdRDUi+ATBT4yHCzf3hhcVryyf6NbmYkFsltJOwne1LiaywRyA0QvhMK76zHDVPjiBXE9BKpAoFER2A44u11yLcB2hf7FUHnIeCPleUvRKRdk77YW7FwA/QBUcS1YIqK2221pxEIAJiALUpO1zLKsTjlIYAsM5/SanziG3gDIlVDE73rMMABfAuBLFIgALQ2KQJPCCcv/BhAEofKsQn+/uSXlb4v/jWBn5Kb/YYHsBrIuQlyv+i2/VshkKAYBQK8BBo74kYnBx5tIHWqgZ38Dpue7rwsFgdqvHWz6zMHa98L4/D9h3bbF2fUX/F8VmeNd3vtPHVkkM3IKzwF0PoDjoVjicbwFCxdO29hR2yMi6k7S0+0ehh+5CkyGYK2o5FeWWo9qB5UDW2CER9deB9WpKhgBAEl9DR36Q1MGn2Ci3zADvQcY8Hi/+7pwCNi60cGmNQ6++iCMNf8Jo+7rHbseEaxVR+d76vvc6+ZZsu6GBbKLs8bU/EQVlQoMNzzQ487yyokXeDDgWLPVY6kDfLkyjHefDuLTN0NQB4DiLUedCbPf6BvRZQGzcu0RjmImgGsAPGWaZvZv58/4NJLbICKiHcZnzx5oIlQAwa0K/AuCvKoF1rI9n2fbtufrJn/i4rlTtrZ2GwVjq3+kjnEXgJPFAI46zYMfXOzFkFEmxGh95q8/DGPF30P470tBdcIQAB8bqun2631ebP1o1FoskF1U1kWIS66rXSCiGSLAyHO9GPNLH5L7yoFffBCq1zp45f4WfPZ2GBCE1ZEZs9/oPU8V7fqFyppiH+YEkX+gDzEiIoq8Pb+8q2JSVam1etfj6dn2BENwbd9knHewp7ttgRE8Y8sdAimEwjzyFBPjbolDn8FtaI17Ub9Zsez3AXzwUhCqUAEqzK0peTwa2bFYILsg+4yN/ULwPgnglF79RS/O88thI1p/xPFgfPJ6CH//bYs2bVMR1SfNQODn1r8P3b6v52fmzRrqaPhHVQusR3f/+d5Oo3BmNRGRO7Ky7XPDgvkCjNy1MIOxHdvFj08BHALBksoF1i0HGidv1MZEfw/P/wFySUIy9ILb/XLU6Z4DvaxN1v03jKcXtGjdRkegeCvs8V1656s9uJxjB2GB7GLssbWDw44+r8Dwo0734OLsOMQlRuao475sq1b8dW4z1q8KA8AbIcO8eM5rPWv3fF5Wlp2sXixXICXeSBxeXJzbuNuF3EUADBGZ1TdJqzizmojIXbtNYJwHIBWCd6A4c9fjKphatcCau6/XTx27tbfHCT8N4PSBx5m4/A4/kvp07P6opVHxdEkLPn0zBAE+NQ0513qt99oO3Wg3xQLZhdhnbesbDgaXq2L4Dy724ifj49p0XUlbhILAU8XN+HhZCFC81dwYPGf3Wyykpd3j9fbY8CyAcwBAHafAMMyPFDoHwCEAKt2+lQQREX2fbdu+zdtwhypmCrB7A1RRXF9Rav1xz9dkj14XnygJ/wAw5shTTFw2zQ+vr2PL4y6OA7xwVwvefToIEawJh0KjZ7/Zj5MvI6waRB64AAAgAElEQVST6gV1tKyLEBcKBJ/ZVR7PS++88ggAHi9w2RQ/hp1qAoJT45O8D4ns+KAREfEmbbgXO8sjAIhhWgD+CMWLauLIyhLrDpZHIqLoY1lWQBWD9yiPACAquC89xx79nR8KpIck/gnAmGGnmrgyP77TyiOw4zZA56XH4QcXe6GKIwzT87esixDXaQG6CRbILqJnfW0JgJOHj/bgJ+Pd+TsxTODyO/w49GgTqrhyxhk1EwEgfdLMfChu/O6z1QT0kcpSK61qvvWNG3mJiOjA0ifNOlaw52f4t/wG8HR6tn3krh/MGF2TrdDLDz3axOVT/TA65hL8Azp3fByOOs0DAKf03Fpb7E6KrounsLuA/DNqzgPwXO9DRG+sSJCOvubxQOo3KpZkbNfm7RraPuz5O1r6frQA3//mCgBB0zSP4+15iIiiV3qufTUUvxDgKABHAns9mveZ44s7ue9rtw1Q4F1/onhurkqQ5FR390ctjYoHMpq0bqMDQ3C+vSzleVcDdSEskDEu6yLE9dxa874IjvpFcTwGdtBs69b670shPLWgGcHk9dow4vF9f4IoHq0sta7pxGhERNQOE6bO7S3BluMMYIQqjlDgJAPopTA2935rfCLUGHtpnh8jzuqY2dattW5VGH/MawKAT+qSU04ofwYtbmfqCqLj/11qs+StW9IAOWrkT7xRUx4BYMRZHrz3DxNr3xso3trDEez9xXYoVkPwKYDVEKwWwepQ2MOjj0REMWTRnDtqASzb+c+3Zpy55XKoPDFklBk15READhthYuS5Xrz/fHB4r/otvwb6VLqdqSvgEcgYlnYSvP39NavFwKC0+xNdP1Wwpw0fh/H7SU1QCb87a1nqD93OQ0REHSf/jJrlAEb/siS+TauddaRt1Yq7b2lUDWG9uTVlGG8y3n6cRBPD+vtrrlTF4JHneqOuPALAoUebO5aoUvMHBWdsOdntPERE1DF2fsaPHnKiGXXlEQCS+gpGnu0VBQ4LJtdc7naeroAFMobpzpnNJ14YPacK9jTqAu/O/ybXuxqEiIg6jIqxc3/kPdBTXbNrX2lAf+lylC6BBTJGTRlTnSTAeSkDDRw6vP3f9pqbA9hW3/idf1pagu0e98jTTcTFi6qAE2WIiLogEYhAr4pLED3y1Pbtj7bVN2LPS+sCgdD39k/Nza0/A33o0SZSBhhQkQvsszb3aFdQ4iSaWOVR80yFeoadHJlTBaWz/4SnHv/O9dDIyLsG1910XrvG9foEg443ZPXb4UOnjd5yzJ2v9/moXQMSEVFUmTq25lgN45DBJ5jwtPGG4S0tARQX/hHPPLEcL7+zCHFx/zuS+aclz2Fx+RPfef5V152FnOnXtXo7R5xsouavjjcQ9IwF8GybwhIAFsiYZSjOgACDjo9Mgdxa14C0rCvw0/837tuf+eJ8ERl78IkerH47DFNkLAAWSCKiLsQM4wwAGHRC2/ZHaz//BlNvvwsDBvXd6+Nb6xpw6VVjkZF71bc/8/radqp88Akm/v3XIAwHLJDtxAIZo8TQY1SBfkMjUyBra7ah36EpSEpOjMh4u0sdsuNKCQGOifjgRETkKgGOUQD9Dm/bVXGffLgWl1/7Y5x8+jFY/sp733u8rrYBAwenRmT/lHr4jn2mGMr9UTvxGsgYpYqjPB5oUr/IzL7eWtcA0zSw9vNvsLV2W0TG3CVl0M5fM9WjIjowERG5b+dne+/D2lYpzr3oFFx7/dlwnL3fVrCudhvi4nxY+/k3qN68te05AST3F3g8UFVwf9ROPAIZu1L8SSJGhL4CGIZgQdEf0aOHH9Wbt2LY8MMw486bMeyoge0eOyF5x7/VkJR2D0ZERFFFDUmB/u+zPtIMw8D9dz2Fx//8Cmqr65HavzfuKLwRPzx5eBvGAvxJIg21yv1RO7FAxigR9PAmRO7ej3/4y0yYnh2H9hsbmjB7xgOYkX03/vRkUbvH9vgEhkfhhCWp3YMREVF0USSKgTZPoDmQeRXp3+6fAoEQFpU8gukT78Ljz89BfIK/1eP5EgVSpx1Ud7sPnsImAPj2jxMAEnvE45YJl+LLNd+gpro+MhtQAAoue0RERK2y+/7J5/PgtqwrUb+1EZ99sr5N46kCO/5D7cECGaNUsS2wveN+/7c3NMP0mEhMim/3WMGAwgkLAESojRIRURRpUAcIBTqnk23f3gJVRa/ebTupFdiugKJ9F1MSC2QMq26qd+CE2z/Q5k11eOHZf6F+ayMA4IvPNqBiwSMY8+MTvnMvrrZqqt3xb4HUtHswIiKKMlINANtrIz9yS0sQTz722rdnwzZ+U4viwj9g+LGDMWBQaqvHc8JAU70DAFsim7T74TWQsetTJyyjtn7joPfA9n8P+NODz2Pm5HsBESQk+HHBZaciLevKCMQEtqxzAACq+klEBiQiouih+ikE2LLeQXL/tt9azhBBUnIiRP53LaWI4B9PvYX5hQ9DVeHzeXHm2SdiwV1ZMIzWX3NZ942z64zYp20OSgBYIGOX4EMosHFN+wtkar9euO//piEcCqO5OYDEHu0/bb27TZ/vKJAQfBjRgYmIyH07P9s3f+5g6A/bXiCHHjkAz72x8Ds/8/k8qFiSC1VFY0MTeiQltCvqpjXcH0UKT2HHKsUyAFj7fgTOYe9kesyIl0cA+HJlaNcWXo344ERE5K5weBmw+2d95IlIu8sjAHy5cuc+M6zcH7UTC2SM8rS0LBMgsOZfIWgUzyULNivWfeCoAl8ULe/5mdt5iIgosoreTP0UwNp17zsabI7eHZIq8Pl/wgqRlkZpWu52nljHAhmjrH8ful0VT23dqFi/KnJHISPto+UhBFtURPGI21mIiKjDPBJoUfl4eccdhWyvdf8NY+tGR6D6ZOnrhzW5nSfWsUDGMBX9PQCseCbodpR9WvHMjg8Tx5E/uByFiIg6iBOWHfujZ6O3QK54due+UpyH3E3SNbBAxrBPBvZ5CsCnq14JoXa943ac7/lyZRhffxiGAi/OfrP3e27nISKijjH7zd7vKeTl9avCEb02P1LqNig+/GdIRbDG4+37jNt5ugIWyBi2dCnCIpivCrz6+4Dbcb5DHeCVJTsymeLMdjkOERF1MFN3fNa/cn8AGmXHNF5Z0gJ1IHAw23oZ0XuYNIawQMY405vyAATvffRaCJ+/Ez3f+lY8G8Q3n4QByN/sZX1fdjsPERF1LPv1Pi8K8PSGj8NY+ffoubRqzb/D+HhZCABWfHRYyoNu5+kqWCBjnPUyQhKWCQCcZ0qbdXud+zPgtqx18Mq9ARVgu8eR293OQ0REncM0zCwIml66N6BbvnL/MGRjreLZsmYF4AgwYelSRM+RlhjHAtkFFL7RezkgcxpqVP42vxlhF7/4tTQqnpjdjEBARYEM641eX7iXhoiIOpP1Ws81ADKDLSp/vbMZLY3uHdQIB4En5zejoVYFgtmFy1PecC1MF8QC2UV4fL1nAnjpyxVhPFPW7Mr1J6GA4jG7GdU7vnUuKVqesqTzUxARkZuKlqXcB8WDm7908FhhM0KBzi+R6gDPlDXvuHG44IWPB6TYnR6ii2OB7CKslxHyhHElIO+seiWEJ+7s3D/aQNOO8vjVBzv+WD1bU37TaRsnIqKosimQ8mtVPPvV+2Esze/cI5HhIPBkcTNWvRICgPc9XuManrqOPNFoXsaEWs0+Y2O/kHj/AcWoQcebuGyKHz1SWr/gfGts+crBE7ObUb3WgRh4rqk+eFXxyv6NHbpRIiKKanmjNib6k7yPQnFB6hADV0z3I+Wwjj1u1VCj+NvcnQczIO94ELjQWt5/U4dutJviEciu5ry7a7b+8N7NoeT1TV+9H8YDGdv10zc65o4F6gArnw3iwawmrV7rIND340DNyYu+ZnkkIqLilf0bNzWnXAaR32/+0sEDmU268u/BDlt+95PXQ1iS3qRffRCGAs8FJDyO5bHj8AhkF5ORY1cCuEEd75kpb/3mUggsAOawU0yceWMc+g2NzHeGrz4I4+X7AtjwcRgQNAHI3HJK1WpDnH9AZUZlaUFxRDZEREQxL/+Mml9DtAIqcQOONXHWrT4cNsKMyNibPnfwzyUtWPPvMARwHKjlfb3PnZbC/WngXRgLZBeSmVuYqaoLVeWKqtKCJwFg+unVPzTEWATBqSLAsJNNjLrIh6E/NGF6Wjd+sEXx6ethvPtMEOv+++3lJM94DDNz58w7ZOTYtwC4VwRXVSywnojg2yMiohg2cfxdL/q/GHOyt35gEgAMGmnixIu8OGq0Ca+vdZdahUPA5/8JYcXfg1jzdhiqgBNfU9M47KXaJuDYxYtvi54bUXZRLJBdRGZu4fmq+hSAnMoSq3z3x2yBETyj5hpRTAUwCgDik0SHnGjK4BNM9DvcQMogA/HJ3/0DbqhR1Kx3sGmNgy/fDWHte44GmnXXk141BLPsZSnPfy9Ltl2qgt8YinHlpdbbHfOOiYgoVmTmFF6l0KVwjDG9305PAjAdwJkAEBcvOuh4Q4b8wIN+RxhIGWh879r9pnpFzVcONn3hYO17YXy5IqxN277dH61Uxey6Hy55G3ENH0ClkGfBOh4LZBeQlWuPcBSvA3ikssT69b6eJwKZPrpurKhzAwz8FIreez7Hn7DjV6KlSb//dVCwAYqlYjgPFb7W9z/72o5t28bmejwuwCniwSnl86x1bX1vREQU29LS7ARvD6wC8ExliTVh18+nn179Q8MwbgBwLYBD93xdXLyoCNC8fa/7o1o4eFxgPFT0Rq9XVaEAkJlj5ypghx0cd1eZ9UWHvSligYx1abl2X6/iTQE+65uMiy3LOqgZM7bACJxWfaIYMkaAYxRypEBSAKeXQMIK2QboRgFWq8qqsEdfu/PVlFUHmys93e4hfixTwEkwEscWF+dyYg0RUTeUkWOXAPiF44s7dtGcO2r39pxpZ9aM8DhyJlSPVeBIQPoLNEmhJmDUKbRGoKsV+EgdXeZ7s++KvV3jaNu2Z/M2/EsVX1SVWFd2+JvrxlggY9jNtu1P3IaXoOjldTC6rMyqczvT7jKn2AM0iLcEWLlx3YjLly69hvfhIiLqRjKzi45Xcf4jwC0VJdYfOmObWdn2KY7gDQGurCix/tYZ2+yOeBufGCUikliP3wEYrorLoq08AkDFPOtrKC5Xwbh+g1bNdjsPERF1Htu2DRXnbgBvVJbOfLiztrvz2vv7FahIT7d7dNZ2uxsWyBiVkT3TBnCN4xhXVZVaq93Osy+VZdY7ArkRQF56TmGa23mIiKhzVG/DrwCcpI75G+3k050+xRQAfvFjRmdutzthgYxBGdn2tQpMF+DWRaX5/3Q7z4FUlBQ8BkG+QCsycgrPcTsPERF1rIyMOX1UMRuC+VVlMz7s7O2Xllo1CkwBkJOVUzSqs7ffHbBAxpj0HHs0BA9CMKuzrieJhMoF1p0CPADo0owce7jbeYiIqAP5AyUAGuMlca5bERaVznwQwGsOnEoR6dg1fbshFsgYMn6SfbgAfwHwZFXJzJlu52mtQMOh6QBWAng2Ldfu63YeIiKKvKzsorFQ3OAYku7mHThUVQ1BBoBTMybZN7mVo6tigYwRt06Zn2Qa+BuAtcEG3NTZ15NEwuLFtwXR4rtGFWGP4vGsrIo4tzMREVHk2Lbtc3ZMnHl0UXHB027nKV9grRJFiRpanJU1J9XtPF0JC2QMuPbaR8z4UNMfASR7wt5LFi+2trudqa0qK6duUce8VICRjrfmbrfzEBFR5GyulxwAg8LqmeR2ll28SC6Eoj7sDcxxO0tXwgIZA/oNWvVbAD92DFy2cOG0jW7naa9FC2d87KhxJYDrMrIL89zOQ0RE7Tdxoj0Y0OkACu4qnb7e7Ty7lJZOahKRdAFuycyzx7mdp6tggYxymbmFtwP4jar8YlGx9Z7beSJl5+zx8RCdm5FdyNUCiIhiXMiDSgBrUpNR6XaWPVUsKHhWgb+qg8q0tHu8bufpClggo1h6tn2Bqi4QkUlVpQVPup0n0ipLrPsBLITow1nZ9ilu5yEiorZJz7V/CsXFcIy0g11St/N5sgAM8SZ+M9HtJF0BC2SUysq1R4jg/wA8ULGgoMLtPB0lNRl5AP6hgifSc2YPcjsPERG1TlqanSCKEhXcU1mW/4bbefalqmT6VwLYEJ2ZmTdrqNt5Yh0LZBRKn2wf4iieAfBmajLGu52nI1mW5WgzrlfBRiD017y8BYluZyIiooPnTUIhgB7S7Iv6VV/6JmMhBJ+oEy5zO0usY4GMMjfbth9h/AXAdq+Dn0fvqYDIqaqyGsTExaJIbQ43/vnaax8x3c5EREQHNj7PHglFFkSyKyunbnE7z4FYlhUyHKQBuDQzx77M7TyxjAUyioiIJNbjPgGONEzz0rIyq87tTJ2lYp71NRSXq2Bc6qBVd7qdh4iI9k9ExHSwGMAbVTG0Mlp5qfU2gPsVqEhPt3u4nSdWsUBGkfScmYUAfqrA5eXzZ3zmdp7OVllmvaOCGwTITc8pTHM7DxER7duEbPtXAE5Sx/xNrC1u4VNMAeAXP6L+tHu0YoGMEpk5hT+DYpoAv64qsV53O49bqhZYj0OQL9CKjJzCc9zOQ0RE35eRMaePQO9UoLiqbMaHbudprdJSq0aBKQBysnKKRrmdJxaxQEaBzElFZyj0QQGKKmLoNEBHqVxg3SnAA4Auzcixh7udh4iI9hAXWACgMcFIjNnVXRaVznwQwGsOnEoREbfzxBoWSJeNn2QfrobzOIC/VZbOtN3OEy0CDYemA1gJ4FmuX0pEFD3Sc+0xAG4EkFFcnNvodp62UlU1BBkATknPnnmz23liDQuki7Ky7GSPgScBrA024KZYu4akIy1efFvQp7haFeGwN/BYVlZFnNuZiIi6O9u2PeKgCorHKkusp9zO017lC6xVoigFUMyDFa3DAumSa699xFQP/qhAD0/Ye8nixdZ2tzNFm9JSq0Yd81IBRjremrvdzkNE1N1t2oZcCIYaXkxyO0ukeJFcCKAu7A3E7Ol4N7BAuqT/4FXlKjhT1Lhs4cJpG93OE60WLZzxMQRXALguM9ee7HYeIqLuauJEe7AoZqiIVT7PWud2nkgpLZ3UpIp0AW7JzLPHuZ0nVrBAuiAjx56oijQA11WU5r/vdp5oV7nAehXAeFXMycguvNLtPERE3VHIg0oAa0LbDql0O0ukVZVafwfwhDqoTEu7x+t2nljAAtnJMnMLLwSwQBUTu8L1I52lssS6H8BCiD6clW2f4nYeIqLuJDPXvgKKi+EYaYsX3xZ0O09HUHhuBzDEm/jNRLezxAIWyE6UlWuPUNU/AVhUVWp1uW9wHS01GXkA/qGCJ9JzZg9yOw8RUXeQlmYnqKIMwL2VZflvuJ2no1SVTP9KABuiMzPzZg11O0+0Y4HsJOmT7UMcxbMA3kxNRrbbeWKRZVlOsAHXKbAOCP01L29BotuZiIi6Ok8P2BAkBaXrr9rSNxkLIfjECYer3M4S7VggO0F2dlk8wvgLgAavg59blhVyO1OsWrzY2i4eXCGK1OZw45+vvfYR0+1MRERd1fg8e6QAt6sie/ECq9rtPB3NsqyQ4SBNBOdn5tiXuZ0nmrFAdjARkaDU3yfAkYZpXlZWZtW5nSnWVcyzvobichWMSx206k638xARdUUiIh4HlQq8uah05kNu5+ks5aXW2wLcp0BFerrdw+080YoFsoNNyJ5ZpMCVcIzLyufP+MztPF1FZZn1jgpuECA3Pacwze08RERdTXrOzFsVON0U/Ka7LXThVdwBwA8/8t3OEq2km/1OtJl91hf+UKjHaRKWwQ6MASIaVJFvDHFWf3Ron38vXYrwnq/JzCn8mUL/qCI3VC0oeNiN3F1dRk7hVEBtQC6sLCl40e08RETR7NprYR6zvuYUQIYptD8gHoXzNWB+Wd+z11vlz6AFADIy5vRBXOAjKO6pLLWmu53bDek59k0C3GvAOKm8JH+l23miDQvkAcwYWzvGn4jpwWb9ca/DzEDPQaaZ3M/wh8PQxo3hppovw2jY7BimV54KbHMKi97o8yGwY61QUbwAxZ2VpVah2++jK8vIthdDcDWA0ytLrE/czkNEFG2mn1E7Mj5BCkIh58IeqaaTcriBHv3NeBFIw2anqW5t2KlfH/YZPnm5ZbsW1Z1WcRsUZ8cbicfF8nrX7SEikp4980UA3qrSmWd2t6OwB8ICuQ/22NrBEie/M316+sk3JiQOGe0Tf7Ls9bmN1Q5WvxwIr/xzU8ARPLZ14DPzAymrX4DglaqSmT/nL13HSku7x+vtseE5AEOMoO+08vKpm93OREQUDaaO3drb73MqDQOXn/jzeP+ws3xmYp+9X73WvFXxxesB/dfvG1ta4tf6G3u+e1Pp/Tc/2MmRo8qEibOONszwSgATdt6PmHZigdyLGaNrRnv98vSJP/P3OP6qeI95kPekDzQq3vzd9pY1r9cYtUOf+NCID51WWjqpqWPTEgBkZ9spLcCbEHxjBlN+Ul6e2eJ2JiIiN+WPqT7aG2e+eNQ5cakn3xzv8ybs/SDInsIBxYo/Nznv/6WlLtjkXDjr9T5vd3DUqJaZbc9RwW1G0HcMD1D8DyfR7GHG2NoxvgT5x7nTe/Q68ecHXx4BwJcoOPP2xLjTbuzn6f3xLw5P/M8th3RcUtpdaalVo455qQAjHW/N3W7nISJy07Sx1cPNOPPt036TcOjo9ISDLo8AYPoEP/plgnH2lB4pvnh5acaYmtM6MGrU8yK5EEBd2BuY43aWaMICuZsZZ9QN8Xrx5Nl39Eg87KS2L4V5zEVxcsrNCYler/PyHSfV9oxgRNqPRQtnfAzBFQCuy8y1J7udh4jIDfZpNcn+OPMfp96a0OPo8+LavJ8ffKoX505PSvTFyTP2aTWHRTJjLCktndSkinQBbsnMs8e5nSdasEDuJi5RH/7BL+KTBp3c/nXUR1zmN4ec7uuf0Bv8xtKJKhdYrwIYr4q5mTmFP3M7DxFRZ5MkLDzix75DRlzc9vK4y8AfeXH8Vf4ks6exJBLZYlVVqfV3AE+og8q0tHvaXxK6ABbInfLHVo/z+uXE46/wR2xlk9N+neDXsN6Uf8bWYZEakw6sssS6H4JShS7JyrZPcTsPEVFnmTa2ejgc/PyUmxPiIjXmidfGe0yfnmaNqT4rUmPGIoXndgBDfEkbJrmdJRqwQO4Ul2jOPuWWhETD07rXrVuzAcHA3lcm9PcUjLwi3uuJc7j2dSdLTcJkAP9QwRPpObMHuZ2HiKgzxPmNKSdcHe+LSzr4ax4BoHpjDerrGvb6mOEFTroxIdGb6Onya2HvT1XJ9K9UZaYqrMy8WUPdzuM2FkgAU8ZUJ4Vb8KPBpx38Uelv1m1G1cwlyLhyOpqb9j3h94hxPo+YuCYSOengWZblBBtwnQLrgNBfuRwVEXV1IhA4cuURP/Yd9Jm0uuqteLB0KdIunIKN6/c9wfjw0T4JBZzReaM2JkYkbIzq11N/C8EnTjhc5XYWt7FAAvCqnN13uNnsjT/wN7Z1azZgweS7kXbRZHy08jNMnP1rJCYl7PP5KUNMmF7ETxtbPTySmenAFi+2tosHV4giVfz487XXPhKxyxOIiKJN/um1I+MSxdNz4IE/6qo31uDu2Q/hlp9k47Xn3sYtuT/DkCP3PU/GlyjoM9TT4k/0jo1k5lhjWVbIcJAmgvMzc+zL3M7jJhZIAKJyeMpQj39/z6mv3YYFk+9G+uVTUbOpFgVVk1D+eBHGXXI6DGP/xTN5gBkyHePwSGamg1Mxz/oaissB/Ljf4FWc0EREXZZj4vCeAw1nf88JtARx9+yHcNsFefjwnU8wcdavsfjpebj4unPhi9v/Wbheg02vGHJ4BCPHpPJS620B7lOgojuf3WKBBGDEYVBiX2O/FxxvrdmGd9/4AB6vB4cPH4TUQ/tA5OCuMenRz/AIdEBEwlKrVZZZ76jgBihyMrPt37idh4ioIxgODk3st/+7F7c0B/D2y+8iHArj8KMH45BBqTA9B3dypkd/I94QHRiRsDHOq7gDgB9+5LudxS0skAAMhQPsf0meQcMGYMkLpbht2vVY+dYqpF8+DVNvnIPXnn0LjnOA1XwUcARc8sdFVQusx1UwXQXlGTmF57idh4go0vQA+zEASOqZiHv/Xozc4glY/8UG5Py/Qtx+dQGee/QVBFqCB9oAlPsyADsXrwCmCJCdlVM0yu08bmCBBBAM6rqGjXrApe98cT6cf/U4VP31Tsx7aDoSevhRnHcXGrdt3+/rGjY5IQljfcQCU5tULbDmQrEE0KUTJs462u08REQRpbKhYWP4AC0Q+P/s3Xd4FVX6B/DvO3NLeqWIdEE6goAIobtW7Chxf+7aS4SQKAFESrhcQhGBoJCgsZdd1wUbYAEbPViw0UW6dMhNz80tM+/vjyQuUgJJbjI3yft5nn2e9ZYz3+iczJtz5pxRTSoG3Ngbc9+dgvmL7Wh1eTO8mPI2Duw+VO73Ck7oTtao/A/VI4tSp74FYJ0OPY0udkqyDpECEgAR73cc8Lor8p1OPdohOX000j6egYDA8rfbyjuimcH6gSqFFD7hKWwyCoxfFFX7LDFxVkOj8wghhK/ohP05R/QKLRZs27kVRs96HK+smIPGTcv/lZh9QPMQs1zLSjEz65o6AsBV8UlTHzI6T02TAhKAyczfZP2uWT3Oio/Mt2jbFGbL+TePdOzToHm4IOXbhr9XJaPwjYyMxz0WYDgAr2Z2f5CYuNBnm+0KIYSRZmZGbvMUsjv3kFbh7zZsEo2wiPOvB3EXMhz7vVbF7VpXlYx1zaLnJ/8GIBXAnPo2KCEFJADbqoYFqgXf78+s0CDkRdmzxu1hpsU+b1hUWmqqzaGo6lACOupmx0tG5xFCCF9gBoPowz1rzvN0iyrYt8HNJquy3rapSfn3bNVDFg5LAZCjm93PGp2lJkkBWZfJ/VYAACAASURBVKq4gCZ//1pRkX7Bu0cq0GaOju3LnB5PMc3zXavCFxY8N3kPCHcBuHfUmGnjjc4jhBC+4PXQzC0fFruL83y31kVzMza9UVTkzuWpPmu0DklNHe1kRjyAhxLG2QcbnaemSAFZavqGiLVeDzZt/qDYZ3+5ZWY4iwF6bfqGCLlnxA+lzbWtJaYnAJ6VMGbaPUbnEUKIqkpZE76PQe9+/1pRsa/a/GVxsUfzYv20jZEbfNVmXZOealsB4GPWkRYX9/LFP9auFpMC8jRcpP3fL4udeQe/q/ow5Nalxdof37sP559yT/BBNFFNFqZOeYOBeQx+IzHJ3tvoPEIIUVVFxd6kfevdR3d+5qrygMgfP3p4y4fF+a4C/RFfZKvLGKYnAbS0hB4dbXSWmiAF5Gls6xsc8Tj51lWz85xVKSK3LyvWNr3pzHM76W9zfm1c6MOIoho0CsN4BlYy4eP4MTOaG51HCCGqYvb6Bvkep3Ldt68WFe743FXuk2nKsz/Tzd9Mzy/SivUbp2dGy1Z0F5A+b9IfzDSVGbaEcdNbG52nukkBeYaTMQt3Odp84PhqTrbnp3ecXq/74u8jKc5jrJ5XWPzDW84DXk3pKVPXtYPNZtOtHHYvA4eIvMvq86OphBB1Q8qG8D1went9/2rRoTUv5Gvuwou/lnldjB/edHpWzy3M8nr0QdM2RP9QjVHrlEbh/AIIu3RNSzc6S3UjvvDG9fXGQ3Z7QHA+vgEjIvi3G+4KcrWfq6oY2Ov+oODW/cwUEHHuejv/uI49q1zar0ucHlKVd3W350nbqoYFNRxfVFHCePul7MF3IGw+8Uen2xYvHl7xvTCEEMKPJD7+yqDgnM6rArPbu7sPD1bbDLGYQhqd+1rmdOjYn+nmTf92FrOGr/Rs7+O27xseq+HItV5ikr23TtgIpmFpqVOWGp2nukgBWYqIKD5p6jsg3Mg6+qSn2nYDwOT+jj7WYJqku/hvIU1Ud2RzhYIbqYGsgfOPacWOAxqcuQxFxVJPnjdF9nus3UaNtveAgrUMvJg+zzbO6DxCCFFZdrtdOZGHDQqQF7px1JOBwUqy7sWtQdHEES1UhDZWA4igFJ7QirIP6Zx/TDOrAfSlq0CbPn19g01G56/NEsbYX2bgRi5Gp/R0W50cUJICstSosXY7GM/orFy/KDV5zZnv27vA4onM7q3oaKWDG4GhQ8FRQN9j3tDgJxuj0veZCP8SP9Y+jBhLiBG/MNUm+0QKIWqlUWOmxQM8T9fUbqUbXsNOULSYrJ6A0kZnvgQEBUTHofO+k+6oHzI2wYeb2dVfSUn2KDdhBwNvps+z1cmt4qSABDAqyR4Lwn9A9GDa3CnvGJ1HGC9+rP0ZYkwD6Ka0eVO+NjqPEEJUxFNPzWzsVT07wZiflmqbZnSe+mhU0rQHQPyqAqXXgnnJvxqdx9fq/SKa+DH2GBDeAmG6FI+iTPpc27NgvAHwh6OSUjobnUcIISpCUz3zmXGyMBzPGZ2lvkqfb3sbjLU69DQiIqPz+Fq9LiBHjLa3IuAjAMvT502danQe4V88hU1GgbEJpC+vb884FULUXiOTUgYx8HcVGPmGzeazDcVFxTAzgzACwFXxSVMfMjqPr9XbAvKR8c+FqgqWATjoKcCDLHP54gwZGY97LMBwAB7N7P4gMXGh1ehMQghRHrvdblFIfwnAfxak2r4yOk99lzbPtgtAKoA5dW0gol4WkLGxS9RAr/NdAGEmzXxLRoZNHg4vzik11eZQVHUoAR11iyPD6DxCCFGek7l4BsClZILsIuEnLByWAiBHN7ufNTqLL9XLArJR8+0vABikK7jt+ecnHjc6j/BvC56bvAeEu8D4v/ix9meMziOEEOcSn2RvC8IEgCYunG07YnQeUSI1dbSTGfEAHkoYZx9sdB5fqXcFZMLYaU8CeIKZ/rFojm2z0XlE7ZA217aWmJ4gxsxRSfa/G51HCCHORIQXCNh24o+Osv2Yn0lPta0gxkesIy0u7mWz0Xl8oV4VkPFJ9huZeS4RjU5PnbLc6DyidlmYOuUNBuaB8PqocSlXG51HCCHKJIyZdg+AG1lR4uUpWv6JzHgSQEtL6NHRRmfxhXpTQCaOtXciwnsA3lw4d8pCo/OI2qlRGMYzsJJ0/aP4MTOaG51HCCEeGf9cKIPnAUhPm5P8ndF5xLktmG07xExTmWFLGDe9tdF5qqpeFJBxY+0NdMZyAN82DMMIo/OI2stms+lWDruXgUNE3mXx8fYQozMJIeq3QK9zOgDVrGOK0VlE+RqF8wsg7NI1Ld3oLFVV5wvIh+z2ADOwDIDLrOPvNpvNa3QmUbulpo52kgl3QEcDCsB/Y2OXqEZnEkLUTyPH2a8AMJJAT82fb8sxOo8on81m8yo64ohww6ikabcbnacq6nQBSUQUnIfXwLicGbdJ5xK+snC27YhCym0ABjVsvr1Obc0ghKgd7Ha7QjoyAKxaOG/Kf43OIy7OglTb9wS8BuKFtXkWq04XkPFjpk4DMIyB29NTbbuNziPqlgXzkn9mwv0EJCUk2Z8wOo8Qon45kYsnCLhS19QEo7OIijEzngFgRQCSjc5SWXW2gByVZI8FYyIBj6XPs2UanUfUTelzbR8CNJEJCxKT7NcanUcIUT889dTMxkSYzqBZi56f/JvReUTFpKbaHGB6moCkxDEp3YzOUxl1soBMGJ3SD4S3CUhZOM/2L6PziLotbd6U2WC8oRM+GJWU0tnoPEKIus+relIBZBWF8Wyjs4jKSZ9vexuMtTr0dCIio/NUVJ0rIEeMtrdiRf8QwLK01Kl2o/OI+sFT2GQUGJtA+vK69rxTIYR/GZmUMgjA/xFR4hs2W7HReUTlMDODMAJAr1Gj7Q8bnaei6lQBmZhoDzMpWA7goKcADzIzG51J1A8ZGY97LMBwAB7d7P4wMXGh1ehMQoi6x263WxTSXyTgvYVzp3xudB5RNWnzbLsApDLxc7Vt8KHOFJCxsUtUNuFdBkJNmvmWjAxbkdGZRP2Smmpz6IybAHTQLY4Mo/MIIeqeE3k0HkBTmDDW6CzCNywclgIgRze7a9WOHnWmgGzcYvsCJgzUFdz2/PMTjxudR9RPi1Jte0G4C4z/ix9rf8boPEKIuiPx6eltCDyBGZMWzrYdMTqP8I3U1NFOZsQDeChhnH2w0XkuVp0oIEeNsT/FjDgA9y6aY9tsdB5Rv6XNta0lpieIMXNUkv3vRucRQtQN7NVeIGD7yUOdXjQ6i/Ct9FTbCmJ8xDrS4uJeNhud52LU+gIyPsl+I4C5zHgqbZ7tE6PzCAEAC1OnvAHCXBBeHzUu5Wqj8wghardRSfZYJtzEihK/ePFwzeg8wvfIjCcBtLSEHh1tdJaLUasLyMSx9k5EeA/AovRUW5rReYQ4XcNQPMPAStL1j+LHzGhudB4hRO30yPjnQkFIJWBR2pzk74zOI6rHgtm2Q8w0lRm2hHHTWxud50JqbQEZ/7T9Ep3xOYBvG4Yhyeg8QpzJZrPpVg67l4E/iLzLavMjq4QQxgnwOFMAqCa99j61RFycRuH8AgO/6ZqWbnSWC6mVBWRS0vxAaPgIQIFZx99tNpvX6ExCnEtq6minRzffAR0NYMXi2NglqtGZhBC1x8hx9iuIEA/G6PnzbTlG5xHVy2azeUFKHBFuGJU07Xaj85Sn1hWQREQeynuNgLaKqt4mHUr4u4z5E48qpNxGhIGNWmyXp0YIIc5rxGh7q7L/b7fbFYXxEoBVaam29wwLJWpU+tzkH8B4FcQLT5+5Ov3c8AdU2/bajh9jn07AGOjKNWnzkzcanUeIizVy3LSbFZ2XApSQNm+KrKIUQpxl1Bj7bgA7FBNG6F66FeD5uqZ2k+dd1y8jJzwbqbhdO0F4K5CC7U69MBnAKE9Bk8iMjMc9RucD/HwE8pHxz4We/s8JY6bdQ8AEJnpUikdR2yyaM+VTgCYB/EJikv3a098781wXQtQ/cc/MDgdwGYBb2IttAM8FY7YUj/XPolnPZIPpadYpqUgv3A1gPIBgU9DRzkZnK+O3BWTCePulgV7ntpFjU3oCQMLolH4MfgsMe/rcKf82Op8QlZE2b8psAK/rhA9GJaV0BoD4sfb+gV7nL0lJ8wMNjieEMJDJ4+oBgACAgTAAQSDcnphk721sMlHTRibZLwNxLBGrBFxS9jop6GFkrtP5bQEJL+4F0FxhfXVCUsrjrOgfAliWPn9qitHRhKgKT0GTBAA/gPTlCWOnPUmMrwFc5qH8W4zOJoQwEKH7OV7tphMyE8bYp9Z0HGGMhKRpjyiErQCGnvkeAVcaEOmcTFVtwD4EJs3tuEpn9AOhPQHtAIQxEEZgBpQcBjuIaBcxtmvA2pmZkduYUe7Nl0z4R+knQpj0l8A47CnEg1zbbtoU4gwZGY97Ro2aeA8s1t8Y/HzZ6wz+B4Al5X03NhZqh8NZPZioPzM6EFM7kB7OoHAAIFAOwDnMvIsI23Wo6yyZEZttDL2afywh6i07QXHH5FyhQBsAoCOD2hEogsGRAEDgXLCSy8S7iLCTmNfvbBr90+LF+MuG4MTc85wHIGwhRX2n+n8S4Q/cCi+1MGIZuP7M9xhnj0ASgZL7ZncBYYAOvTMRtQNT5P/OP+QByGNgFxi/KYQNqiXqB9sqVGkHm0otorETFL2v4zqd+D4Q3QFG8F8aVYCAwJKmi4uYzjoo4QQz/ZcU7a1p6xr8eOb7iWPtnXTGtnMc+lVPQZOR/nIDqRCVMW7c3OAivfBfBNxxxlseuCxN0tImZJ3+IhFocv9Tg1hXHiDgTgDhZ7yPgCBiAHAWnrO/ORhYwjrenp4Zlenrn0eI+mpyjCOGFNxPwHBmRJ35fkAwMaHkOniOS20uAx+Ror81fX2DNczgUWPs2wF0PP1DDPzLW4C4jAxbUbX9IMLvEBHFJ9mfBngm/jpbXHTij05hixcP16b0y7pKZ+V+UnAPmBue2UZAEDERUOxk4jOGEIhQwMwfA/SOKTPqq8oMMlSogCwZbcz6J4OeAdAeAEKiFG51pUotuipo0EpBVFMF1uC/XsOKchlZf+g4sVfHwc0aDv6i8WmF5TqFMcOeGbWy7PMJSfZZTHjmXBmY8fnJQ51ulUc5idpo3Li5wU69cC3O8VckABBjxMJU20tAyR9qWkx2LBNPAOMKAAgKV7hVD4VadFHR6DIFkU0VBIT8tb858xiOQ6X9bYuG/T9rXFzwZ3/7gcEzZmRGL7vQLIAQ4mxEoEkxWbcRaCKA3gAQEEKl10EVjVoriGquIDDsr/2yuICRfbi0X27VsP8nnYty9ZIPETaz6kzN6fnaayAu2yvWRUTjF86d8kJN/nzCv5Tu3vEOgMiy10J+v/UJc1arfwLoD5QUii26q9TiChWN2yiIaqYgKPyv55+rkOE4rOPUfh0Ht+jY/5PGBdkl5x8BO8E8S7VGv1uRUcmLLiAnD8juT8zpYFxBCtC+nwndbjSjZTcVVME7KT1uxu6NGn7+1IM/tv5ZB34GqInTMyP2xidN3Qug1ZnfY8JXOmH0i3NsWyt2RCH8x8ixKT1V1ucxMOgcb69Pm2cbMKnvqR6KorwIoDcR0OYqFd1vsqB1LxVKBbci1zzAnh+8+OUzD/b9VNrfmFZrJo6fuTZqe1V/HiHqi4kDHZ1UL6WDeDAAtLpSxZU3m9HmKhNUc8Xa0jVg348afvncgz3fe8EMaCHHUdh6FbTgk3/oQOyiebZvq+HHELXMU0/ZW3hVvK84w68KOjAY5pwWAIDmXUvOv8v7qDBZzpp8KpeuAwd+0fDrCg92ZXpROkL5CwEjp22Iuqhdbi5YQJaOOs5g0DgA1GGACQPutyCqqW/W3xzarmHVq24c2akBBKcn7ODCgo5Lnz7jYz8xaGz6vCmrfHJQIfxAYpL9Wp3wPID/bcvAxGG/PDBfdYU+CUBtc7WKQQ9Y0bCVb/rb0d81rH7NjYObNYDggY5x0zdGLZDRSCHOjwg0ua8jEQrmgGFucYWKwQ9b0KSdbx4sdXK/jjVvurDnew0AM5tcs81rL50k9y6LMskDjsUD5hegk9q0s4ohD1nQtJNvzr+sP3Sse9uN3zZ4AUAH02yTNXLKhUYjyy0g7TF5UV7yLgXQPzSa+KbRAdS6h++fxMY6sHmlB99kuNntZnI12o6i1qsA0g8TYdrxg51ekylrURfFxb1stoQefYgZKaSbGwXvugnmnJYICie+IcFK7WKqvM7tnLat8uLLdBe7Sm4led9kybvPtqpVcbUcTIhazD5kf4DmCXubGcOtQeDrRgZQpyEmUMUGfC7K7xu9WLHAzUW5OjGw0kP68NnrG+T7/kiitojrBXMji+MVEB4wW4mvfcJCXa83V8v5t3eThhUvuDg/SyeA13gV052z1oVnn+/z5y0gJ8dkNVVAXzCh02W9VNwyNuCsezp8Leugjo9nFOPUHzr0oFN7HE22xbz49p0nqvWgQviBpNjVbQNOtV6nukIvadZZxe0TAhASVb39Lfc44+OZxTj2uwaA15g0us32bVRetR5UiFpkfP9ToWZWlxJ4SOO2Ku6cFIDwxtXbLwscjGXPFpfd3rVJUy1DZ64NOVmtBxV+yd7raJDHYn2fCDc1bKXgjokBiGpWvbsvFuUyPplTXHa701YT6TfY1jc4cq7PnrOAnHh1frRq8qwD0LHL38y46Slrhe+7qixXIeP9qcU4tE0DAZ+qlqg7qrrUXAh/Nr7/qVALK98A6HV5HxNue8Za4ftZKstTXFJE7t1UWkRa8m+UkUghAHsXWDzhjk8IuK5lNxXDpgTAElgz/VLzAJ/OK8aOtV6AsNlkVgbZVkXk1MjBhV+I6wVzI6vjYwBDL+2g4u6p1T+IV0bXgZULXdi80gNibFdhGmDLDHOc+bmzStnEobCqJs8nADpecYMZQ5NqrngEAGswIXZ6AJp2VsHAzV63Y1HNHV2ImhUbC9XCyvsAerXvb8IdkwNqrHgEAHMAYdiUQFzWSwVAgzRP2NtEqLkAQvghIpA3zPEOAde17qFi+LTAGiseAUA1A7c+HYCOA00A4wqPW18cG4savBILozWyOjIADG3WWcXfn6254hEAFAW4MdGKrtebwYROXsW7LK4XzlomdlYBGZHreA5An7a9VdyQYK2WefYLMVsJd9sCEF0yVPvY5H5Z99V8CiGqX/vDjskArm/eVcUt4wKgGPBsKNUE3DExAI3bqmDG8EkxWQk1n0II/zE5JmsUCLGN26q4c3JAhVdY+wIpwM1jAtCiqwoCrmt/2JFc8ymEEZL7OR4C8FCD5grunhoAcw0OKpQhAm5MsKLNVSrA6NfY6nj2rM+cPoWd3M9xPYAVEY0ID6YH0Zn7Oda0kwd0vPOkkz0eLmIVHaevifrD0EBC+NDkmKzeRJQZHEHKQ2lBFFzN9zxeSO5xxhvxRewuYg/r3D1lY/QOQwMJYYCJMVkdTES/WoLI/FBaEIVfYmy/LHQw3kgo4sJs1knhftPWRX9naCBRrex9c1ppir7NbKHA+xYEUoMWxj5xujif8eaoIs49yQD42pQN0d+UvfdnssShsAJIIwLdMi7A8OIRABq2VDDwIQuBEUwePH/hbwhRO8TGQiVSFgFQb3oywPDiEQDCGxOuHWEhBixQKM3oPEIYQSFKY8By7QiL4cUjAARHEW56MoAAqKwri2Qqu27zKvwCA0GDH7UYXjwCQEAo4eaxAVRyaxOl2bvAUvben+nCcxxPALi8y3VmNO3sP+dnj1vNaNxWBQjDpvTN7md0HiF8od3hrHsB7nl5XxPaXO0//a3zNWa06KoCwDXJMdm3GJ1HiJo0qV/2zQT8rXlXFZ2vMWDe+jza9FZRsqUX9+hwKOsfRucR1WNKTM4ggG+7pJ2K7kP95/w7rT909IZlPVb2ugKUrPaBgjEmE3jAfZbztWEIRQEGPVCSSSeeZHAcIaqMCESgp0kBBj7gX/2NCBj8cFkmnmxoGCFqmEI8ASi55hhx/395hjxsAREDRBPsdPb6BVH7MekTAWDwg5YKP+Gvug18wALFBCaiZ8pGIRUAaGjJvhuM5p2vM1NotJ/1GgCte6pocrkKItyU3P9Ue6PzCFEVU/o6rgfQpV2MCf4wRXGmJu1VtLpSBQhXT+7v6GN0HiFqwpR+WVeB0a9lN9VnT/jwpYhLFbTvbwYDHdz9sm8wOo/wreS+WR0BXN+kvYqW3f3v/AttQOhyjZkYaKZFOO4AyqawiR8AgO43Vc9TL3yh240l2YiVfxocRYgq0Qml/c1/pijO1O3GkmwEkv4m6gUmpaRf+tHU4ZnKfmcozLIzSV2jlFwXrvTjOqysRuTS80+ZMCA3koBrG7RQcElb31S9Xq+GUydz4Xb7bv/vDgNNMJnAAGJ91qgQNczeBRYCbg+NVrhlN9/9lZnjyEdhgdNn7bXtY4I1iJjAw2VfSFHXldxWwsMDgojbVtM9ycwMx6k8FDtdlW6jxRUqQhsoDMIdpQtfRR3BoOFmC3H7/tVXQObnFSIvt7DS32/SXkV0MwUEutHexxFmUnXvQIDUNldVvdPkOPLxStoyfL5sI8AMt8eL3n07YsqsRxARFVqltq3BhEs7qXRws9bO3sfRzPZt1KEqBxaihmkR2VczI6hVT9Un97hs37wX0ye/CcepPGiajmYtGmHKsw+jdZtLq9SuyQy07K7Srkxvo+S+2V2AyC1VTyuEf0ru5+jEjEbNu6mV3sjf5fIgdcZ/sPyDddiw9WVQ6U2UzIyVn3yHlxd+jFPHc6Az48qelyP52UfQqHFkhY5BCtC6p0qbV+qBETk5fYCINZUKK/yKfUB2CwIua9pZgSWocuef16th4XOLseTf3+DL7xYgOCTwz/f+2H8c9gmvY/+eIzCbTQgND8KEaffjyl4VvyPwsl4qsg7pJq9CAxUCDQCA5l19U/VarSa8/cEUfPNjOj5dMxe52YXIWPCxT9pueUVJkaspNNAnDQpRw3ToAwCgRVff3Ptoe/pVDLq2Bz5bPx8rNsxHp66tMTP5LZ+0XTZCytClv4k6ruQ62OKKyg2kHDuchRH3zcbhg8fPes/j0fDtuq14esp9+HpTGlZmPg8QYf6M/1TqWGXXQemXdYemYyCAsh0wKuzkiRzEPzgXe3ade1ztuWn/QstWjbEi83l8tj4VN98egyljXq7UsVp0L6sVeaACoCMANGpT9QtaRFQoEsffg2YtGwEAwiND0XdQV+zfe6zKbQP/y8gKd/BJg0LUMOKS/ta4TdVH/JkZJ45lo1efjlAUgmpS0btfJ2Sd8M0jcxtdVtrfoEh/E3Ubc0m/vKxy18HvMrdh8HU9kTj+nrPes1hMmPrco+jTvzPMZhOCQwJx/c298dv2A5U61p/XarkO1iUlddhllbsu/PT9b+h5dXuMn3r/Od8/fsyBHr3bw2RSQUToO7ArcnMKK3WbYaPWpUtnwB1MAC63WIlDony/aUFhgRNrvvwJg67r4ZP2Ii8t7TiMdj5pUIiaxnQ5qUDEpVXvbkSEQddeiTdf+gSXt28Gt9uLd9/4AkPv9M12qWX9jYilv4k6TWdcTgRENq1cAXn78JLBwJ3bLq4oPHjgOBpf2qBSx4pookBRAF0n6Zd1BfHlYCCqaeWuCzfccjWAkqnqcxl8bQ/89+2v0KtvJwQHW/H6i5/guqG9YbFUfOY5NJpgthJ7XGhnAhAdGPHn7Ro+MX3iG8g6lYM9uw7j7nuvwT8e9s2OA8GRpSEJ0T5pUIgaxkTRAYFgs8U3PS551sOY+vSruOv6CQCAu/9xDR4ecasvmkZQBIEUgHWS/ibqNCq9pgSFV/96sZMncrD8/fWwz3nswh8+B5MZsAQBxflyHawrmEv+W/5Z4/jYiNHD4HZ58PehkxAQFID+g6/AuCmV22CDFCAoHJR7AtEKgBBrJW/aPJ8evduh36Du6D+kO/7z1pcli2p84M+bS3VUbUWOEAYh4hBzoO9WNX+z8kds37wXDz5xC67q2xEfvbca32du90nbRIDFSkxg6W+iTiNGiNlKrFTz9nuFBU48HZ+Gobf3xdX9Ole6HWsQASTXwTokhAgwBVRPAbnp251Y/eVP+OcjN2HQ367Eqi9+xFefVf6R6pZAAsCh1bJefOgd/5tC63plGzw39V+44dY+MJurfjgigCHbiohain137v6x/zhmJb+JV96biMvbNwcArPriR0xIXIT3v5iF6AZhVT+I9DdRD3ANbFXlLCrGmBEL0LZ9MyQ8XbXd6LgkrfTLuqPa/lsWFjgx8akXMXX2o+g3+AoAwC13xiDh4Xlo26EF2nVoXvFGCQCIFBAKXU72aeDTXXJpFFwud5X2virjcTKYARDyqp5MiJrHoHxPEXzS4Q7sO4bQsKA/i0cAGHxdDzDr51wNWlHMgLuYCSDpb6Kuy/e6mXS9ehovLnZj3MiFaNHqEkyY9kCV7xlzFzLAch2sQ/KZAW+x72uxI4dPobDAiV59O/75WpfubdDwkkjs232kUm26ixgA8hRmyirOBbMPcm/fvBe7dhz8859zHPl4++XP0OmKyxAaFlzl9gtzSkPqcFS5MSEMQGCHq5jJ6656h2vTvhnycouwYfXmP1/79KMNMFvMaNOuWZXbd+YxWAcYLP1N1G0EBzPgzPH9BbzY6cKYuAWwWM24/7GbcOxIFo4cOoUjh05VamBF8wDuIgBE0i/rDgcAFFXD+de8ZWMEhwTi0w/X//na95nbcfJYNjp1aVXh9pgBZy6YAIeJiHe7nGhbmM0IiaraX0UnTuRgzrR/oaigGMGhgcjNKUTvvh0xPTWuSu2WcRwu/ZdL9LtPGhSiphHvZp16Zx9lNGxZtf7W5NJoTJrxIJ61vQWTSYWm6bBYzZgx/4m/bCJbWY7DZcMxLP1N1Gms024ihuOIjuAo394I+fOm3/Hzpt8AALE3TfrLezPmP4Eh1/esUHvZR3WUZR+WKAAAIABJREFUjJRKv6wriHg3MyHrMCOias+AOEtAgAUz5j+B5+zv4PWXPoHFbILb48WElAfQvFXjCreXn8Vwu5gI+N0EHTtAuPHEXh0hVew4g6/tgYFDuiMnuwCuYjciG4QhIMBSpTZPd3KvBgAgYKfPGhWiBjFjBwE4uVdHw5ZV33v1+puvxvU3X41TJ3OhKgoio313X/3JvSUFpPQ3UdcphB0M4OQ+Hc27VP462KFzS2Rue+Uvr/Ud0OWs16ri5L4/59mlX9YVJXUYTu7TUZWnAjZv1fic51rvmE54f+Us5Djy4dV0NGgYXuljlF0XGNipMGEDABzc4pvnViuqgqgGYWjSrIFPi0cAOLC5pIBUdVp/gY8K4ZdU4tL+pvm03QYNw31aPAL/62861HU+bVgIf6NQSb/c7Nt+WR0O/JmRpV/WEUwmn9Zh5xMRFVql4hEADm4uycjgdYruNa8GoO/b5N8dx13EOLxNZ4D32DZG7Dc6jxCVoZgLNhKheO+PXnA13bDvC5oHOPCLxgCyLJkRmy/4BSFqsZT1EZuJcOrgLxp7PUanOT9mYN+PXhCh2GTJzzQ6j/CNlA3hewAcOLRVZ081LKTxpb0ltaJmtqhrlJnfhWYxsOrEPh0n9vnvFe239V54PUxEWGJ0FiEqy7aqVTGA5fknGX9s898/2vb84EVxARMI79sY/vuLQQgf4JINPj5wFjLt/aF6R4Gq4tBWDXknGACWl/4uEXXH+x4X028b/Pf8O7Zbw6mDOkD40rYqIqfs2YBvAcAvn/vvn16/rCj7l0r/MjSIEFWkMZX0t8/8t7/9uqIkG5P0N1E/EMPvr4N/9kvo0i/rGCq7Lqzw3wLy1xVl09cl1wUFAPLCoxeDcHTLSi8XOPxv+PTALxqO7NTAwNfT1kdtMzqPEFXxe9PIFQTs2rnWc9pKZ/9xfK+OfT9qAPjnGesjNxidR4iaMG1D1EYAP+z7UcPRXf43O5B7jLF9jZeJsNdkbvCZ0XmEb03LjNwCptWHt2n4w8f3yPtCoYOx7SsvE+FYkV74IVBaQC74DC7Wker1MG14121syjOwDqx5qyQTKfp0g+MIUWWLF0MDYzYzYd3b/tXfAGD1ay4wA8xIYfbNpudC1ArMMwFg7Vv+1y/XvOkC6yAGZtpWwX+HqUTlsT4DAFa/6fa7e+TXvuOGp2Sz/dmpmc2cQGkBCQBFKEonYP+vKzw4+pv/VL9leYh5ecq6BquNziOEL6jWqLdB2LxznRf7fvKf/rZznRf7f9YAYN2MjdEfG51HiJo0fWP0UgDr9v+sYcca/6nR9v+sYcdaL0DYbDJHvWV0HlE9UjZGfwXCiiM7NGz5yn9upTiyQ8OWLz0got15EVEvlr3+ZwGZmtnMqYFGsQ58OsfN7mp8vOHFchzS8c0rbgbByWbTk0bnEcJXbKvgJY1GAtA/n+/iolzj+1veKcYXaS4mgpeY4mX0UdQ3zGAdNJII3i8XFXPeSeO7gDOP8VlqMQPQmSheRh/rNpOuJYDI9XWGm7P94BYnVyHjkznFzDrAOics+Ax/Pj7pLzsZz9gQ+SkIGVlHNPr8eZehQ6juIsbHM4vhKdnxPDFlTfg+49II4XvTNkZuANPs/CydPplTDM3Ay4LHzVg6qxjOfCYGTZyWGbnFuDRCGGfGhsituo4JznzQ0lnF8PjgsaOVpWvA8jnFyM9iIuLnpq+LlD2Q6zhbZsPdBDzldjItnVUMIwfzWAc+m+9C9jEmEKWnZEatOP39sx6FUagXjQbop53rvPjmlYo/p9MXvB7gw5RinNyvA6B3pq2PetWQIEJUM5M1cgrAa/b9pGHFCyX3HtY0XQeWz3bhyI6SW0Wmb4icW/MphPAfMzZGzQNo2ZGdGpbNckE34C4TZmDF866yBW1rVHN0cs2nEEaYtj7yJQD/Ob5Xx0fTi6EZNJv9VYYLuzK9APBDbljkmDPfP6uATM1s5tRU840E/L5pqQdfvlizI5GeYsZHKU4c+FUDg1blhkc+VnNHF6Jm2VbBa9LoNgC/bP3ag0/n1exIpNcDLJ9djN83egHge9Wq3ytT16K+YwYXcuHfAazf/Z0XH6U4a3QkUteBFQtc2PK1BwC2mdg8TKau6xdTbtSDAL7Y/7OGJVOccBfV3PnHDKx6xYWflntAhL265r319KnrMsTnGfJIHpTbGpr+JZjbtIsxYehoK6zBVK2hc48xPpzhxIk9OgB84yb9jtnrG+RX60GF8AOTBp5qomjKSgBdW12p4tanAxAUXr39LT+LsfTZYhzepgGM70wwDbVlhjmq9aBC1CITBuRGmnTtMwB9mnZScfszAQhtUL39siiX8cmc4rLFdVtNpN9gW9/gSLUeVPil8f1PhVp0dRmIBzduq2LYpACENa7e889VyPhkrgu7v/OCiHarGl13vqf/nbeABIBJfU40VlTTJwB6RV5CPHRsADXrVPkHfZ8PM7B9lRdfLnKxq4gJwHu54VEPnqviFaKusg/JifC6+CMQDw6NIr5pdAC17un7/gYAuzK9WLmgmIvyQAR86izw3DPn18aF1XIwIWqxcd2OBweEmN4D6JbAUPCNTwZQuxhTtRxr308aPp/v4vwsnQBe41VMd85aF55dLQcTtULiUFgj8hzvMGO4NQh8fXwAdRpSPeffH1s0fJbq4pzjOoHxnYk8t9k2ND5xvs+XW0ACJeHDcrLnEvEoIqDLNWb0u8+C8Ea+qYKP7daw6hU3Dm7RQIAbxGOmrY9O80njQtQy9iEwae5sO4OfAaB0GGDCwPstiGx61t0mlXLygI41r7uw5wcNIGgAJ5s2RM+WxxUKcX5EoEl9s8eTwtPBUNtcpWLQw1Y0bOmbfpl9WMfat93Yuc4LADqYZpuskVNk2loAJeff5L6ORCiYA4a5ZXcVQx6xonEb35x/eccZ6/7lxrZvPCi9hWmBKTfqadtWlLsh6gULyDLJfbOuhUJpANorKrjTEDN1v8GESzupoArWkpq35IHwP3/qKXswNxi0inQ9PmVj9I6KtSZE3TM5xhFDhEUAuhEBHQaa0P0mM5p3UUEV/J2h68D+nzT88rkHu7/1li3U+ZZYGTktM+Jn36cXom6aEpNzJZO+CEAfIqBtn5J+2aqHCqWC/ZJ14I+tGn5d4cGONX/2y19Jp/hpG+UJUOJsU/o7OjNjEYCBRMBlvVRcOdSCVj1VqBUclGQGDu/Q8OvnXmxf7WFdAwHYoZAeb1/fYNXFtHHRBSQA2LvAooVnPwri8cxoAQDhjQmte5rQoquKhq0VRDZRoJr/+j1PMSPrkI6Te3Xs/1XDvk0aO/O5tOykH8H69Okbo5fKzftC/I99CExet+M+Ap5hoB0AhDVQuFUPlVp0U9GwlYKopgST5a9/wXlcDMdhxsl9Gg78omPfTxoXZuulH9J3MKsp5o2R/5VRRyEqzk5QtJjsWCZ9Mpg6A0BwpMKte6jUoruCRq1VRDUlmK1/7ZdeT8nexqf26zjwq4Z9P3mRf+rPS97vAGaZLFHvyKijKA8RaHK/rDvByiSAewBAUBhx654qteymouFlCqKbKTAHnH3+5RzVcXKfjoNbNOz90Yu846XnH+EAgZ5VcyJfv9Co41+yVKSALBPXC+aGlqxbiJT7QbgJzNbTfjgEBBGbg0C6BniLwcVF/JefhBWvyxuxP8/kaHf39A0RayscQIh6JDYWavuj2Td5InYvNmVfZiKmv/yJFhhMbAoEgQGP8+z+RoQCJn15Qfvlt7vDDo1LT01eVLM/gRB1z8iklMetuc2eD9l161Ji5RZmhJz+fkAQsTkQRFTSL52Ff+2XIDihYzlA7/zWLPLzxYvhP4+kErXClJicQTrp9yuEu5kRdvp7AUHEpgCQogKeopLrwl/KPSIXgT9jnd8+4Y7+NGMTKrxZUKUKyNMlxRwKDObAfqxSDDE6gtGaCQ0JCAPBy0wFRHwcjF0g2sG6vian72uhgPNLkKl12txJB6oUQIh6IGF0Sj9W9PWK55LOEZvuacik9QfQEaDLGGhMQAgABrgAoOMg2s06diiMdWpA5He2VfAmjLWns47+aam2bkb/PELUdglj7JuY8WNaqi3OPgQmrTj7ap0wgBR0BHNbBjUicCjACoPyCTgB4r1gbCdW1+dERHwrC0WFL9iHwKR5s3oyKwPB3BGEdszUmIhDwKwyKJ8YJ0HYy4Sdqs4b8uHMLHumdWVVeSlPaYCvSv93Uex2p3IqD8eYvXcBSK1qBiHqOp304QT8tGBB3PbSl9ZUtA0C0pkwMn6MPSZ9ni3TxxGFqDfix6ZcRUBPXVHigJL9XIHIDQDk3kVR40rOv+jvAHxXk8f1zRKeCrLZbLpOWMrAcCOOL0RtQkREhDsBer8q7SyYa9sOYAMxnvBRNCHqJ9bjAHy/aG7yj0ZHEcIohhSQAKAQlhBw9aixM1oalUGI2mBk0tS+AFqoqlKlAhIACHgJhNjExFkNfRBNiHon7pnZ4QT8HUCG0VmEMJJhBeTxA53WADiJkmlsIcR5EDAchF9eeG7y71VuyxO1BECeZvLc74NoQtQ7Fq/rfgDeQCX4v0ZnEcJIhhWQixcP15jwoUxjC3F+REQAhgFY4ov2FixIcDHwFhGPsNvthvV/IWot5scBvDVnzlh5cpOo1wy9gMg0thDli39qWh8ALQj40Fdtqqr6EoDWWbm4xldtClEfJCalDGCgi6bgFaOzCGE0QwvIsmlshjbMyBxC+C1FvxvArwvn2nb6qskFz03eA+BrHYjzVZtC1Ac66XEA1r44x7bV6CxCGM3QAnLx4uEagI8ILNPYQpyhdPr6LgL5ZPr6L22DMkC4Y0TSjKa+bluIumjUqFnRAO4ilsUzQgAGF5AlaAkYfZ56yt7C6CRC+JP4sdN6A2gJ4g983XaDMF4K4LhC2sO+bluIOsnieRhAQUG4724nEaI2M7yAPPFHx9UATnpMJKuxhTgd68MBbPHl9HUZm83mBeE1Aj8WG7tE9XX7QtQlREQgfpSB19+w2YqNziOEPzC8gFy8eLgGxscyjS3EGRh3cjVMX5dRVLwC4NKGzXYMra5jCFEXjBw99ToAl5tU9VWjswjhLwwvIAFAAWQaW4jTJCbZewO4DHrVNw8/nwWzbYcAfErE8mQaIcqhAHEEfOmLvViFqCv8ooA8dqjTKgAnvSpkNbYQAHQFdxOwNX3+5B3VeRwiegnAjQnjpreuzuMIUVvFjZ7ZhAm36iSLZ4Q4nV8UkGXT2JBNxYUowRjG7JvNw8uTNs+2AsBe1rXHqvtYQtRGZvI8RsApb36T5UZnEcKf+EUBCZROYwN9ZRpb1HcJSfZeANooCqpt+roMMzMTXgPwaGLiQmt1H0+I2iQ2dokKwsNMeCUj43GP0XmE8Cd+U0CWTWNrJrrT6CxCGEknDAewbcFc2/aaOJ4XeBVAGJuz76iJ4wlRWzRuvv1mAM0A0+tGZxHC3/hNAbl48XCNgKXMshpb1G8E3EWo/tHHMhlzbadA+IhZFtMIcToueVrTJ2lzJx0wOosQ/sZvCkgAYKIlAGJkGlvUVyPHpvQE0IZZqfb7H0+n68pLIAwelZTSuSaPK4S/Kr0O3UBEsnhGiHPwqwKyYSivAnBKprFFfaXq+t0g/JaWmrytJo+7KDV5DYBtIP3RmjyuEP7KqyAOwOHjBzt+YXQWIfyRXxWQNpvNS8DHMo0t6ism3A3gv0Ycm4heAfBgXJw9yIjjC+Ev4uJeNoPwIEAvLV48XDM6jxD+yK8KSOB/09jxY2Y0NzqLEDUpcUzKlQDaalT92/eci0njtwCYLcF0jxHHF8JfmIOP3gmgoUc3vWl0FiH8ld8VkGXT2ASvTGOLekWHPhyE316cY9tqxPHnz7flAPgvg+OMOL4QfiSOgQ8z5k88anQQIfyV3xWQNpvNC2ApZFNxUd8QhhFjsZERFEYGCFeXLuYRot6JT7K3BWEIIItnhCiP3xWQAFD6BI6YEUkzmhqdRYiaED/a3h2M9loNbB5engWptu8J+FHR9ceNzCGEUYgwAoRdi1Jtq43OIoQ/88sCslE4vgGQpZL3LqOzCFETqGTz8F2L5tg2G51FB2WAcG9ioj3M6CxC1KSH7PYAEB5gUAYzs9F5hPBnfllA2mw2LwPLINPYor4gDGMYs3jmTN4C/jcAr2bCP43OIkRNCspDLBhBVp3fMjqLEP7OLwtIAFBKV2PLNLao60aOs18BoIOKmt08/HwyMmxFAP5NhHijswhRkwiIA2FxaqrNYXQWIfyd3xaQDUL5awBZJkUbZnQWIaqTwhjOjN8XzEv+1egsZVhX0wF0TBid0s/oLELUhNI/5GKgKbJ4RoiL4LcFZNk0ti6biou6jnEX+cn0dZn0+ZN3ANigK7o8H1vUCyojDozNafOTNxqdRYjawG8LSKBkGpuAfgnj7ZcanUWI6pCQlNIVQEeFFENXX58LE71EwPDExFkNjc4iRHWKj7eHMOOfIHrJ6CxC1BZ+XUC68y/5BoRs3QOZxhZ1E+nDAexdMC/5Z6OjnKlRKC8BkMtm9wNGZxGiOimBuBeAonj430ZnEaK28OsCMiPjcQ8YS0u3OBGizmHgbqM3Dz8fm83mBuEtBp6w2+1+/btCiCphPA7g3wsW2PKMjiJEbWEyOsCFMGMJET5NGG+/dOFs2xGj8whxsWJjobY/emqAyawOVy3oxzoaaW4ON1kpm4hOupG7xdSiSUfNevJ+o7Oej6KoGbqmjTmZT38D8KXReYSoCDtB8fR19DFbMdxkVQYzc0OviyNVC+WSghO6G+sLQ7du5bbUEzrL5vlCVAD5+16pcXEvm80hR48xw5aeakszOo8QF2InKHp/xwOKhZ4LaahY2gy2BDfpYlYDIwkB4QqcOTqKHDqO/OrRd68thCvbdNxdxE/O2Bj1PjP8rkMmjLGvZCA/bZ7tbqOzCHExiEDJ/RzDTQH0fGAEBbcZbA26tJvJFBipIDBCQXGuDmc24+hWj7Z7tVPLd7gVFJkfVTZEv2Nj6EbnF6I28PsCEgBGjbG/BqBt2jzbIKOzCFEeex9HMwqllRFNlRZ9RwSHNOpw4UH+o5s9yFxUVFBwkrcXu023zFwbcrIGol60+LH2YcT4r8amVi+mTjpsdB4hyjNxYEHDQKv30+AG1DFmZFBIkyvMF/zOiR1eZC4qLMg9qu93F+o3Ts+MlvNciAuoFfc1lT4bu7+sxhb+bHL/U70QTL92vyfw8ttfCL+o4hEAmlxhxrAXw0M632rtHmB2b5k40NGpmqNWSKNQLANwXIX3EaOzCFGeiQMdnawm95ZOt1qvGPZi+EUVjwDQqKMJdywMD7nynsAO5kBly5QBp3pWc1Qhar1aUUB6C5t8DSCHvXSn0VmEOBf7gOwWZov65ZBxwVHdhgdc3FXrNERArwcDLX1HBDcKMOObiQML/GbrHJvN5iXgVQCPxcYuUY3OI8S52Psdb2S1YFVMfHCjXg8EWokq3sYVwwNMg8cGR6pm9avJgxzNfZ9SiLqjVhSQGRmPe0BYSpBNxYX/iesFsxLAX/W6PzC0ZV9Lldpqd52VOt8WGBlo9X5KhEpcAqsHmfAqCJc0br79ZqOzCHEmIhAFmz/tcltgRLtrrVXqN61iLOj5z8AQq4W+tA/x/4WmQhilVhSQAECgJQwMkGls4W8uDcqOi25jatLlzgCfjM71vD/QEtKIOiYPyL7HF+35woLZtkMAPtUZ8mQa4XeSY7LvCWmotu95f2DV/oIr1fWuAFNkK7UZOFtWZgtxHrWmgHTnX/IVZBpb+JmkmEOBZML0vk8Eh/iqTVKAmBHBISYzz4+Nhd9MGTPjJSLcGJ9kb2t0FiHKxMZCNQXy/H4jg0MrM219PjEjg4OhYEZSzKFA37UqRN1RawrIjIzHPQCWyTS28CdBFHh95GUqRbW++DqPmfHdNz9h2Tsrz/uZS7qaENRADepwJDvGFzl9YdH8qSsB7FEAWUwj/EaHI9kxwdFq0CVdKjbb/POGLVjyyifnfT/6MhVRrVUlWAm4rqoZhaiLak0BWUqmsYVfsQYp915+jTX0Yj5bVjg+NdyGGYkLUFRQXO7n2w62BKuBiPVJUB9gZgboVSY8mpi40Gp0HiEAQLUits1gS/DFfv7nDVsw7h8pmPL4XOQ6yn/wzOXXWEKtweq9VQ4pRB1Uq24Q9hQ0+dIccjRH9+AOAIuMziMECH0bdzFdcOLsl43b8Pb8JdizYz96DeyGUfaHcHnn1uV+p0k3s7ptafFgX0X1BQ/xa2aGXTc57gTwntF5hFAtGNSkm/mCUwDbf9qFfy34ANt+/A29BnbD3HenoH23NuV+p3FXMwHOvj4LK0QdUqtGIP83jS3Pxhb+wevmBiENyu9GC6e8juRHn4PZasKrX8xDcvroCxaPABAcrUDTuJGvsvpCxlzbKQI+JJLFNMI/6F5cEhxdfh98Y+57GH/fDBTmF+HFT2YjOX30BYtHoKQPel3cwFdZhahLalUBWWoJCAPjRs9sYnQQUb/FxkJlL6zmoPIHIP92R3/06N8VO37ejWkjUvH5e9/AWVj+9DUABIQRNA/CfJXXV5jwEgODRiWldDY6ixC6h0MDwsrvg/1uvBp9/tYT+3f9gWnx87H07ZUoyCu8YNvWEILuRYBs5yPE2WpdAekpaPIlgByz4r3D6Cyiflu8GBqZ4PYUlf840E492sGeMRZpH89Ah+5t8epz/8EDQ57E5+99U+73XPkMk5nyfZnZF9Lm2tYSsJWhP2Z0FiEUExW48svvg+26tMakBYl46bPn0COmC/698EM8MPgpvP/q+RfRAIC7kEEmuGyr4PVlZiHqglpXQJZuKr4cshpb+AGThRxFWfpFfbZF26aIn/oQ3vg6FXc/cjNOncgu9/OFWToUE/zqudhlGHiFCA+MGzf3ohcvCFEdVDNOFF5kH2zSvBEen/hPvLnqefwjYRiyT+aW+/miLB0mCzl8kVOIuqbWFZAAoBMtATBIprGFH/jx+M6KDU6ERYYiNu423Jd4V7mfO77dq3u9/G1VwlUXjzngLQBmp17oN5udi/rJ6+Fvj233XlwFWSooJBDDHroJj034R7mfO77DCyj4sUoBhaijamUBqeVd8gWAXJnGFkbzFOLdvatd5e8FUkm7V7nydad/rnTOeHZ8Lpeswo4zOouo37xO/HfPale13OqxZ7Urz1PA/66OtoWo7WplAVk6jb1MprGF0VSNPzu+w6vkHdF82u6p3V7kH9F1JSdqjU8b9iVSMgD0Hjk2pafRUUT9ZcqNWp17WOdTu317m2LuYQ0ndnoV1YsVPm1YiDqiVhaQgExjC/9g+zYqD8yzv32l6MJLOitgY0ZRgaZhgm0r3L5s15fS5yb/AGCTyrqMQgrD2LbCrbsxITO9qMCX7X7/alGhBppl+zaqWmYYhKjtam0BWTaNbSHP7UZnEfVbrss57+hmT96eVe7yl4JepG3LijXHPu8RRYl8zRftVStCBgP/GD3aHmF0FFF/qebIV7MPaMe2Lyv2yVTA7m/cfPRXb47Kuam+aE+IuqjWFpAZGY97CFjOsqm4MFhqZjOntxjXrVtYWHh8W9Wm0Q5t8mDTm84CLlBuqA1bh3jy8S4Al0eh8lcjCFGNbKvg9XiV679/w1lwaJOnSm0d3+bF+rTCQqeHr7etanXhDVuFqKdqbQEJAFyyqfigEePsfvW0DlH/TFsftU338N2fJ+cX7FlduZHI7Z+4tK9mFuS5nTzUtjFiv48jVouMDFsRAf8GOJ6ILvhIRyGqS8qa8H2eYh761cyCvO2fuiq0KrvM7lVu/jw5v0B38bCZa6O2+zqjEHVJrS4gG4bhCwB5Jg3DjM4ihH1t1Ep3MfquX1hw7MvpBUX5xy7uGpZ9UMOKSXmFm94oOgi3cuX0zKjMao7qU7quLgLQYeSYqf2MziLqt+mZUZneYqXHD68VHfxscn5hzsGLm9HOO6rjq5T8wvVphUc1F/exr4/6spqjClHrEbNPbtsyzKgk+9sAmqal2v5mdBYhAMDe62gQhVrHMWFcoy4IunxwMDXuZEZQNMFkIXhdjMJTOo5u8WLvGlfeiZ0aeTW2m7KiFvrzopnyxI+xryXgYNo82z+NziJE4lBYI5yOBEXVZjVsp6LtoGBTk64mBDdQYLISvG5GURbj+DYP9qxx5x/b4lGIMJvzXPNsm5oUGZ1fiNqg1heQ8Un/396dh0dVnn0c/97nzJIEQiAQUPYdFBFU3FhEXCqodQW7+FatVVFBWqG0isI4CFYLgoKo2Natta+l1qVl0apFBUGrr4giKCI7KIQkkBAy2zn3+8ckFBWrkEnOzOT5XBeXlxk480ue55zcc57lTP6+iD7nWLR+aFpop9d5DKPGL6773TlWNP/FprvOeENigR6JqBYioAr+ICXYvB0t16f8QWdRaHFRSleQ1rebxoZ/rMJjjkU7cx4a6WDUr8JHWHH/5txNgx7I33dMFxxOikdpLgIo+IJSatn6XtVenvL7ZUFocdPdXmc2jEyS8Q+Ib1mgLxWXU265cjEw1+s8hlEj3nj7MMnnvUlP/HBwzdfC/T7Py8Y7HC0KeKa4nJm2I1cC07zOYxiWIz9TK16yp2jNr387d9D+lTXZeg4aRn3L6DmQAKFQKIYyX8ym4kYaERER4WKQZw78erb+4gqFQjGFxxEdGQ6HM/66YmS2cDhsKXoNwu/nzr3uS8uys/UcNIz6lhUXekX+CpxuVmMb6eLGsXecCrS3beuZb/3LWUKVuUCnnXs4y+ssRsO2Y68MA9o7Dum/l6phZKisKCDtRLN/Ant9ink2tpEWBEYgvH//b2//1Oss9eXBGaH1wMuWeT624TFLdSSw8KGZoY1eZzGMbJUVBeSsWTdFFf7hmk3FjTRQvR/iJcBfvc5S71TmqnDBDWOntvE6itEwjRo3tR3KuZg58YZRp7JyWWCxAAAgAElEQVSigASw4K+iDDHD2IbXbhh7x8lAe4Fnvc5S34oK9B8oX1jiXON1FqNhskhcC2zfueXoRV5nMYxsljUFpMQLX8IMYxtpwEreCV85e3roY6+z1LdQKJQQ4Q+iek04HM74XR6MzBIOh30KV6M8Mm/eiJQ8F9swjIPLmgLSDGMb6aB6+PpSSS7sapBirn8uQqviPXKe11mMhmVnBRcBrcTPo15nMYxslzUFJJhhbMN7o345+SSgA6J/8zqLV+bOnPC5wgJEr/c6i9HgjER5fvY9oe1eBzGMbJdVBWTNMLblyoVeZzEaKHVHAB82xOHrA1kiDwPnjBob7up1FqNhGPOrKV1EOYNk3zMMo45lVQE5a9ZNUTCbihseUi7WBjx8XeOBe0P/VGWdCGYxjVEvHMe5HtgwZ0boX15nMYyGIKsKSABU/goMGTPmN0VeRzEaljFjwycBnXEbzubh30RV1bL4PfCzMWNmB73OY2S3MWNmBwWuVJWHVFW9zmMYDUHWFZBWotmLwD7HHzersY165VoMF1g1Z+bta7zOkg5i8CjQ2AmUXeJ1FiO7qb90BNDETvif9DqLYTQUWVdAmmFswzPKJaoNcPPwbzB3emgX8KyoWUxj1C1NLp6ZN2vWrcVeZzGMhiLrCkgAEcwwtlGvbhob7gd0sSwa/PD1gSy1HgZOu2F8+BivsxjZadTNU44CBoha5skzhlGPsrOAjBUuAva5gZhZjW3UC1cYAXw8a3potddZ0smsGROXCKyyXa71OouRnSzLuRFYM3vmxDe9zmIYDUlWFpD7h7HVbCpu1A+BSwX+4nWOtCTyCHDl+PHTG3kdxcguI0eG8xQuB3nQ6yyG0dBkZQEJyWFshTPMMLZR12785Z0nAF1ULTP/8SBivuCTgC/i7Puh11mM7OLP58dA0O/qU15nMYyGJmsLyL35vAjsU1/8Aq+zGNnNdt3hCJ88MGPiR15nSUdz7/71HuB/VXSk11mMLKOMFHhq5szQbq+jGEZDk7UF5GOhUERggYpZjW3ULRWGY4av/yt1mQOcWL3YyDBqbdTN4b5AP0fM4hnD8ELWFpAAmtxU/EwzjG3UlTHj7jwO6OqI2b7nv5kzM/Q+8K4K5i6kkRJiMQp458HpE//P6yyG0RBldQFZWaCLMMPYRh1ycUcAax+aFlrldZZ0JyoPAz++8da7m3mdxchsI2+5pwD4kaiYu4+G4ZGsLiDNMLZR54RLEOZ5HSMT+Mn/MxCVaPRyr7MYmS2QiF4BJHLsvKe9zmIYDVVWF5Cwfxj7jNGjf9Pc6yxGdhl1c7gvSg/XDF9/JzNm3FwF/EmEG0VEvM5jZDDV64Anp037ZaXXUQyjocr6ArJ6GLuKoNlU3Egxi+HA2genhT7wOkqmUNd+COh5082TB3qdxchMY8beOUjhGMfiEa+zGEZDlvUF5GOhUARhISQ3FQ+Hw9aYsXcOuvnmcFOPoxkZZtS4qe1G3xw+vub/BS5VzN3HQzFn5u1rgCWuuOb52MZhccUdCbxh5h0bhrd8XgeoD2LJM+rq06PHhucinIe4bSyXDoDZO8z4ziwr0UVh8ehx4U3Am0BPXPPs60OlIg+L6uM3jA/fbCndRRmjIs/NmT7pf73OZqSfUb+cfDnoVbgyK1Gpy/2NuVSUn3mdyzAauqwtIMPhsLWzgv6ijFBlhAg+hOtqXq/ysc/LfEbmEYd9mpy516H6D2Lxwuhx4edV+OuD997xpqqqlxkzgR3wv+JGY1Hb5QOgFQDKy96mMtKVoLkoZyF6lr8RJYI44s95w+tchtHQZW0BuWdPk6BI+Uyg38Gm6zeRRlX1HsrIaHGbfbb7tS+3B8aI0mPEiHnnAU69B8sQo8ffebK47o0KlwE5QH7Na5aQ410yI52pS2D/NVxoriiaqFo3elz4GYUH59wbWuZpQMNooLJ2DuSMGTdX+RwuBXYe7PXGjStNAWkcEnG+8a71Wr/LD+fNG2GKx/9C1W2jcDkcpFhUDdZ/IiMjWHKwvhEEfgx0r+c0hmFUy9oCEuC++0KbVbgUiH3lpUgoFPr6vSTD+C/k4NMeKlDrEvMs3m83Z3roWZCbDv7qQYsEwwAO/uFCRcbNuTf0eD2HMQyjWlYXkABzpoeWqjLuK1828x+NQ2ZHvtZvXFW5/IEZEz/yJFAGeuDeSQ+hhL7+irkDaXwD/fqHC4HwnOmTZnoRxzCMpKydA3mgOTNCD9w0LnyswrUAAtEJ/Ut62pYMwKWHiHRXpQBJzslSdLdAmSBrXWE1tr4x5fXCLd5+F0ZdmDBoV3fbtQYI2lOxuisUCDRJvqp7BMpUZa2Ku6Zlzg3Lvuj70H/+sRKaM2PSP7xJnrkemBGaPHpcuAAYW/M1NzkkSbh/cVdHrIEKPUWku6vS9MD2QNktlq7FZY1t+5aGlhSs9+SbMA7LxMF7Okk8MQiLo9SV7ghNQQoAFMot0d2qulbgY1vdpaFlRevk6x8uHpp9b+iO+k9vGMaBpKEsGh058hF/nmO/4yvt0idY0s2VRO6h3n39VOAvCcv9411LWqytk5BGvbjt1F3HW5Z1BXAp0PZQ/q0T3EO8xafECja8Ouv3159tVl0fHhGRUePu+APKT+3KFuRuO+l9f2mXQpKLkr4zhY2i/NUVeXLqm83MvoBpaNLA0l7qciUwHKHTIf7zzbFm63dF2r19vJO3C4H/bdGE/zFTkAzDe1lfQIogtw/Y9X1cawLCyQCBPGh/jE27Y30UdbQobGuR2xgCecmlftFKZd9upWSbsnOdw+YPHbZ95GgigQAKukCQuya/Wbjcy+/NODQTB5adCzoBZQBAIEe03bGWtO99QD/I/3I/qNpT3Q8+S/aDrR85JKpn1Cq8BNZdU95sarYUOQwTBxUPdXJLnrIrWxYCBIKibXtXt0cni+ZtLXLyIdjogPYoh5JtLsXrHTZ/4LD1I1fj0eTmSgqv2uJODS9tsdjDb8uoFhq4a4ij1m0CZwL4g6Jte1nSrrdNyy42zdtY5Db5T/vG9ilVFVCyxaV4g8vmDxNs/dDVWHX7Oo2K90ik4PKpbxyxwMNvyzCMalldQE7qX9ZbRecAgwA6Hmdz7Dl+up1i4wsc2qN4o5XKx28keG9hnJ2f7f/w+7RP3HGhpS22pza5kUoT+pf0tEXmAGcAtOtt02eon+4DbPyH2A9i+5RPliZYsTDB52uTi65FeM4W+UVoSbPNKQ+fhSaeUtxNbXu2wDkAbXrZ9B3qo8cAH/6cQ2yPKuWTZQneX5Bg+8c1i+B1Pj7fmDtfL9iQ6uzGt5s4eE8nEolZIOcDHNnD5vjzfHQf4COQe2jtG48oa5c5vL8oztaPku2r8JI4zk13vlX0aerTG4bxXWVlASmC3Na/bLwlOlUVX8fjbE67MsCR3e1aH1sV1r/j8PrjUYo3uohQ7rpcM2VZoXmkXZoRQW4/tXQMFtNQ/O162wy+MkCbo2vfDwA2vOfw+uMxdqxzQKhU1RumvNn8jyk5eJaaOKDsBoSZqAbb9Eq2R7tjUtMem1Y6vP5YLFnYC1XiMnryssJHU3Jw4zuZ1L/0arV4ACX3yB42g68K0KFPatp360cOrz0WY9tqB0Siooyd/GazB1NycMMwDlnWFZDj++xolNPY9zTI+bn56Nk35shRg1O/Vsh14J3n4yx9IloztH2/b1nh2JBi5uakgbH9t+Y2lrw/KlwazEPPuiEovc7wc7BN5WvDdWHF/DivPxrTeExF4RF/oHBUaDGJ1L5TZhtzLsGCPaWPAT8K5KJnjgxK77NT3x7qwvuL4rz2u5jGku3xeHG08Lq57xJP7TsZBxrZD39RsPQRgav8AdEh1wak7zA/kuJ9PlRh1ctxXpkb01iVCvD0noLCq2YtJJradzIM49tkVQE54eSK5rYdX4BwcpujbS64JYcmLVL8G+orvljn8MLUqO7e4QrKPF954U9Cq76276RRj27pV1bgD+rfgdOO6GZz0YQcClrVbT8o3uTywtQIJVtdRPUfe6n6wYxlbc1m9cCvB+7K96v1nMCZrTpbXHhrDs3a1O0OYiWbXZ6/K8KuzS4IL0Yq4sOnrWxVWadv2kCF+32eFw8EnxFhWIv2FhdNyKF5+7pt393bk+27Y72LIov9jl4UequwvE7f1DCML8maAjLc7/O8RDD4CnBq15N9XHBr8JDntx2uqnLlmVAV2z9xAXn+kzbNhs+bZx5p54Wx/bfmNpK8l4BBHY+zufj2nEOed3W4InuVv90RYetqB9D5vkDzixv6ncjwMQTiBaXzBc5uf6zNpZNy9i9SqmvxiPLsnRE2rnBQeLW8oPA8c6cqtUb2w18UKH1BhGGte9oMvyOH3Cb1177P3xVh/bsOoK/7AhVDQ4s7RurlzQ3DyI6NxC+7DDsRDD4HnNpjoI+LJ+bUW/EIkNtE+MHUXFp1tQG9qMe20nvr7c2N/cKC1UgaPQ0M6nKyzfBwbr0VjwA5jYXLpubQppcNyPmJWGmDnp8lgjhNS/8kcHbH42xG3Jlbb8UjgD9HuDSUQ/veNgJnFpSXPVJvb95AtMwp+70Iw9r1tvnh3fVXPEKyfS+ZmEunE2xABidiTf4oQv0FMIwGLisKyJ5bSycB32vf2+b88TlYHnxXgTzhssk5NG1lKfDziQNKh9d/ioYt0b9sPOgFrXvaXHhLDrYH2+T7g8LwSTk0b2cBXHv7wJIr6z9Ferj91NIxqoxo1dXmkok5+Pz1n8EXEC6ZlENRRwtUr5g0oOy6+k+RnSYNKLsO1SuKOlpcOql+P7TXsP1w8W05HNHNBhh+26mlP6/3EIbRQGX8EPakAaWnKixt3EzkqgfypFEzbz+AfrHO4amxVeo4VDiW23PqGy0+9zRQAzGp/+7j1HLfyW2M9dM5jSS/jue+fptdm12e/HmVJqJaZbtWr9Dyphs9DVTPJg0s7aWwIpgrvp/OyZO6noP6bUq3uTxxU5XGoxrVhHOs2QKmdiaeUtxNfPYH/qAEr5ydK4V1PKf125TvUB4bvU8j+zThqhxvNpU3jLqX0Xcgw0PwKTwIWMNuzvG8eAQ4oqvNoCuDokoTy7HMUHY9CAuWivsgij305zmeF48ALdpbDPlZQBTyEpbe73We+iSCqOocFP/3RgU9Lx4BCttYnHl9QFTJUdue7XWeTKe2PVuVnDOvD3hePAI0aSWcPSooKH4LnWOGsg2j7nl/5tdCIl56JdC3x0AfnfulZq+xVDjhQj9FHSyAH00aVHKy13myXfzUsh8Ap3Q50aZ7//R5vHvfc/0c0d0G9ILQwF1DvM5TX247teQikMEd+tocPSR92qP32X7a9LIROGdi/9KhXufJVBP7lw4VOKdNL5veZ3swL+EbHH26j47H2QCn3T6g5GKv8xhGtsvYAvKyy7BF+ZUIDL4y4HWcL7F9MPiqIADqWhM8jpPVRBARvVUEBl8d9DrOl4gFQ65O9k1Hrds8jlNvRORWgNOvTq/zUgTO+Fl1JmGSt2kymDABYMhVgZTv41lbQ64JJjOpTDR3IQ2jbmVsAdlj+67zFLofdbqvzveUOxydT7Jp1dkC9PsTTynu5nWebHX7KSVnAr27nuKrueubVtofa9Pm6OQq4EmDdvfxOk9du31Q2UDgxM79bI7omj6jAjVa97Rpf6wNcOqkASUnep0n00watOsEYFC73nb1bgPppWUni84n2gB9J566+zSv8xhGNku/37jfkWBdBXDceekzhHIgkeQQJiDY9uVe58laFldB+vYDgL7Dqodx1f0fb5PUPXH0Kkjv9qjJplg/8ThKxnEd+ypI8/YdlrzLrLimfQ2jDmVkATm+z45GCucXHCG0OSr9PgXX6HmaD8uHCvzA6yzZKHwMAUEublxoaYe+qe8Heyv2peQ4PQb4CARFVbO7H1x2GTbC8Nx80U4npG7uYyyWwHVTt1tE15NtcvJERfQHZpjzuxNBLEsvy8kT7XpK+l53O55gk9dEFGF4eAjpMwnXMLJMRhaQeY38A1H8XU70pXwOzjNPLaZ/r2tZ+/GWWh8rp7HQ5ihbFHqGTyltm4J4xgGcpmUnK+R16mdLqvb+XP3BekZfNY3T+lzP9weP5+H7nq31Mf05QrtjLQHaTRi0q3vtU6annttKjgcKOvWzJRV7cG5a/wXX/+QeTj/uBs7sN5rpU/5MLFb7B/v4AkL7vrao0nLiqWXH1D5pwzChf1kvVVq272vL4e75mEg43H/3Xxg2cOxBX3cSDrN/O49zTv3FYee0fdDpBFuAAidRcsJhH8gwjP8qIwtIV2QQUDOXKWU2rf+Cv/zxZYLB1E3+79AnmdGxxMzHSTEXN9kPeqemG3+yehM3/Wwmp511Av98634WvzeHq2+8ICXHbt8nWVHZrjU4JQdMQy7J87JDCs5L13EZP2o2Xbq15ZV/z+Yvi6bw6cdbmD1tXq2PDf85L7HcrG2PVLOgVtfdXcV7GP3Te/ngvXVUlH/9seQlu8q56eoZrPy/Tw/6+qGoaV83i883w/BaRhaQQC+AI7qkroBMJBwm3/IHrhl9Ia7rpuy4rbpU/4hFj0rZQQ0ApLoftErRYo2H73uWCy4dyGX/cwY5uckV3YFAakbAkguqACWb+0EvgKLOtb+srFm1ke3bdjHm1yPIa5RDy1bN+PktP2D+394kEonV+vgtq89LN7vbI7Wk+nzrcnjt+9L8t+nbrxvjbv/RQV9/eeG/6X1cF8ZNqv2U8f/0QXPdNYy6kqEFpHbz+dD8lqkbv370oX/Qul0Lzjn/ZBIJJ2XHrdlkV5WsHbr0jEo3saDZkbXvB/sqI7z79icMu6g/eyv2sW1LcWr7QdtkPxDJ3n4g0A2geQp2Rdi7N0JubvBLowGduxxJNBpj0/raP9yp5rwUkaxtj5RT7QbQrPXhte/lP/0e1//8m7dn/OEVZ3HDzZeQioejNW9rIQJC9p5vhuG1TJ1g3CK3qaRs3tuq9z/jxReW8/jfklvDpfLxjvufjiO0SNlBjSSlRTAvOaettnZ+UYa6Lu8uW83f/vIafr+PspIKbp18BaeffXytj1/TD1Szuh+08AdFA3m1n5ncqeuRVFVFWfPhBo7q3QmA+c8uA6CqKlrbw5NXIIgF6mZ1e6SYtBBLyWua/uuO/DlCIEc0VqWmfQ2jjmRkASmQH8hLzUUsUhVlyu2PM2HKT2lS0CglxzxQIFcQAVXyU37whk60cTAvNZ8idu+uwHWV0rIK/rroLixLWPT35Uy57TGOP6lHrfuGZYM/IJqIajb3g8aB3NSsam7ZqhnXjb6QMdfMpN/JPdm7t4rWbYsAaNo0NT/CYK5opNLN5vZIKUEbB3JEM2Xluj8XiVaZ665h1JWMLCARrFRdwWZPf4ailk1RVd5Zvmb/11d/sB6fz6Jz1za1ewOp/qOSvvteZCgRsVP1q8zv8yEi/OyG87Gqe9fQ75/CtPCfWLd2G8efWPuRMLFAhWzuB1Yqd0W44rpzOevck1j/6TZatS4k4Pez4LmlFLVqmpLjWxYo5rz8rlwkZdfd+lA9QpWh07QMI/1lZAGpqhXxiOak4liRfVEq91bx0My/fenr8/70Kjt3lHHdTbUrIBNRRV1AKa/VgYyvUaUiXqWFqThW2w4tEUso3rGb9p2OAMBxXBIJh5zc2q/KVxfiURXI6n6wNx5BIXV3qFq3bUHrtslRyD88+Hd69elCo8a5KTl2pMoVEcnm9kgpQfdGI5lx9xEgVoUqUuF1DsPIVhlZQApSVrWHFqpIbe94TPzN1V/7Wv9e13LHb6+le892tTs4sG9P8r9iaVmtD2Z8VVmkUju4TnKIuDYKmjZm0Ol9+P2cvzPxN1fj9/uY9+QrFDZvQpdurWsdtKpcaxYHZHM/KItFVOIx5XD3Cfwmy974kKefeIWpM69PyfGilYqbEMCcl9+VImW4SmSvktM4vevIRByiVSqS3eebYXgqIwtIhXWxqHbfW6rkN0/vC1np1uotgVQ/9TZJVlrnOtJ3zxduSp6H/qvQT5g47mEuOH08OTnJR7VNnn5tSvYFLd1e3Q9Esrgf6DpVOWX3dqWoY+3PywfufYa3l6yifE8lliVMuPNKTup/dApyQum2ZHso2dweqSXoOmBI2TaXI3uk98j/7s/d5MiPmOuuYdSVjCwgBT5WOHfnBpf85qm/kL20/D4aNUrNMNnOjTUFpHySkgMa+1X3A3ZuTE0B2ax5Pg88Pp7Pt+4ikXBo064Iy07NFKriDTX9wM3mfvAxwM4NLkUda/9zu+KaYZw19ETym+RxZJsW++empsKu/ecl2dweKaXwsQDFG2tXQPY4ugOLls745td7tuOl5fcd9vHhP+ebYq67hlFXMnKCsQvLALZ8WPvHmh1MfpNGKSsctnyQzJiw3aUpOaCxnyNS3Q9St18jwJFtW9CuY6uU9QGAzR8kM4raWdsPLNGUtkeTgkb07NUhWcinePnGpur2wCJr2yPlJHnd3VzL9rV9NvlNvnlXg297/bvYtP98U9O+hlFHMrOATPhfA9wN76a2cEi1eEzZ8qGrwNa7lrRY63WebBPwJ5YA8XTvB04CNr3vqAil9vKmK73OU1cs/97lIkQ2vJdIyWbQdcV1YeMKVxEq/P7Cd73Okyn8/sJ3ESo2rnA1hQ/rSjlV2PBeAkSivkDFMq/zGEa2ysgC8q6380sUeX3nBpfijel7Jft0mUMsogL87Vv/snHIQouL9gr8s3S7y+efpG8RueH/ElRVqLjKsyElfTtsLYUWd4ygLCjfqWz9KH3bY9MKh8oyV1B5PrSYuhnGyEKhxSRQfaGyzJVNK9K3fbetdijfoYjq/NDijhGv8xhGtsrIAhIAcZ8A+OCluNdJvlFNNhX3Tx5HyVqu8gTA+y+mbx2wclGyH1hqZX0/cC15AmDli+l7Xq7cf83QrG+PlHNJ//atvhaomvY1jLqUsQWk31/xFxG+WPliQvftTr/xss8/cdi00gHl7SlLW5hhsjpSHCt8XoTNq16Ja3lx+vWDXZtdPksOsX9kL2+6xOs8dW3tkc0WAp+uXpxg9/b0u9lassVl7bIEAh/7lhW+4nWeTDPlreavAqvWLk+wa3P6tW95sbL69bgibNkZa77A6zyGkc0ytoAMLe4YcV25Px5VWfZ0zOs4X/PaY8lMrsidHkfJanPfJe6q3us6yJtPpWM/iKIuiDA5m4eva8ybhyPIdFVYmobt8cYTMdQFF72rIbRHqqmiiv5WXVjyZDq2bxQ3geDK1Lnvkr63SQ0jC2RsAQkQrYzNRtjy3j9i7PgsfX4XrF6cYPMHDoosvmtZs4Ve58l2/kDFI4h89uErcbavSZ+5WZ++leCzt5N3oe03C5/xOk992RFt9pgoq1e/lqj1it1UWv+uw9plCUBXrG3T/M9e58lUyZ+drli7LFFzdz0tbPnQYfXiBKKs3hlr9qjXeQwj22V0ATltZatKdfXnqsL8aRHiUe+HMMuLlZcfiipC3LV1tCreh8pyocUdI5aro9SFBffGNLbP+x95Zany0qyoAo6r7o0N6W7X3HeJq+2OUkUX3hvRyF7v22PfHuXF+yMKuCpy47x5pE/lk2HmzcNRkRsB96X7I7pvj/ftG9mrLLg3oqqoWO5oc/fRMOpeRheQAFOWNX8O5Yldm13++UDM0+1D4jHlhd9EiOxVQbn1rjcKV3uXpmEJLyt8CfSh0u2OLLwvOWzsFScOf78nQuVuFRUmT13e4j3v0njjziUtXkO5b89OlQXTI3i57YvrwPxpESpKVAS5e8rSwre8S5MdpiwtfEuQuytKVOZPi+B6WI67Liy4N8qenSoi3B9e2mKxd2kMo+HI+AISIFIZHyXCR6tejfPGE97My3Fd+Mc9UbZ/7ADy9ynLCr/5UQtGnfAFKsaCvPfJ0gT/+l3UkwzqwsL7Imz+0EHhZf+bhVM8CZIGfOWFtwBvrfu3w8sPetQeCovuj7LhPQfQ1+1As5AnQbJQ8mepr294z+HF+6KefXh/5aEo695OALxl7y78tTcpDKPhyYoCctrKVpWuq+eIsPmteTFenVu/FzMnDvN/G+HT5QmAf/sCicvN0HX9Cy3uGHFs/1CBT999Ic4rD9fvnUjXgRdnRVm9OAHwoT9gXdaQhq6/KrSKmC/g/74In7y/MM7CmdF6vVPluvDSA1FWvRJHhNU+9V9i9n1MndBiEvGodSHw/oevxlk4I4pTjz9dVVj8uygrFsRB5DPXSVwUWkX6rewxjCwlms6PjDhEEwfu6iFqvaLQ9pgz/XxvdAB/MLWPQPuqylLlhbsjbFnlALzjJPzD7no7v6RO39T4r8KD9nROqPMKSqeeg3wM+0WQQG7d9oOqcuXv90TYuMIB4QM3kfje1Lda7qjTN80Q4UFl7R1XX1bo3u0UH+eNCxJsVLftEalQ5k+P8Nk7DgJrXNWzpyxrvq1O37SBCg/c1drBelmVo7ucaHP+L3PIya/b9o1WKgtmRPl0eQIRWeeqnDXlzaab6vRNDcP4kqwqIAFuH1zaznJYpEqvFu0tPX98jrTqUjc3Wj97x2HRzIhW7lZBeNHnd0aEFhftrZM3Mw5J+KTiIxJ+ayHIcc1b23re+IAc2cOuk/fauMJh4YyIVpSooPKaLygXhxY33V0nb5ahJpy2t8h2YvOBk5q2svT88UFpc3TdtMfmDx0WTIto+S4VYKlPfReGljUprZM3MwAI9y8vTEjiBWBgkxai54/PkXa966Z9t612WDA9omVfqADv+IifH3qz1c46eTPDML5R1hWQAOP77GiU08g/B+FKEeX47wfo/8MAeU1T86l493aXxY/GqrcEwVFh8trWhVPNys70Mrb/1txGVt5MlJFiQZ+hfgb+OECjwtT0g/IdymuPR1nzegLAReUeX7DZJDNMenBjziVYsKdsGuhNInDM2X4G/SRAfvMUtUexsuTJGB/9K071FJIZO6OFt8O2xCwAAAOSSURBVJoVufVjZD/8LYOlvwHGiiC9zvAz6IoATYpS074VJcqSP8ZY9XIcVVCVB8qbNvvlrIV4M8HWMBq4rCwga9zev+RiseR+lHb+oGifoT45dqifog6HfkdSNfnJd8XCOGteS1TPsZT3xHJvnLyk+dspD2+kzG0Dys6zRGejdPL5RXuf45M+Q/206nx4d6a3r3F4f2GCj16Lq+sgwCoRuXHy0mZZ/6SZVJg4oPR7IjJHVbv6fGivs/3Sd5iPI7oe3h2rzz9xWLEowUf/iqubQIA1lrijzGpcb4QG7hriqjUHOMryob3O8Mtxw3wc7gjAF+scVr6YYNU/45pIICKyTlwdndx5wTAMr2R1AQnJu5HBRoGbxGIsqkUALTtZdDrBpv2xPoo6WuS3+PonZNeFip3KjvXJRxJ+9u8Ee3Ykf1aKrBP0rk/aFD5p7jpmhrH9t+Y2krwbRfilKkcAFHWw6NzPpt2xPoo6WTQ5SD9QFyqKlR0bHDavdFj3jrP/EX0CG1Xl7p2xZo+au1yHZsy5BAt2l16PxXiUNgDN21l0PsGmQx8fRZ2T56V8pUlUk3caize6bFqRYP07DqU1j0wUtuDqPTtjzR8x7eGt8DEEEk1KrhVLfqVKe4DC1hadT7Tp0NemZUeb/JYHb9+KXUrxBpfNK5MblZdsqT7fhO3q8ts9TQsfNncdDcN7WV9A1gj3+zwvnhMYISpXAKdzwAp0XxAaNRUCuYK6EKtSKstcnMR/rm4CMVXmq+iTa9s0n28Kx8wUHrIxx4kVDFf0J8CZwP7bIr4ANGomBHIEVYhHlMoyNBHXAztCHJVFoH/cGS18wRQqtRM+hkC8SdmloD8R4Xsc0B7+gGhuMyRY3R6xqLKv9CvtgSaAF1XkT/7dhc+ZVbjpZWQ//EWB0otE9ApgKIiv5jWfXzSvEAkEk4VkNKLsK1MSX25BB+FlRf5U3qTZM6ZwNIz00WAKyANNOLmiue2PDRaVAa5ylAidgSIgXxFXcMtFpVhF1gqsFtU39lXGl05b2arS6+xG6tw6aE8zn5MYjMhA4CiBzgotgcbJeyFSARQLshZx1yjWEp8/8YZZKFU3bulXVuDPcQbjWgMRPUqQrlp9Xla3x15gp6iuQ1ijai2JWc7r9yxtUeF1duPb/XrgrvyAaw8WcQcpVk/QbkARaD7Je5EVAsWKrhORjxV3STxiv373u832eJ3dMIyv+39dxfzb9ffirgAAAABJRU5ErkJggg==">
+ </div></p>
+<ul>
+<li>Considérons le nœud portant la valeur $4$ : on a bien $3 &lt; 4$, et $3$ comme $4$ sont <em>inférieurs</em> à $5$, lui même <em>inférieur</em> à $10$.</li>
+<li>De même, $6&lt;8&lt;9$, et ces 3 valeurs sont <strong>supérieures</strong> à $5$, mais <em>inférieures</em> à $10$.</li>
+<li>Enfin, $11&lt;12&lt;15$ mais $15$, $11$ et $12$ sont <strong>supérieurs</strong> à $10$.</li>
+</ul>
+<details class="rem">
+<summary>notation <em>potentiellement</em> ambiguë</summary>
+<p>Positionner un label du type <code>&lt;</code> ou <code>&gt;</code> sur les liens est toujours problématique : dans quel sens faut-il suivre le lien — en descendant ou en remontant ?
+Ici, les symboles ne sont présents que sur les branches allant vers la gauche, et il faut lire globalement « de la gauche vers la droite », ce qui donne par exemple $3&lt;5&lt;10$.</p>
+</details>
+</details>
+<!–
+??? rem "autres contraintes supplémentaires"
+    **Pour la culture** (hors programme) : voici quelques autres dénominations fréquentes.
+
+    - **Arbre binaire complet :** tous ses niveaux sont complètement remplis, sauf éventuellement le dernier. Les nœuds du dernier niveau sont le plus à gauche possible (cf. [_supra_](#arbre_binaire_complet)).
+    - **Arbre binaire parfait :**  tous ses niveaux sont _complètement_ remplis, y compris le dernier (chaque nœud interne a exactement deux enfants, et toutes les feuilles sont à la même hauteur). _Cette notion est hors programme_.
+    - **Arbre binaire équilibré :** la hauteur des sous-arbres gauche et droit d’un même nœud doit rester « proche » (notion également hors programme).
+
+    Ces termes désignent la _forme de l’arbre_ (répartition des nœuds par niveau).
+–>
+
+<h2>Comment implémenter un arbre en Python ?</h2>
+<h3>Approches basiques : listes et dictionnaires</h3>
+<p>Il existe de nombreuses façons d’utiliser listes et dictionnaires Python pour représenter un arbre. Les arbres <em>filiforme</em> et <em>quelconque</em> de l’<a href="#arbre_binaire_complet">exemple précédent</a> peuvent être représentés par les listes suivantes (un arbre vide est ici représenté par une liste vide) :</p>
+<div class="highlight"><pre><span></span><code><span class="n">filiforme</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">]</span> <span class="p">]</span> <span class="p">]</span>
+<span class="n">quelconque</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">],</span> 
+                         <span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">]</span> <span class="p">],</span>
+                   <span class="p">[</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">],</span>
+                   <span class="p">[</span> <span class="s1">&#39;D&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">],</span>
+                          <span class="p">[</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">],</span>
+                          <span class="p">[</span> <span class="s1">&#39;I&#39;</span><span class="p">,</span> <span class="p">[]</span> <span class="p">]</span> <span class="p">]</span> <span class="p">]</span>
+</code></pre></div>
+<p>On peut aussi utiliser des <strong>dictionnaires</strong>, dont chaque clef est un nœud et chaque valeur une liste des descendants (on parle de <em>liste d’adjacence</em>, et on retrouve cette notion avec les <strong>graphes</strong>).</p>
+<div class="highlight"><pre><span></span><code><span class="n">filiforme</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">],</span> <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;C&#39;</span><span class="p">],</span> <span class="s1">&#39;C&#39;</span> <span class="p">:</span> <span class="p">[]</span> <span class="p">}</span>
+<span class="n">quelconque</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;A&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">],</span>
+               <span class="s1">&#39;B&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">],</span>
+               <span class="s1">&#39;C&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+               <span class="s1">&#39;D&#39;</span> <span class="p">:</span> <span class="p">[</span><span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="s1">&#39;I&#39;</span><span class="p">],</span>
+               <span class="s1">&#39;G&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+               <span class="s1">&#39;H&#39;</span> <span class="p">:</span> <span class="p">[],</span>
+               <span class="s1">&#39;I&#39;</span> <span class="p">:</span> <span class="p">[]</span> <span class="p">}</span>
+</code></pre></div>
+<p>Cette forme de représentation souffre d’une légère incohérence : on n’implémente ni clairement ni proprement un <em>véritable</em> arbre vide, ici.
+En effet, un dictionnaire vide représente l’arbre vide, mais un sous-arbre est censé <em><strong>être</strong> un arbre</em> ! Or, dans le code précédent, le sous-arbre de racine <code>C</code>, qui est un arbre-feuille (sans descendance), est représenté par... une <em>liste</em> vide !</p>
+<p>De nombreuses autres représentations sont possibles (<a href="https://codex.forge.apps.education.fr/exercices/arbre_1_profondeur/" rel="noopener">voir ici</a> ou <a href="https://codex.forge.apps.education.fr/exercices/arbre_enracine_2/" rel="noopener">là</a> par exemple).
+<strong>Une représentation particulière, sous forme de liste, est néanmoins <em>particulièrement intéressante</em>, pour les arbres binaires :</strong></p>
+<ul>
+<li>le nœud racine de l’arbre se voit attribué l’indice $0$ ;</li>
+<li>pour chaque nœud d’indice $i$, ses enfants reçoivent les indices $2i+1$ et $2i+2$ ;</li>
+<li>on initialise une liste Python à <code>[...] * (2**h - 1)</code> (on peut remplacer <code>...</code> par <code>None</code>), où <code>h</code> désigne la hauteur de l’arbre ;</li>
+<li>on place la valeur de chaque nœud d’indice $i$ à la position <code>i</code> de cette liste.</li>
+</ul>
+<div style="text-align:center">
+<a href="https://fr.wikipedia.org/wiki/Arbre_binaire#M%C3%A9thode_pour_stocker_des_arbres_binaires" target="_blank">
+<figure><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxMC4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogMy4wLjAgQnVpbGQgNzcpICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4wLy9FTiIgICAgImh0dHA6Ly93d3cudzMub3JnL1RSLzIwMDEvUkVDLVNWRy0yMDAxMDkwNC9EVEQvc3ZnMTAuZHRkIiBbDQoJPCFFTlRJVFkgbnNfZmxvd3MgImh0dHA6Ly9ucy5hZG9iZS5jb20vRmxvd3MvMS4wLyI+DQoJPCFFTlRJVFkgbnNfc3ZnICJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+DQoJPCFFTlRJVFkgbnNfeGxpbmsgImh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KCTwhRU5USVRZIHN0MCAiZm9udC1mYW1pbHk6J015cmlhZC1Sb21hbic7Ij4NCgk8IUVOVElUWSBzdDEgImFkb2JlLWtub2Nrb3V0OmZhbHNlOyI+DQoJPCFFTlRJVFkgc3QyICJmaWxsOm5vbmU7c3Ryb2tlOiMwMDAwMDA7YWRvYmUta25vY2tvdXQ6ZmFsc2U7Ij4NCgk8IUVOVElUWSBzdDMgImFkb2JlLWtub2Nrb3V0OnRydWU7Ij4NCgk8IUVOVElUWSBzdDQgImZpbGw6bm9uZTtzdHJva2U6IzAwMDAwMDsiPg0KCTwhRU5USVRZIHN0NSAiZmlsbDojRkZGRkZGO2Fkb2JlLWtub2Nrb3V0OmZhbHNlOyI+DQoJPCFFTlRJVFkgc3Q2ICJmaWxsOiNGRkZGRkY7Ij4NCgk8IUVOVElUWSBzdDcgImZpbGw6I0ZGRkZGRjtzdHJva2U6IzAwMDAwMDsiPg0KCTwhRU5USVRZIHN0OCAiZm9udC1zaXplOjE4OyI+DQpdPg0KPHN2ZyAgeG1sbnM9IiZuc19zdmc7IiB4bWxuczp4bGluaz0iJm5zX3hsaW5rOyIgeG1sbnM6YT0iaHR0cDovL25zLmFkb2JlLmNvbS9BZG9iZVNWR1ZpZXdlckV4dGVuc2lvbnMvMy4wLyINCgkgd2lkdGg9IjM2OS44MjQiIGhlaWdodD0iOTIuODc1IiB2aWV3Qm94PSIwIDAgMzY5LjgyNCA5Mi44NzUiIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlO2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzY5LjgyNCA5Mi44NzUiDQoJIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KCTxtZXRhZGF0YT4NCjw/eHBhY2tldCBiZWdpbj0n77u/JyBpZD0nVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkJz8+PD9hZG9iZS14YXAtZmlsdGVycyBlc2M9IkNSIj8+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIycgeG1sbnM6aVg9J2h0dHA6Ly9ucy5hZG9iZS5jb20vaVgvMS4wLyc+CgogPHJkZjpEZXNjcmlwdGlvbiBhYm91dD0nJwogIHhtbG5zOnBkZj0naHR0cDovL25zLmFkb2JlLmNvbS9wZGYvMS4zLyc+CiAgPHBkZjpQcm9kdWNlcj5BZG9iZSBQREYgbGlicmFyeSA1LjAwPC9wZGY6UHJvZHVjZXI+CiAgPCEtLSBwZGY6Q3JlYXRpb25EYXRlIGlzIGFsaWFzZWQgLS0+CiAgPCEtLSBwZGY6TW9kRGF0ZSBpcyBhbGlhc2VkIC0tPgogIDwhLS0gcGRmOkNyZWF0b3IgaXMgYWxpYXNlZCAtLT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gYWJvdXQ9JycKICB4bWxuczp4YXA9J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8nPgogIDx4YXA6Q3JlYXRlRGF0ZT4yMDA0LTAxLTI0VDE5OjQ2OjExLTA0OjAwPC94YXA6Q3JlYXRlRGF0ZT4KICA8eGFwOk1vZGlmeURhdGU+MjAwNS0xMi0zMVQyMjozMDo1MVo8L3hhcDpNb2RpZnlEYXRlPgogIDx4YXA6Q3JlYXRvclRvb2w+QWRvYmUgSWxsdXN0cmF0b3IgMTAuMDwveGFwOkNyZWF0b3JUb29sPgogIDx4YXA6TWV0YWRhdGFEYXRlPjIwMDQtMDEtMjRUMTk6NDY6MTItMDU6MDA8L3hhcDpNZXRhZGF0YURhdGU+CiA8L3JkZjpEZXNjcmlwdGlvbj4KCjwvcmRmOlJERj4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8P3hwYWNrZXQgZW5kPSd3Jz8+DQoJCQk8L21ldGFkYXRhPg0KCQk8ZyBpZD0iTGF5ZXJfMSI+DQoJCQk8cGF0aCBzdHlsZT0iJnN0NjsiIGQ9Ik0zNjkuODI0LDY0LjA4NmgtMi44MThWMTIuODc4aDIuODE4VjY0LjA4NnoiLz4NCgkJCTxwYXRoIHN0eWxlPSImc3Q3OyIgZD0iTTM2OC4wODEsNjMuOTM5SDAuNVYxMi44OWgzNjcuNTgxVjYzLjkzOXoiLz4NCgkJCTxwYXRoIHN0eWxlPSImc3Q0OyIgZD0iTTMxNS43MDYsNjMuNTYxdi01MC4zNSIvPg0KCQkJPHBhdGggc3R5bGU9IiZzdDQ7IiBkPSJNMTU4LjQ1Myw2My41NjF2LTUwLjM1Ii8+DQoJCQk8cGF0aCBzdHlsZT0iJnN0NDsiIGQ9Ik0xMDYuMDM1LDYzLjU2MXYtNTAuMzUiLz4NCgkJCTxwYXRoIHN0eWxlPSImc3Q0OyIgZD0iTTUzLjYxOCw2My41NjF2LTUwLjM1Ii8+DQoJCQk8cGF0aCBzdHlsZT0iJnN0NDsiIGQ9Ik0yNjMuMjg5LDYzLjU2MXYtNTAuMzUiLz4NCgkJCTxwYXRoIHN0eWxlPSImc3Q0OyIgZD0iTTIxMC44NzEsNjMuNTYxdi01MC4zNSIvPg0KCQkJPHRleHQgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAyMy4yNDcxIDg4LjM3NTUpIj48dHNwYW4geD0iMCIgeT0iMCIgc3R5bGU9IiZzdDA7ICZzdDg7Ij4wPC90c3Bhbj48L3RleHQ+DQoJCQk8dGV4dCB0cmFuc2Zvcm09Im1hdHJpeCgxIDAgMCAxIDczLjI0NzEgODguMzc1NSkiPjx0c3BhbiB4PSIwIiB5PSIwIiBzdHlsZT0iJnN0MDsgJnN0ODsiPjE8L3RzcGFuPjwvdGV4dD4NCgkJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTI2Ljc0NzEgODguMzc1NSkiPjx0c3BhbiB4PSIwIiB5PSIwIiBzdHlsZT0iJnN0MDsgJnN0ODsiPjI8L3RzcGFuPjwvdGV4dD4NCgkJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMTc5LjI0NzEgODguMzc1NSkiPjx0c3BhbiB4PSIwIiB5PSIwIiBzdHlsZT0iJnN0MDsgJnN0ODsiPjM8L3RzcGFuPjwvdGV4dD4NCgkJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjMwLjc0NzEgODguMzc1NSkiPjx0c3BhbiB4PSIwIiB5PSIwIiBzdHlsZT0iJnN0MDsgJnN0ODsiPjQ8L3RzcGFuPjwvdGV4dD4NCgkJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMjgzLjI0NjYgODguMzc1NSkiPjx0c3BhbiB4PSIwIiB5PSIwIiBzdHlsZT0iJnN0MDsgJnN0ODsiPjU8L3RzcGFuPjwvdGV4dD4NCgkJCTx0ZXh0IHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIDEgMzM2Ljc0NjYgODguMzc1NSkiPjx0c3BhbiB4PSIwIiB5PSIwIiBzdHlsZT0iJnN0MDsgJnN0ODsiPjY8L3RzcGFuPjwvdGV4dD4NCgkJCTxwYXRoIHN0eWxlPSImc3Q0OyIgZD0iTTQwLjM2NCwzOS4zNzVjMCw4LjAwOC02LjQ5MiwxNC41LTE0LjUsMTQuNXMtMTQuNS02LjQ5Mi0xNC41LTE0LjVzNi40OTItMTQuNSwxNC41LTE0LjUNCgkJCQlTNDAuMzY0LDMxLjM2Nyw0MC4zNjQsMzkuMzc1eiIvPg0KCQkJPHBhdGggc3R5bGU9IiZzdDQ7IiBkPSJNOTMuODY0LDM5LjM3NWMwLDguMDA4LTYuNDkyLDE0LjUtMTQuNSwxNC41cy0xNC41LTYuNDkyLTE0LjUtMTQuNXM2LjQ5Mi0xNC41LDE0LjUtMTQuNQ0KCQkJCVM5My44NjQsMzEuMzY3LDkzLjg2NCwzOS4zNzV6Ii8+DQoJCQk8cGF0aCBzdHlsZT0iJnN0NDsiIGQ9Ik0xNDQuODY0LDM5LjM3NWMwLDguMDA4LTYuNDkyLDE0LjUtMTQuNSwxNC41cy0xNC41LTYuNDkyLTE0LjUtMTQuNXM2LjQ5Mi0xNC41LDE0LjUtMTQuNQ0KCQkJCVMxNDQuODY0LDMxLjM2NywxNDQuODY0LDM5LjM3NXoiLz4NCgkJCTxwYXRoIHN0eWxlPSImc3Q0OyIgZD0iTTE5Ni44NjQsMzkuMzc1YzAsOC4wMDgtNi40OTIsMTQuNS0xNC41LDE0LjVzLTE0LjUtNi40OTItMTQuNS0xNC41czYuNDkyLTE0LjUsMTQuNS0xNC41DQoJCQkJUzE5Ni44NjQsMzEuMzY3LDE5Ni44NjQsMzkuMzc1eiIvPg0KCQkJPHBhdGggc3R5bGU9IiZzdDQ7IiBkPSJNMzU2LjM2NCwzOS4zNzVjMCw4LjAwOC02LjQ5MiwxNC41LTE0LjUsMTQuNXMtMTQuNS02LjQ5Mi0xNC41LTE0LjVzNi40OTItMTQuNSwxNC41LTE0LjUNCgkJCQlTMzU2LjM2NCwzMS4zNjcsMzU2LjM2NCwzOS4zNzV6Ii8+DQoJCQk8cGF0aCBzdHlsZT0iJnN0NDsiIGQ9Ik0zMDIuODY0LDM5LjM3NWMwLDguMDA4LTYuNDkyLDE0LjUtMTQuNSwxNC41cy0xNC41LTYuNDkyLTE0LjUtMTQuNXM2LjQ5Mi0xNC41LDE0LjUtMTQuNQ0KCQkJCVMzMDIuODY0LDMxLjM2NywzMDIuODY0LDM5LjM3NXoiLz4NCgkJCTxwYXRoIHN0eWxlPSImc3Q0OyIgZD0iTTI0OS4zNjQsMzkuMzc1YzAsOC4wMDgtNi40OTIsMTQuNS0xNC41LDE0LjVzLTE0LjUtNi40OTItMTQuNS0xNC41czYuNDkyLTE0LjUsMTQuNS0xNC41DQoJCQkJUzI0OS4zNjQsMzEuMzY3LDI0OS4zNjQsMzkuMzc1eiIvPg0KCQkJPGc+DQoJCQkJPGcgc3R5bGU9IiZzdDM7Ij4NCgkJCQkJPHBhdGggc3R5bGU9IiZzdDU7IiBkPSJNNjQuODk5LDM5Ljg3NWMtMi44NCwxLjA1NC02LjM2MywyLjg1Mi04LjU0Nyw0Ljc1NWwxLjcyLTQuNzU1bC0xLjcyLTQuNzU1DQoJCQkJCQlDNTguNTM2LDM3LjAyNCw2Mi4wNTksMzguODIyLDY0Ljg5OSwzOS44NzV6Ii8+DQoJCQkJPC9nPg0KCQkJCTxnIHN0eWxlPSImc3QzOyI+DQoJCQkJCTxwYXRoIHN0eWxlPSImc3QyOyIgZD0iTTQwLjM2NCw0MC4zNzVjNS45NTIsMC41MjMsMTIuNDMxLTAuNSwxOC41LTAuNSIvPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0MTsiIGQ9Ik02NC44OTksMzkuODc1Yy0yLjg0LDEuMDU0LTYuMzYzLDIuODUyLTguNTQ3LDQuNzU1bDEuNzItNC43NTVsLTEuNzItNC43NTUNCgkJCQkJCUM1OC41MzYsMzcuMDI0LDYyLjA1OSwzOC44MjIsNjQuODk5LDM5Ljg3NXoiLz4NCgkJCQk8L2c+DQoJCQk8L2c+DQoJCQk8Zz4NCgkJCQk8ZyBzdHlsZT0iJnN0MzsiPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0NTsiIGQ9Ik0xMjIuMjMsMjguMjUzYy0zLjAwNy0wLjM2My02Ljk2My0wLjM3Ni05Ljc3NSwwLjMxN2wzLjcwNS0zLjQ0MWwwLjY0Ni01LjAxNQ0KCQkJCQkJQzExNy44NzcsMjIuODA2LDEyMC4xODcsMjYuMDE3LDEyMi4yMywyOC4yNTN6Ii8+DQoJCQkJPC9nPg0KCQkJCTxnIHN0eWxlPSImc3QzOyI+DQoJCQkJCTxwYXRoIHN0eWxlPSImc3QyOyIgZD0iTTM4LjMwMSwzMC4zNzVjLTAuOTk2LDAuNDk4LTEuMzI0LDAuNDkyLTAuOTg0LTAuMDE5YzguMTk0LTcuNzQ0LDI4LjU5My0xMS4yMzgsNDAuNTAxLTExLjkzOA0KCQkJCQkJYzE0Ljc4NS0wLjg2OSwyNi45NTksMC44NTIsMzkuMDQ2LDcuMDcyIi8+DQoJCQkJCTxwYXRoIHN0eWxlPSImc3QxOyIgZD0iTTEyMi4yMywyOC4yNTNjLTMuMDA3LTAuMzYzLTYuOTYzLTAuMzc2LTkuNzc1LDAuMzE3bDMuNzA1LTMuNDQxbDAuNjQ2LTUuMDE1DQoJCQkJCQlDMTE3Ljg3NywyMi44MDYsMTIwLjE4NywyNi4wMTcsMTIyLjIzLDI4LjI1M3oiLz4NCgkJCQk8L2c+DQoJCQk8L2c+DQoJCQk8Zz4NCgkJCQk8ZyBzdHlsZT0iJnN0MzsiPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0NTsiIGQ9Ik0xNzEuODM2LDQ4LjYxNmMtMS43NDIsMi40NzgtMy42MjYsNS45NTYtNC4zNDcsOC43NjFsLTEuMjc4LTQuODkybC00LjExMi0yLjk0Mg0KCQkJCQkJQzE2NC45NzcsNDkuODc0LDE2OC44OTksNDkuMzU4LDE3MS44MzYsNDguNjE2eiIvPg0KCQkJCTwvZz4NCgkJCQk8ZyBzdHlsZT0iJnN0MzsiPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0MjsiIGQ9Ik04OS44NjQsNTAuMzc1YzEuMzQzLDEuNjU1LDcuODY4LDUuMDgyLDEwLjM2Niw2LjMyYzUuODMxLDIuODg4LDE1LjQzOSw0LjI4NywyMi42MDgsNC41NjkNCgkJCQkJCWMxNC44MjgsMC41ODMsMzMuNTQ0LTIuMDE3LDQ0LjAyNi05LjIyOCIvPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0MTsiIGQ9Ik0xNzEuODM2LDQ4LjYxNmMtMS43NDIsMi40NzgtMy42MjYsNS45NTYtNC4zNDcsOC43NjFsLTEuMjc4LTQuODkybC00LjExMi0yLjk0Mg0KCQkJCQkJQzE2NC45NzcsNDkuODc0LDE2OC44OTksNDkuMzU4LDE3MS44MzYsNDguNjE2eiIvPg0KCQkJCTwvZz4NCgkJCTwvZz4NCgkJCTxnPg0KCQkJCTxnIHN0eWxlPSImc3QzOyI+DQoJCQkJCTxwYXRoIHN0eWxlPSImc3Q1OyIgZD0iTTIyNS43NDgsNTEuMzNjLTEuNjc5LDIuNTIxLTMuNDc0LDYuMDQ2LTQuMTIzLDguODY5bC0xLjQwMi00Ljg1OGwtNC4xODUtMi44MzgNCgkJCQkJCUMyMTguOTIzLDUyLjc2MSwyMjIuODMxLDUyLjE0NiwyMjUuNzQ4LDUxLjMzeiIvPg0KCQkJCTwvZz4NCgkJCQk8ZyBzdHlsZT0iJnN0MzsiPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0MjsiIGQ9Ik04Mi4zNjQsNTUuMjYyYy0wLjQxNi0wLjI2Ni0wLjg3OC0wLjM5MS0xLjM4Ni0wLjM3N2MxMC43OSwxMS43ODYsMjguODUsMTYuNTAxLDQ2Ljc4MywxNy4wMDcNCgkJCQkJCWMyOS4zNTUsMC44MjgsNzAuMzE1LTAuNDc0LDkzLjEwNC0xNy4wMTciLz4NCgkJCQkJPHBhdGggc3R5bGU9IiZzdDE7IiBkPSJNMjI1Ljc0OCw1MS4zM2MtMS42NzksMi41MjEtMy40NzQsNi4wNDYtNC4xMjMsOC44NjlsLTEuNDAyLTQuODU4bC00LjE4NS0yLjgzOA0KCQkJCQkJQzIxOC45MjMsNTIuNzYxLDIyMi44MzEsNTIuMTQ2LDIyNS43NDgsNTEuMzN6Ii8+DQoJCQkJPC9nPg0KCQkJPC9nPg0KCQkJPGc+DQoJCQkJPGcgc3R5bGU9IiZzdDM7Ij4NCgkJCQkJPHBhdGggc3R5bGU9IiZzdDU7IiBkPSJNMjc3LjIwOCwzMC40MTVjLTMuMDEzLDAuMzEzLTYuODc0LDEuMTc1LTkuNDYzLDIuNDczbDIuODUxLTQuMTc1bC0wLjQ3OS01LjAzNA0KCQkJCQkJQzI3MS43NTcsMjYuMDY2LDI3NC43MjEsMjguNjg3LDI3Ny4yMDgsMzAuNDE1eiIvPg0KCQkJCTwvZz4NCgkJCQk8ZyBzdHlsZT0iJnN0MzsiPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0MjsiIGQ9Ik0xNDIuMzY0LDMyLjg3NWM1LjY0My01LjM3LDE2LjE5My03LjksMjMuMjI2LTEwLjAwOWMxMC44OTEtMy4yNjYsMjMuODg2LTMuNDAzLDM1LjMyOC00LjA3OA0KCQkJCQkJYzI0LjU2My0xLjQ0OSw0Ny4yMjksNC4xNDIsNzAuNDQ3LDEwLjEyMSIvPg0KCQkJCQk8cGF0aCBzdHlsZT0iJnN0MTsiIGQ9Ik0yNzcuMjA4LDMwLjQxNWMtMy4wMTMsMC4zMTMtNi44NzQsMS4xNzUtOS40NjMsMi40NzNsMi44NTEtNC4xNzVsLTAuNDc5LTUuMDM0DQoJCQkJCQlDMjcxLjc1NywyNi4wNjYsMjc0LjcyMSwyOC42ODcsMjc3LjIwOCwzMC40MTV6Ii8+DQoJCQkJPC9nPg0KCQkJPC9nPg0KCQkJPGc+DQoJCQkJPGcgc3R5bGU9IiZzdDM7Ij4NCgkJCQkJPHBhdGggc3R5bGU9IiZzdDU7IiBkPSJNMzMxLjcxMiwyOC40NjljLTIuOTA4LTAuODQ0LTYuODEtMS40OTgtOS42OTctMS4yNjhsNC4yMTItMi43OTdsMS40NDktNC44NDQNCgkJCQkJCUMzMjguMjk3LDIyLjM4OSwzMzAuMDU4LDI1LjkzMiwzMzEuNzEyLDI4LjQ2OXoiLz4NCgkJCQk8L2c+DQoJCQkJPGcgc3R5bGU9IiZzdDM7Ij4NCgkJCQkJPHBhdGggc3R5bGU9IiZzdDI7IiBkPSJNMTM2Ljg2NCwyNS44NzVjOS41MTktOS4xNjcsMjMuNTc1LTEzLjU5MiwzNS45MTktMTcuNjExYzQwLjAzMS0xMy4wMzYsODMuMzM2LTguMjg4LDEyMy4xOTUsMi44MTYNCgkJCQkJCWMxMC40NzksMi45MTksMjIuMDI3LDcuMjMxLDMwLjg4NiwxMy43OTUiLz4NCgkJCQkJPHBhdGggc3R5bGU9IiZzdDE7IiBkPSJNMzMxLjcxMiwyOC40NjljLTIuOTA4LTAuODQ0LTYuODEtMS40OTgtOS42OTctMS4yNjhsNC4yMTItMi43OTdsMS40NDktNC44NDQNCgkJCQkJCUMzMjguMjk3LDIyLjM4OSwzMzAuMDU4LDI1LjkzMiwzMzEuNzEyLDI4LjQ2OXoiLz4NCgkJCQk8L2c+DQoJCQk8L2c+DQoJCTwvZz4NCgk8L3N2Zz4NCg==" alt="Schéma issu de Wikipedia"><figcaption>Schéma issu de Wikipedia</figcaption></figure>
+</a>
+</div>
+
+<details class="ex">
+<summary>transformation de l’ABR d’exemple en liste</summary>
+<p>L’<a href="#abr">ABR montré plus haut</a> a une hauteur de 4, et une taille de 11. On crée donc une liste Python de longueur $2^4-1=15$ : <code>abr = [...] * 15</code>.</p>
+<ol>
+<li>Le nœud racine est numéroté <code>0</code>. Sa valeur <code>10</code> est affectée en position <code>0</code> de la <em>liste</em> <code>abr</code> : <code>abr[0] = 10</code>.
+    On a alors <code>abr = [10, ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>Son enfant gauche est numéroté $2\times 0 + 1 = 1$. Sa valeur <code>5</code> est affectée en position <code>1</code> :<br />
+<code>abr = [10, 5, ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>Son enfant droit est numéroté $2\times 0 + 2 = 2$. Sa valeur <code>15</code> est affectée en position <code>2</code> :<br />
+<code>abr = [10, 5, 15, ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>L’enfant gauche du nœud d’indice <code>1</code> (celui qui porte la valeur <code>5</code>) est numéroté $2\times 1 + 1 = 3$. Sa valeur <code>3</code> est affectée en position <code>3</code> :<br />
+<code>abr = [10, 5, 15, 3, ..., ..., ..., ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>L’enfant droit du nœud d’indice <code>1</code> (celui qui porte la valeur <code>5</code>) est numéroté $2\times 1 + 2 = 4$. Sa valeur <code>8</code> est affectée en position <code>4</code> :<br />
+<code>abr = [10, 5, 15, 3, 8, ..., ..., ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>L’enfant gauche du nœud d’indice <code>2</code> (celui qui porte la valeur <code>15</code>) est numéroté $2\times 2 + 1 = 5$. Sa valeur <code>12</code> est affectée en position <code>5</code> :<br />
+<code>abr = [10, 5, 15, 3, 8, 12, ..., ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>L’enfant droit du nœud d’indice <code>2</code> (celui qui porte la valeur <code>15</code>) est numéroté $2\times 2 + 2 = 6$. Sa valeur <code>18</code> est affectée en position <code>6</code> :<br />
+<code>abr = [10, 5, 15, 3, 8, 12, 18, ..., ..., ..., ..., ..., ..., ..., ...]</code></li>
+<li>Et ainsi de suite. À la fin du processus, on obtient la liste :<br />
+<code>abr = [10, 5, 15, 3, 8, 12, 18, ..., 4, 6, 9, 11, ..., ..., ...]</code><br />
+    Noter que, dans ce cas, certaines cases restent à <code>Ellipsis</code> (<code>...</code>) : elles correspondent à des nœuds inexistants.</li>
+</ol>
+</details>
+<details class="success" open="open">
+<summary>Retrouver le parent d’un nœud avec l’organisation en liste</summary>
+<p>Soit un nœud d’emplacement <code>i</code> de la liste. La position de son parent (s’il existe) vaut <strong><code>(i-1)//2</code></strong>.</p>
+</details>
+<details class="rem" open="open">
+<summary>condition d’optimalité</summary>
+<p><strong>Pour la culture :</strong> cette approche est <em>optimale</em> si l’arbre binaire est <em>complet</em>, car il n’y a aucune « perte de place ».
+On dit d’un arbre binaire qu’il est <strong>complet</strong> lorsque tous ses niveaux sont remplis, sauf (éventuellement) le dernier, qui doit être rempli <em>par la gauche</em>.</p>
+<p><em>Dans cette situation, la structure résultante est aussi appelée un <strong>tas</strong>.</em></p>
+</details>
+<h3>Approche POO</h3>
+<p>Il existe également de nombreuses façons d’implémenter les arbres binaires en Programmation Orientée Objet (POO).
+Voici l’exemple le plus fréquent, qui ne fait appel qu’à une seule classe, le plus souvent nommé <code>Noeud</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Noeud</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valeur</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">=</span> <span class="n">valeur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># sous-arbre gauche (None → SAG vide)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">droite</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># sous-arbre droit (idem)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">inserer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valeur</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Insertion dans un ABR (sans doublons).&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">valeur</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span><span class="o">.</span><span class="n">inserer</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>             <span class="c1"># Récursivité ici !</span>
+        <span class="k">elif</span> <span class="n">valeur</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span><span class="p">:</span>                      <span class="c1"># elif pour éviter les doublons</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">droite</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">droite</span><span class="o">.</span><span class="n">inserer</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>              <span class="c1"># Récursivité encore, ici...</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">rechercher</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valeur</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recherche dans un ABR ; retourne True/False.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">valeur</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">valeur</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>                                       <span class="c1"># else est superflu, en réalité</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span><span class="o">.</span><span class="n">rechercher</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>   <span class="c1"># Récursivité ici</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Simplification du code précédent (pour recherche récursive à droite) :</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span><span class="o">.</span><span class="n">rechercher</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Utilisation :</strong>
+<div class="highlight"><pre><span></span><code><span class="n">racine</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>                                      <span class="c1"># Création de la racine</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">]:</span>            <span class="c1"># On obtient l’ABR d’exemple</span>
+    <span class="n">racine</span><span class="o">.</span><span class="n">inserer</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">Difficulté avec cette approche !</p>
+<p>La définition de la classe <code>Noeud</code> souffre d’un gros défaut : un arbre vide <strong>n’</strong>est <strong>pas</strong> de la classe <code>Noeud</code> : c’est <code>None</code>.
+Cela implique deux choses :</p>
+<ul>
+<li>pas moyen de stocker la valeur <code>None</code> dans un arbre ainsi implémenté ;</li>
+<li>le code est plus pénible à écrire. Il faut constamment vérifier si le (sous-)arbre vers lequel on souhaite poursuivre un traitement n’est pas vide.
+    Concrètement, cela revient à vérifier s’il n’est pas <code>None</code>.
+    Sans cette vérification, on risquerait d’appeler une méthode telle que <code>rechercher</code> ou <code>inserer</code> sur <code>None</code>.
+    S’ensuivrait une erreur <code>AttributeError</code> car l’objet <code>None</code> ne dispose pas de ces méthodes.<br />
+<strong>Le problème fondamental avec cette approche est qu’un arbre vide <em>n’</em> est <em>pas</em> un arbre !</strong> C’est juste <code>None</code> ! </li>
+</ul>
+</div>
+<details class="rem">
+<summary>méthodes pour calculer hauteur et taille d’un arbre</summary>
+<p>Il suffit d’ajouter à la classe <code>Noeud</code> les méthodes récursives suivantes. 
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hauteur</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>                                  <span class="c1"># Approche récursive</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">h_gauche</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">h_gauche</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span><span class="o">.</span><span class="n">hauteur</span><span class="p">()</span>
+    <span class="c1"># Simplification du code précédent avec l’opérateur ternaire de Python</span>
+    <span class="n">h_droite</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span><span class="o">.</span><span class="n">hauteur</span><span class="p">()</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="nb">max</span><span class="p">(</span><span class="n">h_gauche</span><span class="p">,</span> <span class="n">h_droite</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">taille</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>                                   <span class="c1"># Approche récursive</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">t_gauche</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">t_gauche</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gauche</span><span class="o">.</span><span class="n">taille</span><span class="p">()</span>
+    <span class="c1"># Simplification du code précédent avec l’opérateur ternaire de Python</span>
+    <span class="n">t_droite</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">droite</span><span class="o">.</span><span class="n">taille</span><span class="p">()</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">t_gauche</span> <span class="o">+</span> <span class="n">t_droite</span>
+</code></pre></div></p>
+</details>
+<h2>Parcours d’arbre</h2>
+<p>Lorsque des informations sont organisées sous forme d’arbre, il faut pouvoir les retrouver, vérifier si une valeur est bien présente dans cet arbre, etc.
+Pour cela, on doit <strong>parcourir</strong> cet arbre. Il existe diverses approches : toutes ont pour objectif de visiter <em>tous les nœuds</em> selon un ordre précis.</p>
+<ul>
+<li>
+<p><strong>Le parcours en largeur</strong> est un parcours « niveau par niveau ».
+    Dans le cadre de l’<a href="#arbre_binaire_complet">exemple d’arbre binaire complet</a>, au début de cette fiche, cela donnerait :
+    A → B → C → D → E → F → G → H → I.</p>
+</li>
+<li>
+<p><strong>Le parcours en profondeur</strong> est un parcours qui vise à descendre immédiatement aussi profondément que possible, puis à reprendre l’exploration au dernier embranchement non complètement exploré.
+    Il existe <strong>3 variantes <em>distinctes</em> du parcours en profondeur</strong>.</p>
+</li>
+</ul>
+<p>On a déjà effectué des parcours d’arbres, lors du calcul de la hauteur et de la taille d’un arbre : ces <em>parcours <strong>récursifs</strong></em> sont les plus naturels.
+Mais des <strong>parcours <em>itératifs</em></strong> sont aussi possibles : il faut pour cela <strong>employer des structures de données auxiliaires, <em>pile</em> ou <em>file</em>.</strong></p>
+<div class="admonition warning">
+<p class="admonition-title">Rappel : point de vigilance !</p>
+<p>En raison de l’implémentation retenue, il faut <strong>toujours tester si un nœud <em>existe</em> AVANT</strong> de l’explorer, avec <code>if noeud is None</code> ici.
+Autrement, on risque des erreurs ou des parcours impossibles à terminer correctement.</p>
+</div>
+<h3>Parcours en largeur <em>itératif</em></h3>
+<p>Le parcours en largeur n’est pas naturellement récursif : on n’évoquera donc que la version itérative.
+Quelle que soit l’approche, néanmoins, ce parcours nécessite une <strong>file</strong> comme structure de données intermédiaire.
+On va ici utiliser une liste Python « en mode file » (<code>fil.append(...)</code> pour enfiler, <code>fil.pop(0)</code> pour défiler).</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parcours_largeur</span><span class="p">(</span><span class="n">arbre</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arbre</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fil</span> <span class="o">=</span> <span class="p">[</span><span class="n">arbre</span><span class="p">]</span>                       <span class="c1"># Liste qu&#39;on utiliser en « mode file » (FIFO)</span>
+        <span class="k">while</span> <span class="n">fil</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="n">noeud</span> <span class="o">=</span> <span class="n">fil</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>              <span class="c1"># pop(0) pour défiler par la gauche</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">noeud</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">noeud</span><span class="o">.</span><span class="n">gauche</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fil</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">noeud</span><span class="o">.</span><span class="n">gauche</span><span class="p">)</span>    <span class="c1"># append() pour enfiler par la droite</span>
+            <span class="k">if</span> <span class="n">noeud</span><span class="o">.</span><span class="n">droite</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fil</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">noeud</span><span class="o">.</span><span class="n">droite</span><span class="p">)</span>    <span class="c1"># idem</span>
+</code></pre></div>
+<details class="rem">
+<summary><code>pop(0)</code> n’est pas très efficace !</summary>
+<p>Le coût d’emploi d’une liste Python en mode file est assez médiocre : <code>pop(0)</code> s’exécute en $O(n)$ !
+En effet, toutes les valeurs qui suivent celle qui sort de la file doivent « glisser vers la gauche »... </p>
+</details>
+<div class="admonition success">
+<p class="admonition-title">Moyen mnémotechnique</p>
+<p>Un parcours en <strong>L</strong>argeur utilise une fi<strong>L</strong>e.</p>
+</div>
+<h3>Parcours en profondeur <em>préfixe</em></h3>
+<p>Ce parcours passe <strong>d’abord par la racine</strong>, puis par le sous-arbre gauche, puis par le sous-arbre droit.
+Il est naturellement récursif.
+<strong>La version itérative utilise une <em>pile</em> comme structure de données auxiliaire.</strong></p>
+<div class="admonition success">
+<p class="admonition-title">Moyen mnémotechnique</p>
+<p>Un parcours en <strong>P</strong>rofondeur utilise une <strong>P</strong>ile.</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parcours_prefixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arbre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>                     <span class="c1"># Traiter la racine d’abord</span>
+    <span class="n">parcours_prefixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">gauche</span><span class="p">)</span> <span class="c1"># puis le sous-arbre gauche</span>
+    <span class="n">parcours_prefixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">droite</span><span class="p">)</span> <span class="c1"># enfin le sous-arbre droit</span>
+</code></pre></div>
+<p><a id="parcours_prefixe_iteratif"></a>La version itérative simule la récursivité avec une pile : il faut empiler d’abord le fils droit, puis le fils gauche, pour traiter le gauche en premier.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parcours_prefixe_iteratif</span><span class="p">(</span><span class="n">arbre</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arbre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">pile</span> <span class="o">=</span> <span class="p">[</span><span class="n">arbre</span><span class="p">]</span>                          <span class="c1"># Liste qu&#39;on utiliser en « mode pile » (LIFO)</span>
+    <span class="k">while</span> <span class="n">pile</span><span class="p">:</span>
+        <span class="n">noeud</span> <span class="o">=</span> <span class="n">pile</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>                  <span class="c1"># pop() pour dépiler par la droite (LIFO)</span>
+        <span class="k">if</span> <span class="n">noeud</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>               <span class="c1"># Test utile, car...</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">noeud</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>
+            <span class="n">pile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">noeud</span><span class="o">.</span><span class="n">droite</span><span class="p">)</span>       <span class="c1"># ...ici on peut empiler None (à droite)</span>
+            <span class="n">pile</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">noeud</span><span class="o">.</span><span class="n">gauche</span><span class="p">)</span>       <span class="c1"># ici aussi (mais None sera ignoré au tour suivant)</span>
+</code></pre></div>
+<details class="rem">
+<summary>pourquoi ajouter d’abord le sous-arbre de droite ?</summary>
+<p>Il est d’usage de progresser de la gauche vers la droite et, vu le mode de fonctionnement d’une pile (dernier arrivé, premier sorti), il faut empiler <em>d’abord</em> le SAD, pour que le SAG soit empilé <em>en dernier</em>.
+Ce sera ainsi le premier à être dépilé, et le SAG sera parcouru <em>avant</em> le SAD.</p>
+</details>
+<h3>Parcours en profondeur <em>infixe</em></h3>
+<p>Ce parcours passe <strong>d’abord par le sous-arbre gauche</strong>, <em>puis par la racine</em>, et enfin par le sous-arbre droit.</p>
+<p>Le code récursif est très proche du précédent : il suffit de déplacer <code>print</code> entre les deux appels récursifs.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parcours_infixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arbre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">parcours_infixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">gauche</span><span class="p">)</span>  <span class="c1"># Traiter le SAG d’abord</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>                     <span class="c1"># puis la racine </span>
+    <span class="n">parcours_infixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">droite</span><span class="p">)</span>  <span class="c1"># enfin le sous-arbre droit</span>
+</code></pre></div>
+<details class="rem">
+<summary>pas de version itérative ici !</summary>
+<p>Une simple pile ne permet pas de différer le traitement d'un nœud jusqu'après l'exploration de ses descendants.
+Essayez de modifier le <a href="#parcours_prefixe_iteratif">code itératif du parcours en profondeur préfixe</a> pour vous en rendre compte...
+Il est <em>possible</em> mais <em>plus difficile</em> de faire un parcours en profondeur infixe itératif.</p>
+</details>
+<h3>Parcours en profondeur postfixe (ou suffixe)</h3>
+<p>Ce parcours passe <strong>d’abord par le sous-arbre gauche</strong>, <em>puis par le sous-arbre droit</em>, et enfin par la racine.</p>
+<p>Là encore, le code est quasiment identique aux codes précédents : il suffit de déplacer <code>print</code> après les deux appels récursifs.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parcours_postfixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">arbre</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span>
+    <span class="n">parcours_postfixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">gauche</span><span class="p">)</span>    <span class="c1"># Traiter le SAG d’abord</span>
+    <span class="n">parcours_postfixe_recursif</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">droite</span><span class="p">)</span>    <span class="c1"># puis le sous-arbre droit</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">arbre</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>                         <span class="c1"># enfin la racine </span>
+</code></pre></div>
+<details class="rem">
+<summary>pas de version itérative ici !</summary>
+<p>Ici encore, une simple pile ne permet pas de différer le traitement d'un nœud jusqu'après l'exploration de ses descendants.
+Essayez de modifier le <a href="#parcours_prefixe_iteratif">code itératif du parcours en profondeur préfixe</a> pour vous en rendre compte...
+Il est <em>possible</em> mais <em>plus difficile</em> de faire un parcours en profondeur postfixe itératif.</p>
+</details>
+<h2>Liens avec d’autres notions</h2>
+<ul>
+<li>La <strong>récursivité</strong> est naturelle pour les parcours d’arbres.</li>
+<li>Les <strong>piles</strong> servent à simuler les parcours en profondeur.</li>
+<li>Les <strong>files</strong> servent à faire des parcours en largeur.</li>
+<li>Les <strong>graphes</strong> généralisent la notion d’arbre.</li>
+</ul>
+
+    <script>
+// ── Numérotation automatique des titres du document ──────────────────
+function numeroterTitres() {
+    var compteurs = {h2: 0, h3: 0, h4: 0};
+    var titres = document.querySelectorAll('h2, h3, h4');
+    for (var i = 0; i < titres.length; i++) {
+        var titre = titres[i];
+        var niveau = titre.tagName.toLowerCase();
+        if (!titre.textContent.match(/^\d+\./)) {
+            if (niveau === 'h2') {
+                compteurs.h2++; compteurs.h3 = 0; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '. ' + titre.textContent;
+            } else if (niveau === 'h3') {
+                compteurs.h3++; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '. ' + titre.textContent;
+            } else if (niveau === 'h4') {
+                compteurs.h4++;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '.' + compteurs.h4 + '. ' + titre.textContent;
+            }
+        }
+    }
+}
+
+
+// ── Génère un slug à partir d'un texte ───────────────────────────────
+function slugifier(texte) {
+  return texte
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // supprime accents
+    .replace(/[^a-z0-9\s-]/g, "")                    // supprime ponctuation
+    .trim()
+    .replace(/\s+/g, "-");                            // espaces → tirets
+}
+
+
+// ── Fabrique des ancres convenables pour les titres du document ──────
+// À appeler au DOMContentLoaded, AVANT numeroterTitres() !
+function assignerAncres() {
+  const titres = document.querySelectorAll('h2, h3, h4');
+  titres.forEach((t) => {
+    if (!t.id) {
+      t.id = slugifier(t.textContent.trim());
+    }
+  });
+}
+
+
+// ── Thème clair / sombre ─────────────────────────────────────────────
+function basculerTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+
+// ── Cycle des polices (pour dyslexie ; double-clic : reset) ──────────
+let policeCourante = localStorage.getItem('police') || '0';
+let dernierClicPolice = 0;
+
+function basculerPolice() {
+    // Double-clic reset
+    const maintenant = Date.now();
+    if (maintenant - dernierClicPolice < 400) {
+        document.body.classList.remove('police-1', 'police-2', 'police-3');
+        localStorage.setItem('police', '0');
+        policeCourante = '0';
+        return;
+    }
+    dernierClicPolice = maintenant;
+
+    // Cycle 3 polices : 0→1→2→3→0
+    const nouvellePolice = (parseInt(policeCourante) + 1) % 4;
+
+    // Nettoyer classes précédentes
+    document.body.classList.remove('police-1', 'police-2', 'police-3');
+
+    if (nouvellePolice === 0) {
+        // Retour normal
+        localStorage.setItem('police', '0');
+    } else {
+        document.body.classList.add('police-' + nouvellePolice);
+        localStorage.setItem('police', nouvellePolice.toString());
+    }
+
+    policeCourante = nouvellePolice.toString();
+}
+
+
+// ── Fabrique un sommaire automatique pour le document HTML ───────────
+// Nécessite que les ancres aient été préalablement calculées
+function construireSommaire() {
+  const panneau = document.getElementById('toc-overlay');
+  if (panneau.dataset.built) return;
+  const titres = document.querySelectorAll('h2, h3, h4');
+  if (titres.length === 0) {
+    panneau.innerHTML = '<p style="padding:0.5em 1em;color:#888;">Aucun titre trouvé.</p>';
+    panneau.dataset.built = '1';
+    return;
+  }
+  titres.forEach((t) => {
+    const cls = 'toc-' + t.tagName.toLowerCase();
+    const texte = t.textContent.trim();
+    // html += `<a href="#${t.id}" class="${cls}" onclick='fermerSommaire()'>${texte}</a>`;
+    const a = document.createElement('a');
+    a.href = '#' + t.id;
+    a.className = cls;
+    a.textContent = texte;
+    a.addEventListener('click', fermerSommaire);
+    panneau.appendChild(a);
+  });
+  panneau.dataset.built = '1';
+}
+
+function basculerSommaire() {
+    construireSommaire();
+    document.getElementById('toc-overlay').classList.toggle('open');
+}
+
+function fermerSommaire() {
+    document.getElementById('toc-overlay').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+    const controles = document.getElementById('controls');
+    const sommaire = document.getElementById('toc-overlay');
+    if (!controles.contains(e.target) && !sommaire.contains(e.target)) fermerSommaire();
+});
+
+
+// ── Mode pagination par bloc (viewport-height scroll) ────────────────
+// Gestion des touches pour block-scroll à l'appui sur barre d'espacement, page up & down
+document.addEventListener('keydown', (e) => {
+    // Pas dans les champs de saisie !
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    } else if (e.key === 'PageUp') {
+        e.preventDefault();
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    }
+});
+
+
+// ── Impression : ouvrir les <details> avant, puis revenir à leur état
+// Prépare le DOM avant impression
+window.addEventListener('beforeprint', function () {
+    window._impressionEnCours = true;          // ← flag AVANT d'ouvrir les details
+
+    // 1. Ouvrir tous les <details> (admonitions dépliables)
+    //    et mémoriser leur état pour restauration après impression
+    document.querySelectorAll('details').forEach(function (d) {
+        d._etaitOuvert = d.open;
+        d.open = true;
+    });
+
+    // 2. Injecter le titre de chaque onglet juste avant son bloc
+    //    (les labels et blocs sont dans le même ordre : label[i] ↔ block[i])
+    document.querySelectorAll('.tabbed-set').forEach(function (set) {
+        const labels = Array.from(set.querySelectorAll('.tabbed-labels > label'));
+        const blocks = Array.from(set.querySelectorAll('.tabbed-content > .tabbed-block'));
+        labels.forEach(function (label, i) {
+            if (blocks[i]) {
+                const titre = document.createElement('div');
+                titre.className = 'tabbed-print-label';
+                titre.textContent = label.textContent;
+                titre.setAttribute('data-print-injected', '1'); // marqueur de nettoyage
+                blocks[i].prepend(titre);
+            }
+        });
+    });
+});
+
+window.addEventListener('afterprint', function () {
+    window._impressionEnCours = false;         // ← reset du flag
+
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+// Restauration du DOM après impression (retour à l'état avant impression
+window.addEventListener('afterprint', function () {
+
+    // 1. Restaurer l'état d'ouverture initial des <details>
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+
+    // 2. Supprimer les titres d'onglets injectés
+    //    (le marqueur data-print-injected évite tout risque de suppression parasite)
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+
+// ── Bouton copier sur les blocs de code ──────────────────────────────
+function ajouterBoutonsCopier() {
+    document.querySelectorAll('.highlight').forEach(bloc => {
+        // Conteneur relatif pour positionner le bouton
+        bloc.style.position = 'relative';
+
+        const btn = document.createElement('button');
+        btn.textContent = '📋';
+        btn.title = 'Copier le code';
+        btn.style.cssText = `
+            position: absolute;
+            top: 0.4em;
+            right: 0.4em;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0.2em 0.4em;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        `;
+
+        // Afficher au survol du bloc
+        bloc.addEventListener('mouseenter', () => btn.style.opacity = '1');
+        bloc.addEventListener('mouseleave', () => btn.style.opacity = '0');
+
+        btn.addEventListener('click', () => {
+            const cellCode = bloc.querySelector('td.code pre') || bloc.querySelector('pre');
+            const code = cellCode.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✅';
+                setTimeout(() => btn.textContent = '📋', 1500);
+            });
+        });
+
+        bloc.appendChild(btn);
+    });
+}
+
+
+// ── Barre de progression de lecture ──────────────────────────────────
+function majBarreProgression() {
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (docHeight <= 0) return;
+  document.body.style.setProperty('--progress', window.scrollY / docHeight);
+}
+
+window.addEventListener('scroll', majBarreProgression, { passive: true });
+window.addEventListener('resize', majBarreProgression, { passive: true });
+document.addEventListener('DOMContentLoaded', majBarreProgression);
+
+
+// ── Positionnement des notes de bas de page / infobulles ─────────────
+// Il s'agit d'éviter qu'elles soient coupées lorsqu'utilisées dans un bloc
+function positionnerInfobulles() {
+    document.querySelectorAll('.infobulle-note').forEach(note => {
+        const bulle = note.querySelector('.infobulle-contenu');
+
+        note.addEventListener('mouseenter', () => {
+            bulle.style.display = 'block';
+            const rect = note.getBoundingClientRect();
+            const bw   = bulle.offsetWidth;
+            const bh   = bulle.offsetHeight;
+
+            // Position par défaut : centré au-dessus du sup
+            let left = rect.left + rect.width / 2 - bw / 2;
+            let top  = rect.top - bh - 6;
+
+            // Correction débordement droit
+            if (left + bw > window.innerWidth - 8)
+                left = window.innerWidth - bw - 8;
+            // Correction débordement gauche
+            if (left < 8) left = 8;
+            // Si ça dépasse en haut → afficher en dessous
+            if (top < 8) top = rect.bottom + 6;
+
+            bulle.style.left = left + 'px';
+            bulle.style.top  = top  + 'px';
+        });
+
+        note.addEventListener('mouseleave', () => {
+            bulle.style.display = 'none';
+        });
+    });
+}
+
+
+// ── Auto target="_blank" pour liens externes ─────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])')
+        .forEach(link => {
+            if (!link.target) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        });
+});
+
+
+// ── Initialisation complète du document HTML ─────────────────────────
+function initialiser() {
+    assignerAncres();
+    numeroterTitres();
+    positionnerInfobulles();
+
+    // Thème
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // ← Police restaurée au chargement
+    const police = localStorage.getItem('police') || '0';
+    if (parseInt(police) > 0) {
+        document.body.classList.add('police-' + police);
+    }
+    
+    // Bouton copier-coller
+    ajouterBoutonsCopier();   // ← ajouter cette ligne
+    
+    // Pour scroll souris dans le sommaire
+    document.getElementById('toc-overlay').addEventListener(
+        'wheel', function(e) { e.stopPropagation(); }, { passive: true });
+}
+
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+
+    </script>
+</body>
+</html>

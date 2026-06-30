@@ -1,0 +1,2079 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listes chaînées</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <style>
+/* ── Google Font accessibilité ───────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Andika:wght@400;700&display=swap');
+
+/* ── Base ────────────────────────────────────────────────────────── */
+body {
+    font-family: Cantarell, Roboto, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    transition: background-color 0.3s, color 0.3s;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+}
+
+/* ── Pour barre de défilement ────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: #6b46c1;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  z-index: 2000;
+}
+
+/* ── Cycle polices dyslexie ──────────────────────────────── */
+body.police-1 { font-family: 'Andika', sans-serif !important; }
+body.police-2 { font-family: 'Atkinson Hyperlegible', sans-serif !important; }
+body.police-3 { font-family: 'Ubuntu', sans-serif !important; }
+body.police-1, body.police-2, body.police-3 {
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.8 !important;
+}
+
+/* ── H1 ──────────────────────────────────────────────────── */
+body h1 {
+    color: #6b46c1;
+    border: 0.15em solid #6b46c1;
+    border-radius: 0.5em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    background: none;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* ── H2 / H3 / H4 : dégradé via ::after, pas de boîte ───── */
+body h2, body h3, body h4 {
+    position: relative;
+    z-index: 0;
+    background: none;
+    border-radius: 0;
+    padding: 0.15em 0 0.15em 0.2em;
+}
+
+body h2 { font-size: 1.75rem; color: #2d3748; margin-top: 1.5em; }
+body h3 { font-size: 1.4rem;  color: #2d3748; margin-top: 1.2em; }
+body h4 { font-size: 1.2rem;  color: #2d3748; margin-top: 0.9em; }
+
+/* Premier titre : pas d'espace parasite en haut de page */
+body > :is(h2, h3, h4):first-child { margin-top: 0.5em; }
+
+body h2 em, body h2 i {
+    font-style: italic !important;
+    font-weight: 600 !important;
+    font-synthesis: none;
+    font-family: Georgia, 'Times New Roman', serif !important;
+}
+
+/* Dégradé vertical via ::after (texte jamais affecté) */
+body h2::after, body h3::after, body h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 4px 4px 0 0;
+}
+
+body h2::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(262, 52%, 65%, 0.28) 0%,
+        hsla(262, 52%, 65%, 0.10) 33%,
+        transparent 100%
+    );
+    border-bottom: 4px solid hsla(262, 52%, 65%, 0.55);
+}
+
+body h3::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(35, 95%, 58%, 0.22) 0%,
+        transparent 33%
+    );
+    border-bottom: 3px solid hsla(35, 95%, 58%, 0.45);
+}
+
+body h4::after {
+    height: 0;
+    border-bottom: 2px solid hsla(100, 56%, 55%, 0.40);
+}
+
+    /* Listes */
+    body ul, body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    body li {
+        margin: 0.5rem 0;
+    }
+
+    /* Code inline */
+    body code {
+        background-color: #edf2f7;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c7254e;
+    }
+
+    /* Annuler padding pour code dans pre (évite espace initial) */
+    body pre code,
+    body .highlight pre code {
+        padding: 0;
+        background: none;
+    }
+
+    /* Blocs de code */
+    body .highlight {
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0
+        overflow-x: auto;
+        margin: 1rem 0;
+        /* Forcer le scrollbar visible sur WebKit (Chrome/Safari) */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .highlight pre {
+        margin: 0;
+        background: none;
+        padding: 1rem;
+        overflow-x: auto;  /* ← ajouter aussi ici par sécurité */
+        white-space: pre;  /* ← garantir le non-wrap */
+    }
+
+    /* Masquer les spans vides de Pygments qui créent un espace initial */
+    body .highlight pre span:empty {
+        display: none !important;
+    }
+    body.dark-mode .highlight pre span:empty {
+        display: none !important;
+    }
+
+    /* Tableaux */
+    body table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        background-color: white;
+    }
+
+    body th, body td {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    body th {
+        background-color: #9f7aea;
+        color: white;
+        font-weight: 600;
+    }
+
+    body tr:nth-child(even) {
+        background-color: #f7fafc;
+    }
+
+
+
+/* ── Texte à lignes numérotées (pour littéraires) ────────────────── */
+.texte-numerote,
+.texte-numerote * {
+    text-align: left !important;
+}
+
+.texte-numerote {
+    margin: 1.2em 0;
+    font-family: Andika, sans-serif;
+    font-size: 1em;
+}
+
+.texte-lignes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.texte-ligne {
+    display: flex;
+    flex-direction: row;           /* ← row, pas row-reverse */
+    align-items: baseline;
+    padding: 0;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.texte-ligne::before {
+    content: attr(data-num);
+    min-width: 2.5em;
+    text-align: right;
+    padding-right: 0.6em;
+    margin-right: 0.8em;
+    border-right: 1px solid #d0dae6;
+    color: #999;
+    font-size: 0.82em;
+    font-family: ui-monospace, monospace;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.dark-mode .texte-ligne::before {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+
+
+
+
+.highlight [data-linenos]::before {
+    content: attr(data-linenos);
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+
+
+
+    /* ── Bloc contrôles haut-droite ───────────────────────────── */
+    #controls {
+        position: fixed;
+        top: 0.8rem;
+        display: flex;
+        font-size: clamp(0.6rem, 1.5vw, 1rem); /* ajuster la taille des boutons selon le zoom */
+        flex-direction: row;
+        align-items: center;
+        gap: 0.2em;
+        background: var(--ctrl-bg, #ccc);
+        border: 1px solid var(--ctrl-border, #ccc);
+        border-radius: 2em;
+        padding: 0.2em 0.5em;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        box-sizing: border-box;
+        overflow: visible;
+        width: auto;
+        max-width: none;
+        /* Positionner les boutons à droite dans le bloc de texte */
+        /* right: max(0.8rem, calc(50% - 450px + 0.8rem)); */
+        /* right: 0.8rem; */
+        right: max(0.8rem, calc(50vw - 450px - 7.5rem));
+    }
+
+    #controls button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        width: 1.8em;
+        height: 1.8em;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border-radius: 50%;
+        transition: background 0.15s;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    #controls button:hover {
+        background: var(--ctrl-hover, rgba(0,0,0,0.08));
+    }
+
+    /* Tooltip natif amélioré : on s'appuie sur [title] + pseudo CSS */
+    #controls button[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        top: 2.8em;
+        right: 0;
+        background: var(--tooltip-bg, #333);
+        color: var(--tooltip-fg, #fff);
+        font-size: 0.75rem;
+        font-family: sans-serif;
+        white-space: nowrap;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 1100;
+    }
+
+    #controls {
+        position: fixed; /* redéclaré pour que ::after soit relatif au bouton */
+    }
+
+    #controls button {
+        position: relative;
+    }
+
+    /* ── Overlay sommaire ─────────────────────────────────────── */
+    #toc-overlay {
+        display: none;
+        position: fixed;
+        top: 3.8rem;
+        right: 1rem;
+        width: clamp(200px, 25vw, 340px);
+        max-height: 70vh;
+        overflow-y: auto;
+        background: var(--toc-bg, #fafafa);
+        border: 1px solid var(--toc-border, #ddd);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        z-index: 999;
+        padding: 0.6em 0;
+        font-size: 0.9rem;
+    }
+    #toc-overlay.open {
+        display: block;
+    }
+    #toc-overlay a {
+        display: block;
+        padding: 0.3em 1em;
+        color: var(--toc-link, #1a1a1a);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        transition: background 0.12s, border-color 0.12s;
+    }
+    #toc-overlay a:hover {
+        background: var(--toc-hover, #e8f0fe);
+        border-left-color: #448aff;
+    }
+    #toc-overlay a.toc-h2 {
+        font-weight: bold;
+        padding-left: 1em;
+    }
+    #toc-overlay a.toc-h3 {
+        padding-left: 2em;
+        font-weight: normal;
+        color: var(--toc-link-h3, #444);
+    }
+    #toc-overlay a.toc-h4 {
+        padding-left: 3em;
+        font-weight: normal;
+        font-size: 0.85em;
+        color: var(--toc-link-h4, #666);
+    }
+
+    /* ── Variables thème clair ────────────────────────────────── */
+    :root {
+        --ctrl-bg:       #ccc;
+        --ctrl-border:   #eee;
+        --ctrl-hover:    rgba(0,0,0,0.08);
+        --tooltip-bg:    #ccc;
+        --tooltip-fg:    #fff;
+        --toc-bg:        #fafafa;
+        --toc-border:    #ddd;
+        --toc-link:      #1a1a1a;
+        --toc-link-h3:   #444;
+        --toc-link-h4:   #666;
+        --toc-hover:     #e8f0fe;
+    }
+    
+/* ── Liens lisibles (thème clair) ────────────────────────────────── */
+body a               { color: #0066cc; }
+body a:hover         { color: #004499; text-decoration: underline; }
+body a:visited       { color: #6b46c1; }
+
+/* ── Liens lisibles (thème sombre) ───────────────────────────────── */
+body.dark-mode a         { color: #90cdf4; }
+body.dark-mode a:hover   { color: #63b3ed; }
+body.dark-mode a:visited { color: #d6bcfa; }
+
+/* ── Variables thème sombre ──────────────────────────────────────── */
+body.dark-mode {
+    background-color: #1a202c;
+    color: #e2e8f0;
+    --ctrl-bg:       #888;
+    --ctrl-border:   #ddd;
+    --ctrl-hover:    rgba(255,255,255,0.4);
+    --tooltip-bg:    #eee;
+    --tooltip-fg:    #111;
+    --toc-bg:        #1e1e1e;
+    --toc-border:    #444;
+    --toc-link:      #ddd;
+    --toc-link-h3:   #aaa;
+    --toc-link-h4:   #888;
+    --toc-hover:     #1a2a3a;
+}
+
+    /* dark-mode h1 : voir section dark-mode titres */
+
+    /* ── Dark-mode H1 ────────────────────────────────────────────── */
+    body.dark-mode h1  { color: #b794f4; border-color: #b794f4; }
+    body.dark-mode h2  { color: #e2e8f0; }
+    body.dark-mode h3  { color: #e2e8f0; }
+    body.dark-mode h4  { color: #e2e8f0; }
+
+    /* ── Dark-mode ::after dégradés ──────────────────────────────── */
+    body.dark-mode h2::after {
+        background: linear-gradient(
+            to top,
+            hsla(262, 70%, 75%, 0.35) 0%,
+            hsla(262, 70%, 75%, 0.12) 33%,
+            transparent 100%
+        );
+        border-bottom: 4px solid hsla(262, 70%, 75%, 0.60);
+    }
+    body.dark-mode h3::after {
+        background: linear-gradient(
+            to top,
+            hsla(35, 90%, 68%, 0.28) 0%,
+            transparent 33%
+        );
+        border-bottom: 3px solid hsla(35, 90%, 68%, 0.50);
+    }
+    body.dark-mode h4::after {
+        border-bottom: 2px solid hsla(100, 56%, 65%, 0.45);
+    }
+
+    body.dark-mode code {
+        background-color: #2d3748;
+        color: #fc8181;
+    }
+    
+    body.dark-mode a:visited {
+        color: #d6bcfa !important;
+    }
+
+    body.dark-mode table {
+        background-color: #2d3748;
+    }
+
+    body.dark-mode th {
+        background-color: #6b46c1;
+    }
+
+    body.dark-mode tr:nth-child(even) {
+        background-color: #374151;
+    }
+
+    body.dark-mode td {
+        border-color: #4a5568;
+    }
+    
+    body.dark-mode .admonition,
+    body.dark-mode details {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    body.dark-mode .admonition a,
+    body.dark-mode details a {
+        color: #90cdf4;
+    }
+    
+    body.dark-mode .admonition a:hover,
+    body.dark-mode details a:hover {
+        color: #63b3ed;
+    }
+
+    body.dark-mode .admonition a:visited,
+    body.dark-mode details a:visited {
+        color: #d6bcfa !important;
+    }
+
+
+    /* ── Coloration syntaxique mode clair — thème "vs" (Visual Studio) */
+    /* Fond légèrement bleuté ajouté pour délimiter visuellement le bloc */
+    td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    .highlight .hll { background-color: #ffffcc }
+    .highlight  { background: #f0f4f8; }
+    .highlight .c  { color: #008000 }                      /* Comment */
+    .highlight .err { border: 1px solid #F00 }             /* Error */
+    .highlight .k  { color: #0000FF; font-weight: bold }   /* Keyword */
+    .highlight .ch { color: #008000 }                      /* Comment.Hashbang */
+    .highlight .cm { color: #008000 }                      /* Comment.Multiline */
+    .highlight .cp { color: #0000FF }                      /* Comment.Preproc */
+    .highlight .cpf { color: #008000 }                     /* Comment.PreprocFile */
+    .highlight .c1 { color: #008000 }                      /* Comment.Single */
+    .highlight .cs { color: #008000 }                      /* Comment.Special */
+    .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    .highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+    .highlight .gh { font-weight: bold }                   /* Generic.Heading */
+    .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    .highlight .gu { color: #800080; font-weight: bold }   /* Generic.Subheading */
+    .highlight .kc { color: #0000FF; font-weight: bold }   /* Keyword.Constant */
+    .highlight .kd { color: #0000FF; font-weight: bold }   /* Keyword.Declaration */
+    .highlight .kn { color: #0000FF; font-weight: bold }   /* Keyword.Namespace */
+    .highlight .kp { color: #0000FF }                      /* Keyword.Pseudo */
+    .highlight .kr { color: #0000FF; font-weight: bold }   /* Keyword.Reserved */
+    .highlight .kt { color: #2B91AF }                      /* Keyword.Type */
+    .highlight .s  { color: #A31515 }                      /* Literal.String */
+    .highlight .na { color: #FF0000 }                      /* Name.Attribute */
+    .highlight .nb { color: #00F }                         /* Name.Builtin */
+    .highlight .nc { color: #2B91AF }                      /* Name.Class */
+    .highlight .no { color: #2B91AF }                      /* Name.Constant */
+    .highlight .nd { color: #2B91AF }                      /* Name.Decorator */
+    .highlight .nf { color: #000000 }                      /* Name.Function */
+    .highlight .nt { color: #800000 }                      /* Name.Tag */
+    .highlight .nv { color: #000000 }                      /* Name.Variable */
+    .highlight .ow { color: #0000FF; font-weight: bold }   /* Operator.Word */
+    .highlight .sa { color: #A31515 }                      /* Literal.String.Affix */
+    .highlight .sb { color: #A31515 }                      /* Literal.String.Backtick */
+    .highlight .sc { color: #A31515 }                      /* Literal.String.Char */
+    .highlight .dl { color: #A31515 }                      /* Literal.String.Delimiter */
+    .highlight .sd { color: #A31515 }                      /* Literal.String.Doc */
+    .highlight .s2 { color: #A31515 }                      /* Literal.String.Double */
+    .highlight .se { color: #A31515 }                      /* Literal.String.Escape */
+    .highlight .sh { color: #A31515 }                      /* Literal.String.Heredoc */
+    .highlight .si { color: #A31515 }                      /* Literal.String.Interpol */
+    .highlight .sx { color: #A31515 }                      /* Literal.String.Other */
+    .highlight .sr { color: #A31515 }                      /* Literal.String.Regex */
+    .highlight .s1 { color: #A31515 }                      /* Literal.String.Single */
+    .highlight .ss { color: #A31515 }                      /* Literal.String.Symbol */
+    .highlight .vc { color: #000000 }                      /* Name.Variable.Class */
+    .highlight .vg { color: #000000 }                      /* Name.Variable.Global */
+    .highlight .vi { color: #000000 }                      /* Name.Variable.Instance */
+    .highlight .il { color: #098658 }                      /* Literal.Number.Integer.Long */
+    .highlight .m  { color: #098658 }                      /* Literal.Number */
+    .highlight .mb { color: #098658 }                      /* Literal.Number.Bin */
+    .highlight .mf { color: #098658 }                      /* Literal.Number.Float */
+    .highlight .mh { color: #098658 }                      /* Literal.Number.Hex */
+    .highlight .mi { color: #098658 }                      /* Literal.Number.Integer */
+    .highlight .mo { color: #098658 }                      /* Literal.Number.Oct */
+
+    /* ── Coloration syntaxique mode sombre — thème "one-dark" ────── */
+    body.dark-mode .highlight { background: #282C34; color: #ABB2BF; }
+    body.dark-mode .highlight .hll { background-color: #3E4451; }
+    body.dark-mode .highlight .c  { color: #7F848E; font-style: italic } /* Comment */
+    body.dark-mode .highlight .err { color: #E06C75 }                    /* Error */
+    body.dark-mode .highlight .esc { color: #ABB2BF }                    /* Escape */
+    body.dark-mode .highlight .k  { color: #C678DD }                     /* Keyword */
+    body.dark-mode .highlight .l  { color: #ABB2BF }                     /* Literal */
+    body.dark-mode .highlight .n  { color: #E06C75 }                     /* Name */
+    body.dark-mode .highlight .o  { color: #56B6C2 }                     /* Operator */
+    body.dark-mode .highlight .p  { color: #ABB2BF }                     /* Punctuation */
+    body.dark-mode .highlight .ch { color: #7F848E; font-style: italic } /* Comment.Hashbang */
+    body.dark-mode .highlight .cm { color: #7F848E; font-style: italic } /* Comment.Multiline */
+    body.dark-mode .highlight .cp { color: #7F848E; font-style: italic } /* Comment.Preproc */
+    body.dark-mode .highlight .cpf { color: #7F848E; font-style: italic }/* Comment.PreprocFile */
+    body.dark-mode .highlight .c1 { color: #7F848E; font-style: italic } /* Comment.Single */
+    body.dark-mode .highlight .cs { color: #7F848E; font-style: italic } /* Comment.Special */
+    body.dark-mode .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    body.dark-mode .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    body.dark-mode .highlight .kc { color: #C678DD }                     /* Keyword.Constant */
+    body.dark-mode .highlight .kd { color: #C678DD }                     /* Keyword.Declaration */
+    body.dark-mode .highlight .kn { color: #C678DD }                     /* Keyword.Namespace */
+    body.dark-mode .highlight .kp { color: #C678DD }                     /* Keyword.Pseudo */
+    body.dark-mode .highlight .kr { color: #C678DD }                     /* Keyword.Reserved */
+    body.dark-mode .highlight .kt { color: #E5C07B }                     /* Keyword.Type */
+    body.dark-mode .highlight .ld { color: #98C379 }                     /* Literal.Date */
+    body.dark-mode .highlight .m  { color: #D19A66 }                     /* Literal.Number */
+    body.dark-mode .highlight .s  { color: #98C379 }                     /* Literal.String */
+    body.dark-mode .highlight .na { color: #E06C75 }                     /* Name.Attribute */
+    body.dark-mode .highlight .nb { color: #61AFEF }                     /* Name.Builtin */
+    body.dark-mode .highlight .nc { color: #E5C07B }                     /* Name.Class */
+    body.dark-mode .highlight .no { color: #E06C75 }                     /* Name.Constant */
+    body.dark-mode .highlight .nd { color: #61AFEF }                     /* Name.Decorator */
+    body.dark-mode .highlight .ni { color: #ABB2BF }                     /* Name.Entity */
+    body.dark-mode .highlight .ne { color: #E06C75 }                     /* Name.Exception */
+    body.dark-mode .highlight .nf { color: #61AFEF }                     /* Name.Function */
+    body.dark-mode .highlight .nl { color: #E06C75 }                     /* Name.Label */
+    body.dark-mode .highlight .nn { color: #E5C07B }                     /* Name.Namespace */
+    body.dark-mode .highlight .nt { color: #E06C75 }                     /* Name.Tag */
+    body.dark-mode .highlight .nv { color: #E06C75 }                     /* Name.Variable */
+    body.dark-mode .highlight .ow { color: #56B6C2 }                     /* Operator.Word */
+    body.dark-mode .highlight .sa { color: #98C379 }                     /* Literal.String.Affix */
+    body.dark-mode .highlight .sb { color: #98C379 }                     /* Literal.String.Backtick */
+    body.dark-mode .highlight .sc { color: #98C379 }                     /* Literal.String.Char */
+    body.dark-mode .highlight .dl { color: #98C379 }                     /* Literal.String.Delimiter */
+    body.dark-mode .highlight .sd { color: #7F848E; font-style: italic } /* Literal.String.Doc */
+    body.dark-mode .highlight .s2 { color: #98C379 }                     /* Literal.String.Double */
+    body.dark-mode .highlight .se { color: #56B6C2 }                     /* Literal.String.Escape */
+    body.dark-mode .highlight .sh { color: #98C379 }                     /* Literal.String.Heredoc */
+    body.dark-mode .highlight .si { color: #D19A66 }                     /* Literal.String.Interpol */
+    body.dark-mode .highlight .sx { color: #98C379 }                     /* Literal.String.Other */
+    body.dark-mode .highlight .sr { color: #56B6C2 }                     /* Literal.String.Regex */
+    body.dark-mode .highlight .s1 { color: #98C379 }                     /* Literal.String.Single */
+    body.dark-mode .highlight .ss { color: #98C379 }                     /* Literal.String.Symbol */
+    body.dark-mode .highlight .mb { color: #D19A66 }                     /* Literal.Number.Bin */
+    body.dark-mode .highlight .mf { color: #D19A66 }                     /* Literal.Number.Float */
+    body.dark-mode .highlight .mh { color: #D19A66 }                     /* Literal.Number.Hex */
+    body.dark-mode .highlight .mi { color: #D19A66 }                     /* Literal.Number.Integer */
+    body.dark-mode .highlight .mo { color: #D19A66 }                     /* Literal.Number.Oct */
+    body.dark-mode .highlight .il { color: #D19A66 }                     /* Literal.Number.Integer.Long */
+    body.dark-mode .highlight .vc { color: #E06C75 }                     /* Name.Variable.Class */
+    body.dark-mode .highlight .vg { color: #E06C75 }                     /* Name.Variable.Global */
+    body.dark-mode .highlight .vi { color: #E06C75 }                     /* Name.Variable.Instance */
+    body.dark-mode .highlight .bp { color: #61AFEF }                     /* Name.Builtin.Pseudo */
+    body.dark-mode .highlight .fm { color: #61AFEF }                     /* Name.Function.Magic */
+
+/* ── Numérotation de lignes — style inline (pymdownx.highlight défaut) */
+/* Les numéros ne se copient pas avec le code — meilleur pour les élèves */
+.highlight .linenos {
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+body.dark-mode .highlight .linenos {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+    
+    /* ── ONGLETS — pymdownx.tabbed (alternate_style) ────────────────── 
+       Structure : .tabbed-set > input[radio]
+                               > .tabbed-labels > label
+                               > .tabbed-content > .tabbed-block */
+    .tabbed-set {
+      margin: 1.2em 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* Cacher les radio buttons */
+    .tabbed-set > input { display: none; }
+
+    /* Barre d'onglets */
+    .tabbed-labels {
+      display: flex;
+      flex-wrap: wrap;
+      background: #f7fafc;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tabbed-labels > label {
+      display: inline-block;
+      padding: 0.5em 1.2em;
+      cursor: pointer;
+      font-size: 0.92em;
+      font-weight: 600;
+      color: #4a5568;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      margin: 0;
+      user-select: none;
+    }
+
+    .tabbed-labels > label:hover {
+      color: #6b46c1;
+      background: #ede9fe;
+    }
+
+    /* Contenu : tous les blocs cachés par défaut */
+    .tabbed-content { padding: 0; }
+
+    .tabbed-block {
+      display: none;
+      padding: 1em 1.2em;
+    }
+
+    /* Afficher le bon bloc selon l'onglet actif */
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #6b46c1;
+      border-bottom: 2px solid #6b46c1;
+      background: white;
+    }
+
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-content > .tabbed-block:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-content > .tabbed-block:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-content > .tabbed-block:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-content > .tabbed-block:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-content > .tabbed-block:nth-child(5) {
+      display: block;
+    }
+
+    /* ---- Dark mode ---- */
+    body.dark-mode .tabbed-set { border-color: #4a5568; }
+
+    body.dark-mode .tabbed-labels {
+      background: #2d3748;
+      border-bottom-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label {
+      color: #a0aec0;
+      border-right-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label:hover {
+      color: #b794f4;
+      background: #3d2d5e;
+    }
+
+    body.dark-mode .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    body.dark-mode .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    body.dark-mode .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    body.dark-mode .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    body.dark-mode .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #b794f4;
+      border-bottom-color: #b794f4;
+      background: #1a202c;
+    }
+
+    body.dark-mode .tabbed-block { background: #1a202c; }
+
+
+    /* ── CSS bouton "copier" des blocs de code sur écrans tactiles ─ */
+    @media (hover: none) {
+      .highlight button[title="Copier le code"] {
+        opacity: 0.5 !important;
+      }
+    }
+    
+    /* ── Indicateur de progression CSS pur ───────────────────────── */
+    @keyframes grow-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── Figures GeoGebra ────────────────────────────────────────── */
+    .ggb-container {
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    body.dark-mode .ggb-container {
+      border-color: #4a5568;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ── Notes "de bas de page" -> infobulles ────────────────────── */
+    .infobulle-note {
+        position: relative;
+        cursor: help;
+    }
+    .infobulle-note sup {
+        color: #6b46c1;
+        font-weight: bold;
+    }
+    .infobulle-contenu {    /* Il faut éviter qu'elles soient coupées dans
+        un bloc, donc plus de bottom/left/transform : ce sera géré en JS */
+        display: none;
+        position: fixed;   /* ← Et plus d'absolute non plus */
+        background: #2d3748;
+        color: #e2e8f0;
+        font-size: 0.82em;
+        line-height: 1.5;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        width: max-content;
+        max-width: 28em;
+        white-space: normal;
+        z-index: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        pointer-events: none;
+    }
+    /* Cacher les footnotes en affichage écran, afficher en impression */
+    .footnote-impression { display: none; }
+    
+    /* ── Gestion des légendes / titres d'images ──────────────────── */
+    figure {
+        margin: 1.5em auto;
+        text-align: center;
+    }
+    figure img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    figcaption {
+        font-size: 0.85em;
+        color: #718096;
+        font-style: oblique 8deg;
+        margin-top: 0.4em;
+    }
+    body.dark-mode figcaption {
+        color: #a0aec0;
+    }
+
+
+    /* ── CSS pour impression sur feuille A4 ──────────────────────── */
+    @media print {
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        /* Pour les textes à lignes numérotées */
+        .texte-ligne::after { color: #666; }
+
+        /* Gestion des légendes */
+        figcaption {
+            color: #444 !important;
+            font-size: 0.8em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px 8px;
+        }
+
+        body {
+            background-color: white !important;
+            color: black !important;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            padding-top: 0.5cm !important;  /* tentative pour impression PDF */
+            padding-bottom: 0.5cm !important;
+        }
+
+        #controls {
+            display: none !important;
+        }
+
+        /* Définitions et propriétés : encadrées, sans couleur */
+        .admonition.def, details.def,
+        .admonition.prop, details.prop {
+            border: 1.5px solid #000 !important;
+            background: white !important;
+            border-left-width: 1.5px !important;
+        }
+        .admonition.def > .admonition-title,
+        details.def > summary,
+        .admonition.prop > .admonition-title,
+        details.prop > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+            border-bottom: 1px solid #000;
+        }
+        /* Toutes admonitions : fond blanc à l'impression */
+        .admonition, details {
+            background: white !important;
+            border-color: #888 !important;
+        }
+        .admonition-title, details > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+        }
+        /* Exemples et remarques : forcer l'affichage déplié */
+        details.ex, details.rem {
+            display: block !important;
+        }
+        details.ex > summary,
+        details.rem > summary {
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            background: none !important;
+            color: black !important;
+            border-color: black !important;
+        }
+
+        /* ── Traits sous les titres à l'impression ───────────────── */
+        /* Modifié le 18/02/2026 par intégration aux règles principales
+        h2::after { border-bottom-width: 4px !important; }
+        h3::after { border-bottom-width: 3px !important; }
+        h4::after { border-bottom-width: 2px !important; } */
+
+        pre, blockquote, table {
+            page-break-inside: avoid;
+        }
+
+        img {
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+
+        * {
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        /* APRÈS */
+        .highlight, pre {
+            background-color: #f5f5f5 !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* Code inline : fond léger, sans bordure */
+        code {
+            background-color: #f0f0f0 !important;
+            color: black !important;
+            border: none !important;
+            padding: 0.1em 0.2em !important;
+        }
+
+        /* Annuler le fond pour code dans pre (évite double fond) */
+        pre code {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        table, th, td {
+            border-color: black !important;
+        }
+
+        th {
+            background-color: #ddd !important;
+            color: black !important;
+        }
+
+        a {
+            color: #000 !important;
+            text-decoration: underline !important;
+        }
+
+        a[href^="http"]:after {
+            content: none !important;
+            font-size: 0.8em;
+        }
+        
+        /* Onglets à l'impression */
+        .tabbed-set { border: 1px solid #aaa !important; }
+        .tabbed-labels { display: flex !important; background: #eee !important; border-bottom: 1px solid #aaa !important; }
+        .tabbed-labels > label { display: inline-block !important; padding: 0.3em 0.8em !important; font-weight: bold !important; color: black !important; border-right: 1px solid #aaa !important; font-size: 0.85em !important; }
+        .tabbed-block { display: block !important; border-top: 1px dashed #ccc !important; padding: 0.5em 0.8em !important; }
+
+        .tabbed-print-label {
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #444;
+            background: #eee;
+            padding: 0.2em 0.6em;
+            margin-bottom: 0.4em;
+            border-left: 3px solid #aaa;
+        }
+        
+        .tabbed-labels { display: none !important; }
+        .tabbed-set { border: none !important; }
+        
+        /* Notes de bas de page à la fin */
+        .infobulle-contenu  { display: none !important; }
+        .footnote-impression {
+            display: block !important;
+            border-top: 1px solid #000;
+            margin-top: 2em;
+            font-size: 0.85em;
+        }
+    }
+
+    /* ── Admonitions (!!! et ???) ─────────────────────────────────── */
+    .admonition, details {
+        margin: 1.2em 0;
+        /* padding: 0 0 0.6em; */
+        padding: 0 0 0.6em;
+        border-left: 4px solid #999;
+        border-radius: 4px;
+        background: #f8f8f8;
+        /* overflow: hidden; */
+    }
+    .admonition-title, details > summary {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        padding: 0.45em 0.8em;
+        background: #e0e0e0;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+    }
+    details > summary { justify-content: space-between; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* Flèche droite / bas selon état */
+    details > summary::after {
+        content: '▶';
+        font-size: 0.75em;
+        transition: transform 0.2s;
+        margin-left: auto;
+        padding-left: 0.8em;
+        flex-shrink: 0;
+    }
+    details[open] > summary::after {
+        content: '▼';
+    }
+
+    /* Corps du contenu */
+    .admonition > *:not(.admonition-title),
+    details > *:not(summary) {
+        margin: 0.5em 0.9em;
+    }
+    
+    /* Annuler l'espace entre bandeau et premier contenu */
+    .admonition > .admonition-title + * {
+        margin-top: 0;
+    }
+
+    details > summary + * {
+        margin-top: 0 !important;
+    }
+
+    /* ── Icônes par type ──────────────────────────────────────────── */
+    .admonition-title::before,
+    details > summary .admonition-icon {
+        font-style: normal;
+    }
+
+    /* note */
+    .admonition.note, details.note {
+        border-color: #448aff;
+    }
+    .admonition.note > .admonition-title,
+    details.note > summary {
+        background: #e3ecff;
+        color: #1a4ab5;
+    }
+    .admonition.note > .admonition-title::before,
+    details.note > summary::before {
+        content: '📝';
+    }
+
+    /* abstract / summary / tldr */
+    .admonition.abstract, details.abstract,
+    .admonition.summary,  details.summary,
+    .admonition.tldr,     details.tldr {
+        border-color: #00b0ff;
+    }
+    .admonition.abstract > .admonition-title,
+    details.abstract > summary,
+    .admonition.summary > .admonition-title,
+    details.summary > summary,
+    .admonition.tldr > .admonition-title,
+    details.tldr > summary {
+        background: #e1f5fe;
+        color: #0060a0;
+    }
+    .admonition.abstract > .admonition-title::before,
+    details.abstract > summary::before,
+    .admonition.summary > .admonition-title::before,
+    details.summary > summary::before,
+    .admonition.tldr > .admonition-title::before,
+    details.tldr > summary::before {
+        content: '📋';
+    }
+
+    /* info */
+    .admonition.info, details.info {
+        border-color: #26c6da;
+    }
+    .admonition.info > .admonition-title,
+    details.info > summary {
+        background: #e0f7fa;
+        color: #006270;
+    }
+    .admonition.info > .admonition-title::before,
+    details.info > summary::before {
+        content: 'ℹ️';
+    }
+
+    /* tip / hint / important */
+    .admonition.tip,       details.tip,
+    .admonition.hint,      details.hint,
+    .admonition.important, details.important {
+        border-color: #00bfa5;
+    }
+    .admonition.tip > .admonition-title,
+    details.tip > summary,
+    .admonition.hint > .admonition-title,
+    details.hint > summary,
+    .admonition.important > .admonition-title,
+    details.important > summary {
+        background: #e0f7f4;
+        color: #007a6a;
+    }
+    .admonition.tip > .admonition-title::before,
+    details.tip > summary::before,
+    .admonition.hint > .admonition-title::before,
+    details.hint > summary::before,
+    .admonition.important > .admonition-title::before,
+    details.important > summary::before {
+        content: '💡';
+    }
+
+    /* success / check / done */
+    .admonition.success, details.success,
+    .admonition.check,   details.check,
+    .admonition.done,    details.done {
+        border-color: #4caf50;
+    }
+    .admonition.success > .admonition-title,
+    details.success > summary,
+    .admonition.check > .admonition-title,
+    details.check > summary,
+    .admonition.done > .admonition-title,
+    details.done > summary {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .admonition.success > .admonition-title::before,
+    details.success > summary::before,
+    .admonition.check > .admonition-title::before,
+    details.check > summary::before,
+    .admonition.done > .admonition-title::before,
+    details.done > summary::before {
+        content: '✅';
+    }
+
+    /* question / help / faq */
+    .admonition.question, details.question,
+    .admonition.help,     details.help,
+    .admonition.faq,      details.faq {
+        border-color: #64dd17;
+    }
+    .admonition.question > .admonition-title,
+    details.question > summary,
+    .admonition.help > .admonition-title,
+    details.help > summary,
+    .admonition.faq > .admonition-title,
+    details.faq > summary {
+        background: #f1f8e9;
+        color: #387002;
+    }
+    .admonition.question > .admonition-title::before,
+    details.question > summary::before,
+    .admonition.help > .admonition-title::before,
+    details.help > summary::before,
+    .admonition.faq > .admonition-title::before,
+    details.faq > summary::before {
+        content: '❓';
+    }
+
+    /* warning / caution / attention */
+    .admonition.warning,   details.warning,
+    .admonition.caution,   details.caution,
+    .admonition.attention, details.attention {
+        border-color: #ff9100;
+    }
+    .admonition.warning > .admonition-title,
+    details.warning > summary,
+    .admonition.caution > .admonition-title,
+    details.caution > summary,
+    .admonition.attention > .admonition-title,
+    details.attention > summary {
+        background: #fff3e0;
+        color: #b35e00;
+    }
+    .admonition.warning > .admonition-title::before,
+    details.warning > summary::before,
+    .admonition.caution > .admonition-title::before,
+    details.caution > summary::before,
+    .admonition.attention > .admonition-title::before,
+    details.attention > summary::before {
+        content: '⚠️';
+    }
+
+    /* failure / fail / missing */
+    .admonition.failure, details.failure,
+    .admonition.fail,    details.fail,
+    .admonition.missing, details.missing {
+        border-color: #ff5252;
+    }
+    .admonition.failure > .admonition-title,
+    details.failure > summary,
+    .admonition.fail > .admonition-title,
+    details.fail > summary,
+    .admonition.missing > .admonition-title,
+    details.missing > summary {
+        background: #fde8e8;
+        color: #b00020;
+    }
+    .admonition.failure > .admonition-title::before,
+    details.failure > summary::before,
+    .admonition.fail > .admonition-title::before,
+    details.fail > summary::before,
+    .admonition.missing > .admonition-title::before,
+    details.missing > summary::before {
+        content: '❌';
+    }
+
+    /* danger / error */
+    .admonition.danger, details.danger,
+    .admonition.error,  details.error {
+        border-color: #e53935;
+    }
+    .admonition.danger > .admonition-title,
+    details.danger > summary,
+    .admonition.error > .admonition-title,
+    details.error > summary {
+        background: #fde8e8;
+        color: #a00;
+    }
+    .admonition.danger > .admonition-title::before,
+    details.danger > summary::before,
+    .admonition.error > .admonition-title::before,
+    details.error > summary::before {
+        content: '🛑';
+    }
+
+    /* bug */
+    .admonition.bug, details.bug {
+        border-color: #f50057;
+    }
+    .admonition.bug > .admonition-title,
+    details.bug > summary {
+        background: #fce4ec;
+        color: #9b0039;
+    }
+    .admonition.bug > .admonition-title::before,
+    details.bug > summary::before {
+        content: '🐛';
+    }
+
+    /* example */
+    .admonition.example, details.example {
+        border-color: #7c4dff;
+    }
+    .admonition.example > .admonition-title,
+    details.example > summary {
+        background: #ede7f6;
+        color: #4a148c;
+    }
+    .admonition.example > .admonition-title::before,
+    details.example > summary::before {
+        content: '🔬';
+    }
+
+    /* quote / cite */
+    .admonition.quote, details.quote,
+    .admonition.cite,  details.cite {
+        border-color: #9e9e9e;
+    }
+    .admonition.quote > .admonition-title,
+    details.quote > summary,
+    .admonition.cite > .admonition-title,
+    details.cite > summary {
+        background: #f5f5f5;
+        color: #424242;
+    }
+    .admonition.quote > .admonition-title::before,
+    details.quote > summary::before,
+    .admonition.cite > .admonition-title::before,
+    details.cite > summary::before {
+        content: '💬';
+    }
+    
+    .admonition.quote em, .admonition.quote i, details.quote em, 
+    details.quote i {
+        font-family: Andika, sans-serif;
+        font-style: oblique 8deg;  /* inclinaison légère, non cursive */
+    }
+
+
+    /* Correction mode sombre : titres d'admonition */
+    body.dark-mode .admonition.algo > .admonition-title {
+        color: #1a202c !important;
+    }
+
+    
+    /* ── Définitions (def) ────────────────────────────────────── */
+    .admonition.def, details.def {
+        border-color: #2b6cb0;
+        background: #ebf8ff;
+    }
+    .admonition.def > .admonition-title,
+    details.def > summary {
+        background: #bee3f8;
+        color: #1a365d;
+    }
+    .admonition.def > .admonition-title::before,
+    details.def > summary::before {
+        content: '🎓';
+    }
+
+    /* ── Propriétés (prop) ────────────────────────────────────── */
+    .admonition.prop, details.prop {
+        border-color: #276749;
+        background: #f0fff4;
+    }
+    .admonition.prop > .admonition-title,
+    details.prop > summary {
+        background: #c6f6d5;
+        color: #1c4532;
+    }
+    .admonition.prop > .admonition-title::before,
+    details.prop > summary::before {
+        content: '⚙️';
+    }
+
+    /* ── Exemples (ex) : filet droit, zéro boîte ────────────── */
+    .admonition.ex, details.ex {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        margin-left: 0;
+        padding-right: 0.8em;
+        border-right: 2px solid #a0aec0;
+    }
+    .admonition.ex > .admonition-title,
+    details.ex > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .admonition.ex > .admonition-title::before,
+    details.ex > summary::before { content: '✏️ Exemple : '; }
+
+    /* ── Remarques (rem) : filet droit pointillé, zéro boîte ── */
+    .admonition.rem, details.rem {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        position: relative;
+        padding-right: 0.8em;
+        border-right: 2px dashed #cbd5e0;
+    }
+    details.rem[open]::after { display: none; }
+    .admonition.rem > .admonition-title,
+    details.rem > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px dotted #e2e8f0;
+    }
+    .admonition.rem > .admonition-title::before,
+    details.rem > summary::before { content: '💭 Remarque : '; }
+
+    /* dark-mode ex + rem */
+    body.dark-mode .admonition.ex,
+    body.dark-mode details.ex       { border-right-color: #4a5568; }
+    body.dark-mode .admonition.ex > .admonition-title,
+    body.dark-mode details.ex > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+    body.dark-mode .admonition.rem,
+    body.dark-mode details.rem      { border-right-color: #4a5568; }
+    body.dark-mode .admonition.rem > .admonition-title,
+    body.dark-mode details.rem > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+
+    /* ── Défi (defi) ──────────────────────────────────────────── */
+    .admonition.defi, details.defi {
+        border-color: #e53e3e;
+        background: linear-gradient(
+            135deg,
+            #fff5f5 0%,
+            #fffaf0 40%,
+            #fefcbf 100%
+        );
+    }
+    .admonition.defi > .admonition-title,
+    details.defi > summary {
+        background: linear-gradient(
+            135deg,
+            #fc8181 0%,
+            #f6ad55 50%,
+            #f6e05e 100%
+        );
+        color: #7b341e;
+        font-weight: bold;
+    }
+    .admonition.defi > .admonition-title::before,
+    details.defi > summary::before {
+        content: '💪';
+    }
+
+    /* Admonitions imbriquées */
+    .admonition .admonition,
+    details details {
+        margin: 0.8em 0.4em;
+        font-size: 0.97em;
+    }
+
+    </style>
+    <!-- MathJax pour le rendu LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [["$", "$"]],
+                displayMath: [["$$", "$$"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    
+</head>
+<body>
+    <div id="controls">
+        <button id="btn-police" title="Police standard / Polices pour dys (double-clic pour annuler)" onclick="basculerPolice()">Aa</button>
+        <button id="theme-btn"  title="Thème clair / thème sombre"                                    onclick="basculerTheme()">🌓</button>
+        <button id="btn-toc"    title="Sommaire"                                                      onclick="basculerSommaire()">📑</button>
+    </div>
+    <div id="toc-overlay"></div>
+
+    <h1>Listes chaînées</h1>
+<h2>Idée générale</h2>
+<p>Dans un <em>vrai</em> <strong>tableau</strong>, les éléments sont contigus en mémoire : <em>accéder</em>
+au <code>i</code>-ème élément est <em>immédiat</em>, mais <strong>insérer</strong> (ou <strong>supprimer</strong>) un élément « quelque
+part au milieu » est <strong>impossible</strong> (il <em>faut</em> créer un nouveau tableau, plus grand,
+et recopier les éléments de l'ancien dans le nouveau).</p>
+<p>Dans une liste Python, cette <strong>insertion est <em>possible</em></strong>, mais <em><strong>coûteuse</strong></em> en temps
+(elle oblige à décaler tous les éléments qui suivent).</p>
+<p>Une <strong>liste chaînée</strong> adopte une stratégie radicalement différente : les éléments
+(appelés <strong>nœuds</strong> ou <strong>maillons</strong>) peuvent être « éparpillés » <em>n'importe où</em> dans la mémoire vive.
+Chaque nœud connaît seulement son voisin immédiat grâce à une <strong>référence</strong> (une
+sorte de lien) vers le nœud suivant.</p>
+<p>La liste est ainsi « chaînée » de nœud en nœud, depuis une <strong>tête</strong> jusqu'à un
+nœud final qui ne pointe vers « rien ».</p>
+<p><a id="queue"></a>Ce qui suit la tête est appelé la <strong>queue</strong>.</p>
+<details class="ex">
+<summary>analogie</summary>
+<p>Il faut imaginer une suite de wagons de train : chaque wagon ne voit que
+le wagon qui le suit immédiatement.</p>
+<p>Le train débute à la locomotive : pour atteindre le 5ème wagon, il faut partir
+d'elle et avancer wagon par wagon — on ne peut pas « sauter <em>directement</em> »
+au bon endroit.</p>
+</details>
+<details class="rem">
+<summary>difficulté analogue à celle des arbres (1/2)</summary>
+<p><a id="rem_queue"></a>
+Listes chaînées et arbres sont deux structures <em>naturellement <strong>récursives</strong></em>.
+Se pose alors la même difficulté, lors de l'implémentation en Python : que désigne vraiment le mot « liste » ?
+L'ensemble de la structure, ou seulement le nœud de tête ?
+Et peut-on dire que « <a href="#queue">ce qui suit</a> la tête » d'une liste est aussi une (sous-)liste ?</p>
+<p><strong>Oui,</strong> car son premier maillon devient la tête de cette sous-liste. C'est précisément ce qui rend la structure récursive.</p>
+<p>Lorsqu'on parle de liste (chaînée), on désigne uniquement le <em>nœud de <strong>tête</strong></em>.
+C'est par <em>convention</em> qu'on lui donne le rôle de « représentant » de toute la liste.
+La liste entière n'a pas d'existence propre en mémoire : elle n'est que la succession de nœuds que l'on peut atteindre en partant de la tête.</p>
+</details>
+<h2>Représentation en Python</h2>
+<p>Un nœud se représente naturellement par une classe :</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Noeud</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valeur</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">=</span> <span class="n">valeur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="kc">None</span>         <span class="c1"># À la création : pas de suivant</span>
+</code></pre></div>
+<p>Une liste chaînée contenant les valeurs 1, 2, 3 se construit ainsi :</p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">lst</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">lst</span><span class="o">.</span><span class="n">suivant</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+<p>Ce qui correspond schématiquement à :</p>
+<div style="text-align:center">
+<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgd2lkdGg9IjMyOC4zNjU2MyIKICAgaGVpZ2h0PSIxNDUuMzEyMzIiCiAgIGZvbnQtZmFtaWx5PSJtb25vc3BhY2UiCiAgIGZvbnQtc2l6ZT0iMTRweCIKICAgdmVyc2lvbj0iMS4xIgogICBpZD0ic3ZnMzkiCiAgIHNvZGlwb2RpOmRvY25hbWU9Imxpc3RlX2NoYcOubsOpZV92Mi5zdmciCiAgIGlua3NjYXBlOnZlcnNpb249IjEuMi4yIChiMGE4NDg2NTQxLCAyMDIyLTEyLTAxKSIKICAgeG1sbnM6aW5rc2NhcGU9Imh0dHA6Ly93d3cuaW5rc2NhcGUub3JnL25hbWVzcGFjZXMvaW5rc2NhcGUiCiAgIHhtbG5zOnNvZGlwb2RpPSJodHRwOi8vc29kaXBvZGkuc291cmNlZm9yZ2UubmV0L0RURC9zb2RpcG9kaS0wLmR0ZCIKICAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIgogICB4bWxuczpzdmc9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8c29kaXBvZGk6bmFtZWR2aWV3CiAgICAgaWQ9Im5hbWVkdmlldzQxIgogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzAwMDAwMCIKICAgICBib3JkZXJvcGFjaXR5PSIwLjI1IgogICAgIGlua3NjYXBlOnNob3dwYWdlc2hhZG93PSIyIgogICAgIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwLjAiCiAgICAgaW5rc2NhcGU6cGFnZWNoZWNrZXJib2FyZD0iMCIKICAgICBpbmtzY2FwZTpkZXNrY29sb3I9IiNkMWQxZDEiCiAgICAgc2hvd2dyaWQ9ImZhbHNlIgogICAgIGlua3NjYXBlOnpvb209IjguNzYxNTMyNiIKICAgICBpbmtzY2FwZTpjeD0iNDguNTY0NTYzIgogICAgIGlua3NjYXBlOmN5PSIyNC4yNTM3NDgiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxODU0IgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjExMjMiCiAgICAgaW5rc2NhcGU6d2luZG93LXg9IjY2IgogICAgIGlua3NjYXBlOndpbmRvdy15PSI0MCIKICAgICBpbmtzY2FwZTp3aW5kb3ctbWF4aW1pemVkPSIxIgogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9ImcxNzgxIiAvPgogIDwhLS0gRmzDqGNoZSAidMOqdGUiIHZlcnMgbsWTdWQgMSAtLT4KICA8IS0tIE7Fk3VkIDEgKGhhdXQgZ2F1Y2hlKSAtLT4KICA8IS0tIGZsw6hjaGUgdmVycyBuxZN1ZCAyIC0tPgogIDwhLS0gTsWTdWQgMiAobWlsaWV1IGRyb2l0ZSkgLS0+CiAgPCEtLSBmbMOoY2hlIHZlcnMgbsWTdWQgMyAtLT4KICA8IS0tIE7Fk3VkIDMgKGJhcyBnYXVjaGUpIC0tPgogIDxnCiAgICAgaWQ9ImcxNzgxIgogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI3LjU3MzQsLTIyOC43NzExMSkiPgogICAgPHJlY3QKICAgICAgIHN0eWxlPSJmaWxsOiM1MzA2YjU7ZmlsbC1vcGFjaXR5OjAuMTQ2MDA2O3N0cm9rZTojNTMwNmI1O3N0cm9rZS13aWR0aDoxLjM7c3Ryb2tlLW9wYWNpdHk6MSIKICAgICAgIGlkPSJyZWN0Njg0IgogICAgICAgd2lkdGg9IjE1Mi4wMTMwMyIKICAgICAgIGhlaWdodD0iMTQ0LjAxMjMxIgogICAgICAgeD0iMTQ4LjEyOTIxIgogICAgICAgeT0iMjI5LjQyMTExIgogICAgICAgcnk9IjE0Ljc4NDk1OSIgLz4KICAgIDxnCiAgICAgICBpZD0iZzQ4NiIKICAgICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0zOS43NjY2MTgsMjQzLjUyNDQ5KSI+CiAgICAgIDxyZWN0CiAgICAgICAgIHg9Ijk1IgogICAgICAgICB5PSIzNSIKICAgICAgICAgd2lkdGg9IjYwIgogICAgICAgICBoZWlnaHQ9IjMwIgogICAgICAgICBmaWxsPSIjZmZmZmZmIgogICAgICAgICBzdHJva2U9IiMwMDAwMDAiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMS41IgogICAgICAgICBpZD0icmVjdDYiCiAgICAgICAgIHN0eWxlPSJzdHJva2U6IzgwODA4MDtzdHJva2Utb3BhY2l0eToxIiAvPgogICAgICA8bGluZQogICAgICAgICB4MT0iMTI1IgogICAgICAgICB5MT0iMzUiCiAgICAgICAgIHgyPSIxMjUiCiAgICAgICAgIHkyPSI2NSIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgICAgaWQ9ImxpbmU4IgogICAgICAgICBzdHlsZT0ic3Ryb2tlOiM4MDgwODA7c3Ryb2tlLW9wYWNpdHk6MSIgLz4KICAgICAgPHRleHQKICAgICAgICAgeD0iMTA0IgogICAgICAgICB5PSI1NSIKICAgICAgICAgaWQ9InRleHQxMCIKICAgICAgICAgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS1vcGFjaXR5OjEiPjE8L3RleHQ+CiAgICA8L2c+CiAgICA8ZwogICAgICAgaWQ9ImcxNzUxIgogICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTc5LjEwNDIzLDEzOS4zMTkyOCkiPgogICAgICA8cmVjdAogICAgICAgICB4PSIyNTAiCiAgICAgICAgIHk9IjExMCIKICAgICAgICAgd2lkdGg9IjYwIgogICAgICAgICBoZWlnaHQ9IjMwIgogICAgICAgICBmaWxsPSIjZmZmZmZmIgogICAgICAgICBzdHJva2U9IiMwMDAwMDAiCiAgICAgICAgIHN0cm9rZS13aWR0aD0iMS41IgogICAgICAgICBpZD0icmVjdDE2IgogICAgICAgICBzdHlsZT0ic3Ryb2tlOiM4MDgwODA7c3Ryb2tlLW9wYWNpdHk6MSIgLz4KICAgICAgPGxpbmUKICAgICAgICAgeDE9IjI4MCIKICAgICAgICAgeTE9IjExMCIKICAgICAgICAgeDI9IjI4MCIKICAgICAgICAgeTI9IjE0MCIKICAgICAgICAgc3Ryb2tlPSIjMDAwMDAwIgogICAgICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgICAgaWQ9ImxpbmUxOCIKICAgICAgICAgc3R5bGU9InN0cm9rZTojODA4MDgwO3N0cm9rZS1vcGFjaXR5OjEiIC8+CiAgICAgIDx0ZXh0CiAgICAgICAgIHg9IjI2MSIKICAgICAgICAgeT0iMTMwIgogICAgICAgICBpZD0idGV4dDIwIgogICAgICAgICBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLW9wYWNpdHk6MSI+MjwvdGV4dD4KICAgIDwvZz4KICAgIDxwYXRoCiAgICAgICBpZD0icmVjdDU0NiIKICAgICAgIHN0eWxlPSJmaWxsOiNjZmNmY2Y7c3Ryb2tlOiM4MDgwODA7c3Ryb2tlLXdpZHRoOjEuMztzdHJva2Utb3BhY2l0eToxO2ZpbGwtb3BhY2l0eToxIgogICAgICAgZD0ibSAxNC44NDMyMTgsMTMuMDY2OTgxIGggNDQuNzUxNzI0IGwgMTIsOS42NTQ4NzcgLTEyLDkuNjU0ODc3IEggMTQuODQzMjE4IFoiCiAgICAgICBzb2RpcG9kaTpub2RldHlwZXM9ImNjY2NjYyIKICAgICAgIGNsaXAtcGF0aD0idXJsKCNjbGlwYXRoX2xwZV9wYXRoLWVmZmVjdDc2Ni0xKSIKICAgICAgIGlua3NjYXBlOnBhdGgtZWZmZWN0PSIjcGF0aC1lZmZlY3Q3NjYtMSIKICAgICAgIGlua3NjYXBlOm9yaWdpbmFsLWQ9Im0gMTQuODQzMjE4LDEzLjA2Njk4MSBoIDQ0Ljc1MTcyNCBsIDEyLDkuNjU0ODc3IC0xMiw5LjY1NDg3NyBIIDE0Ljg0MzIxOCBaIgogICAgICAgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTQxLjc2NjYxOCwyNDMuNTI0NDkpIiAvPgogICAgPGNpcmNsZQogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6IzgwODA4MDtzdHJva2Utd2lkdGg6MS4zO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICBpZD0icGF0aDY0MS0zIgogICAgICAgY3g9IjE5Ljk5MjkxNiIKICAgICAgIGN5PSIyNjYuNDA1ODUiCiAgICAgICByPSIzLjY0NzA0NTkiIC8+CiAgICA8dGV4dAogICAgICAgeD0iLTI0LjM3MTc4MiIKICAgICAgIHk9IjI3NC4zMjU2NSIKICAgICAgIGZvbnQtd2VpZ2h0PSJib2xkIgogICAgICAgaWQ9InRleHQyIgogICAgICAgc3R5bGU9ImZvbnQtc2l6ZToyMS4zNjE2cHg7ZmlsbDojZmZmZmZmO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZTA4Yjg2O3N0cm9rZS13aWR0aDoxLjA2MjY0O3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIj5sc3Q8L3RleHQ+CiAgICA8cGF0aAogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6IzgwODA4MDtzdHJva2Utd2lkdGg6MS4zO3N0cm9rZS1saW5lY2FwOnJvdW5kO21hcmtlci1lbmQ6dXJsKCNBcnJvdzIpO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICBkPSJtIDIyLjI3OTEyMiwyNjcuNjI5MDEgYyAzLjE1NTYwMiwyLjM2MzMgMi44OTg3NywzLjE2ODg3IDMuMzk5MzIzLDQuNDk4MDcgMC4wNjQ2OCwxLjM2NjQxIC0wLjA3MTA3LDQuNzYwMiAzLjY3MTEzNSwwLjM3NyAyLjAyNTc1OCwtMi4zNzI3NCA3LjMxODA4MSwtNS4zNDcyNyAzLjA0Mjk0NywyLjM1ODY1IC0zLjMwMjY2MSw1Ljk1MzA0IC0wLjU4NDQyOCwxNC41NTQzNyA2LjA3NDY3Myw5LjU3MDU3IDYuNjU5MTAxLC00Ljk4MzggOS4yNjEyOTEsLTUuMTY3NzcgOS4yNjEyOTEsLTUuMTY3NzciCiAgICAgICBpZD0icGF0aDU3MCIKICAgICAgIHNvZGlwb2RpOm5vZGV0eXBlcz0iY2Nzc3pjIiAvPgogICAgPHBhdGgKICAgICAgIHN0eWxlPSJmaWxsOm5vbmU7c3Ryb2tlOiM4MDgwODA7c3Ryb2tlLXdpZHRoOjEuMztzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2Utb3BhY2l0eToxIgogICAgICAgZD0ibSAyMi4wMjgyNTMsMjY4LjgyMDk3IGMgMS45ODU3ODQsMC44MDE1NiAtMi41MzI1MTIsLTAuNjA0NTcgLTAuODI2NjA5LDAuMTkyMTkgMS43MDU5MDQsMC43OTY3NyAyLjYzOTUxOSwyLjk0MjU5IDIuNjM5NTE5LDIuOTQyNTkiCiAgICAgICBpZD0icGF0aDE1MzIiCiAgICAgICBzb2RpcG9kaTpub2RldHlwZXM9ImN6YyIgLz4KICAgIDxyZWN0CiAgICAgICB4PSIyMjQuNTI2MzQiCiAgICAgICB5PSIzMjQuNzk2OTciCiAgICAgICB3aWR0aD0iNjAiCiAgICAgICBoZWlnaHQ9IjMwIgogICAgICAgZmlsbD0iI2ZmZmZmZiIKICAgICAgIHN0cm9rZT0iIzAwMDAwMCIKICAgICAgIHN0cm9rZS13aWR0aD0iMS41IgogICAgICAgaWQ9InJlY3QyNiIKICAgICAgIHN0eWxlPSJzdHJva2U6IzgwODA4MDtzdHJva2Utb3BhY2l0eToxIiAvPgogICAgPGcKICAgICAgIGlkPSJnOTYzIgogICAgICAgc3R5bGU9InN0cm9rZS13aWR0aDoyLjI7c3Ryb2tlLWRhc2hhcnJheTpub25lIgogICAgICAgdHJhbnNmb3JtPSJtYXRyaXgoMS40MTc2MTA4LDAsMCwxLjQxNzYxMDgsLTI4MC41MzQxOSwxMzUuOTk1NzQpIj4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzYyNjI2MjtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2Q4MDAwMDtzdHJva2Utd2lkdGg6Mi4yO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDM3OS41MjM1MSwxNTIuMjYzNjcgMTcuMDA0NzUsLTE3LjAwNDc1IgogICAgICAgICBpZD0icGF0aDkxMSIgLz4KICAgICAgPHBhdGgKICAgICAgICAgc3R5bGU9ImZpbGw6IzYyNjI2MjtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2Q4MDAwMDtzdHJva2Utd2lkdGg6Mi4yO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIgogICAgICAgICBkPSJtIDM3OS41MjM1MSwxMzUuMjU4OTEgMTcuMDA0NzUsMTcuMDA0NzYiCiAgICAgICAgIGlkPSJwYXRoNjM0IiAvPgogICAgPC9nPgogICAgPGxpbmUKICAgICAgIHgxPSIyNTQuNTI2MzQiCiAgICAgICB5MT0iMzI0Ljc5Njk3IgogICAgICAgeDI9IjI1NC41MjYzNCIKICAgICAgIHkyPSIzNTQuNzk2OTciCiAgICAgICBzdHJva2U9IiMwMDAwMDAiCiAgICAgICBzdHJva2Utd2lkdGg9IjEuNSIKICAgICAgIGlkPSJsaW5lMjgiCiAgICAgICBzdHlsZT0ic3Ryb2tlOiM4MDgwODA7c3Ryb2tlLW9wYWNpdHk6MSIgLz4KICAgIDx0ZXh0CiAgICAgICB4PSIyMzUuNTI2MzQiCiAgICAgICB5PSIzNDQuNzk2OTciCiAgICAgICBpZD0idGV4dDMwIgogICAgICAgc3R5bGU9InN0cm9rZTojMDAwMDAwO3N0cm9rZS1vcGFjaXR5OjEiPjM8L3RleHQ+CiAgICA8cGF0aAogICAgICAgc3R5bGU9ImZpbGw6bm9uZTtzdHJva2U6IzgwODA4MDtzdHJva2Utd2lkdGg6MS4zO3N0cm9rZS1saW5lY2FwOnJvdW5kO21hcmtlci1lbmQ6dXJsKCNtYXJrZXIyNTk0KTtzdHJva2Utb3BhY2l0eToxIgogICAgICAgZD0ibSAxMDEuMTk0MTgsMjkzLjM0MjkxIGMgNDAuMzMzMjIsLTEuODk5MSAxNy4zMTk1MiwtMjIuOTUxNSAyMy44ODM3NSwtMzUuNDIyMzkgNi41NjQyMywtMTIuNDcwODggMzguMjcyMzQsLTguNzM4OTUgMzguMjcyMzQsLTguNzM4OTUiCiAgICAgICBpZD0icGF0aDI1OTAiCiAgICAgICBzb2RpcG9kaTpub2RldHlwZXM9ImN6YyIgLz4KICAgIDxwYXRoCiAgICAgICBzdHlsZT0iZmlsbDpub25lO3N0cm9rZTojODA4MDgwO3N0cm9rZS13aWR0aDoxLjM7c3Ryb2tlLWxpbmVjYXA6cm91bmQ7bWFya2VyLWVuZDp1cmwoI21hcmtlcjI2OTgpO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICBkPSJtIDIxNi4xMDI4OCwyNjQuMzExMjkgYyAwLDAgNi41MjIyMSwyNS42NzE4MyAtMC42NzQ0MiwzNS4wMTk2IC04LjIzNDk0LDEwLjY5NjQyIC0zMS4wMDEyMiwtMC4wMzEyIC00NS45ODkyLDkuOTQwMzkgLTE2LjQ4ODA4LDEwLjk2OTYgLTAuODA3NiwzNS45NTA5OSAxNy4zNzA0NSwyNy40MjIyOCAxOC4yMjg4OCwtOC41NTI1NiAzMC41MTEzMSwtMTAuMjE2MDQgMzAuNTExMzEsLTEwLjIxNjA0IgogICAgICAgaWQ9InBhdGgyNjk0IgogICAgICAgc29kaXBvZGk6bm9kZXR5cGVzPSJjc3NzYyIgLz4KICAgIDx0ZXh0CiAgICAgICB4PSI1Ni4zMzc0MDIiCiAgICAgICB5PSIyNzMuNzkyNDIiCiAgICAgICBmb250LXdlaWdodD0iYm9sZCIKICAgICAgIGlkPSJ0ZXh0Mi01IgogICAgICAgc3R5bGU9ImZvbnQtc2l6ZToyMy45Njg4cHg7ZmlsbDojZmVkZWQxO2ZpbGwtb3BhY2l0eToxO3N0cm9rZTojZmM4ZDYwO3N0cm9rZS13aWR0aDoxO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIj5Uw6p0ZTwvdGV4dD4KICAgIDx0ZXh0CiAgICAgICB4PSI3Ni4xNTk4MTMiCiAgICAgICB5PSIzNjcuMzg4MjEiCiAgICAgICBmb250LXdlaWdodD0iYm9sZCIKICAgICAgIGlkPSJ0ZXh0Mi01LTIiCiAgICAgICBzdHlsZT0iZm9udC1zaXplOjIyLjc2NXB4O2ZpbGw6I2UxY2FmZDtmaWxsLW9wYWNpdHk6MTtzdHJva2U6IzUzMDZiNTtzdHJva2Utd2lkdGg6MTtzdHJva2UtZGFzaGFycmF5Om5vbmU7c3Ryb2tlLW9wYWNpdHk6MSI+UXVldWU8L3RleHQ+CiAgICA8dGV4dAogICAgICAgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIKICAgICAgIHN0eWxlPSJmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxNHB4O2ZvbnQtZmFtaWx5OkFyaWFsLCBzYW5zLXNlcmlmOy1pbmtzY2FwZS1mb250LXNwZWNpZmljYXRpb246J0FyaWFsLCBzYW5zLXNlcmlmLCBCb2xkJztmaWxsOiM1MzA2YjU7ZmlsbC1vcGFjaXR5OjAuMTQ1MDk4O3N0cm9rZTojZTA4Yjg2O3N0cm9rZS13aWR0aDoxO3N0cm9rZS1kYXNoYXJyYXk6bm9uZTtzdHJva2Utb3BhY2l0eToxIgogICAgICAgeD0iLTIzLjUyNDg5MyIKICAgICAgIHk9IjIyMS45NDk3MSIKICAgICAgIGlkPSJ0ZXh0MTM0MjgiPjx0c3BhbgogICAgICAgICBzb2RpcG9kaTpyb2xlPSJsaW5lIgogICAgICAgICB4PSItMjMuNTI0ODkzIgogICAgICAgICB5PSIyMjEuOTQ5NzEiCiAgICAgICAgIGlkPSJ0c3BhbjEzNDMwIiAvPjwvdGV4dD4KICAgIDx0ZXh0CiAgICAgICB4bWw6c3BhY2U9InByZXNlcnZlIgogICAgICAgc3R5bGU9ImZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjE0cHg7Zm9udC1mYW1pbHk6QXJpYWwsIHNhbnMtc2VyaWY7LWlua3NjYXBlLWZvbnQtc3BlY2lmaWNhdGlvbjonQXJpYWwsIHNhbnMtc2VyaWYsIEJvbGQnO2ZpbGw6IzUzMDZiNTtmaWxsLW9wYWNpdHk6MC4xNDUwOTg7c3Ryb2tlOiNlMDhiODY7c3Ryb2tlLXdpZHRoOjE7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICB4PSItMzEuMjQwOTg4IgogICAgICAgeT0iMjI4LjIwOTA1IgogICAgICAgaWQ9InRleHQxMzUwMiI+PHRzcGFuCiAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiCiAgICAgICAgIGlkPSJ0c3BhbjEzNTAwIgogICAgICAgICB4PSItMzEuMjQwOTg4IgogICAgICAgICB5PSIyMjguMjA5MDUiIC8+PC90ZXh0PgogICAgPHRleHQKICAgICAgIHhtbDpzcGFjZT0icHJlc2VydmUiCiAgICAgICBzdHlsZT0iZm9udC13ZWlnaHQ6Ym9sZDtmb250LXNpemU6OC43NzQ4OHB4O2ZvbnQtZmFtaWx5OkFyaWFsLCBzYW5zLXNlcmlmOy1pbmtzY2FwZS1mb250LXNwZWNpZmljYXRpb246J0FyaWFsLCBzYW5zLXNlcmlmLCBCb2xkJztmaWxsOiMwYTU0ZDY7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNhNGM0ZmI7c3Ryb2tlLXdpZHRoOjAuMjU7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICB4PSItMjQuMzY3MDgzIgogICAgICAgeT0iMjg1LjMzNjg4IgogICAgICAgaWQ9InRleHQxMzUwNiI+PHRzcGFuCiAgICAgICAgIHNvZGlwb2RpOnJvbGU9ImxpbmUiCiAgICAgICAgIGlkPSJ0c3BhbjEzNTA0IgogICAgICAgICB4PSItMjQuMzY3MDgzIgogICAgICAgICB5PSIyODUuMzM2ODgiCiAgICAgICAgIHN0eWxlPSJmb250LXN0eWxlOml0YWxpYztmb250LXZhcmlhbnQ6bm9ybWFsO2ZvbnQtd2VpZ2h0Om5vcm1hbDtmb250LXN0cmV0Y2g6bm9ybWFsO2ZvbnQtc2l6ZTo4Ljc3NDg4cHg7Zm9udC1mYW1pbHk6c2Fucy1zZXJpZjstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOidzYW5zLXNlcmlmLCBJdGFsaWMnO2ZvbnQtdmFyaWFudC1saWdhdHVyZXM6bm9ybWFsO2ZvbnQtdmFyaWFudC1jYXBzOm5vcm1hbDtmb250LXZhcmlhbnQtbnVtZXJpYzpub3JtYWw7Zm9udC12YXJpYW50LWVhc3QtYXNpYW46bm9ybWFsO2ZpbGw6IzBhNTRkNjtmaWxsLW9wYWNpdHk6MTtzdHJva2U6I2E0YzRmYjtzdHJva2Utd2lkdGg6MC4yNTtzdHJva2UtZGFzaGFycmF5Om5vbmU7c3Ryb2tlLW9wYWNpdHk6MSI+Tm9tIGRlIGxhPC90c3Bhbj48dHNwYW4KICAgICAgICAgc29kaXBvZGk6cm9sZT0ibGluZSIKICAgICAgICAgeD0iLTI0LjM2NzA4MyIKICAgICAgICAgeT0iMjk2LjM4NTUzIgogICAgICAgICBzdHlsZT0iZm9udC1zdHlsZTppdGFsaWM7Zm9udC12YXJpYW50Om5vcm1hbDtmb250LXdlaWdodDpub3JtYWw7Zm9udC1zdHJldGNoOm5vcm1hbDtmb250LXNpemU6OC43NzQ4OHB4O2ZvbnQtZmFtaWx5OnNhbnMtc2VyaWY7LWlua3NjYXBlLWZvbnQtc3BlY2lmaWNhdGlvbjonc2Fucy1zZXJpZiwgSXRhbGljJztmb250LXZhcmlhbnQtbGlnYXR1cmVzOm5vcm1hbDtmb250LXZhcmlhbnQtY2Fwczpub3JtYWw7Zm9udC12YXJpYW50LW51bWVyaWM6bm9ybWFsO2ZvbnQtdmFyaWFudC1lYXN0LWFzaWFuOm5vcm1hbDtmaWxsOiMwYTU0ZDY7ZmlsbC1vcGFjaXR5OjE7c3Ryb2tlOiNhNGM0ZmI7c3Ryb2tlLXdpZHRoOjAuMjU7c3Ryb2tlLWRhc2hhcnJheTpub25lO3N0cm9rZS1vcGFjaXR5OjEiCiAgICAgICAgIGlkPSJ0c3BhbjEzNTYxIj52YXJpYWJsZTwvdHNwYW4+PC90ZXh0PgogICAgPGNpcmNsZQogICAgICAgY3g9IjIxNy4wMzYwOSIKICAgICAgIGN5PSIyNjQuNTk5MDYiCiAgICAgICByPSI1IgogICAgICAgZmlsbD0iIzAwMDAwMCIKICAgICAgIGlkPSJjaXJjbGUyMiIgLz4KICA8L2c+CiAgPCEtLSBEw6lmaW5pdGlvbiBkZSBsYSBwb2ludGUgZGUgZmzDqGNoZSAtLT4KICA8ZGVmcwogICAgIGlkPSJkZWZzMzciPgogICAgPGlua3NjYXBlOnBhdGgtZWZmZWN0CiAgICAgICBlZmZlY3Q9InBvd2VyY2xpcCIKICAgICAgIGlkPSJwYXRoLWVmZmVjdDc2NiIKICAgICAgIGlzX3Zpc2libGU9InRydWUiCiAgICAgICBscGV2ZXJzaW9uPSIxIgogICAgICAgaW52ZXJzZT0idHJ1ZSIKICAgICAgIGZsYXR0ZW49ImZhbHNlIgogICAgICAgaGlkZV9jbGlwPSJmYWxzZSIKICAgICAgIG1lc3NhZ2U9ImZpbGw6IzUzMDZiNTtzdHJva2U6IzUzMDZiNTstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOidBcmlhbCwgc2Fucy1zZXJpZiwgQm9sZCc7Zm9udC1mYW1pbHk6QXJpYWwsIHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LXNpemU6MTRweDtzdHJva2Utd2lkdGg6MC45NjM7ZmlsbC1vcGFjaXR5OjAuMDc5NjEzMDUiIC8+CiAgICA8bWFya2VyCiAgICAgICBpZD0iYXJyb3ciCiAgICAgICBtYXJrZXJXaWR0aD0iOCIKICAgICAgIG1hcmtlckhlaWdodD0iOCIKICAgICAgIHJlZlg9IjYiCiAgICAgICByZWZZPSIzIgogICAgICAgb3JpZW50PSJhdXRvIj4KICAgICAgPHBhdGgKICAgICAgICAgZD0iTSAwLDAgViA2IEwgOCwzIFoiCiAgICAgICAgIGZpbGw9IiMwMDAwMDAiCiAgICAgICAgIGlkPSJwYXRoMzQiIC8+CiAgICA8L21hcmtlcj4KICAgIDxjbGlwUGF0aAogICAgICAgY2xpcFBhdGhVbml0cz0idXNlclNwYWNlT25Vc2UiCiAgICAgICBpZD0iY2xpcFBhdGg3NTYiPgogICAgICA8Y2lyY2xlCiAgICAgICAgIHN0eWxlPSJkaXNwbGF5Om5vbmU7ZmlsbDojNTY1NjU2O3N0cm9rZTojMDAwMDAwO3N0cm9rZS13aWR0aDoxLjMiCiAgICAgICAgIGlkPSJjaXJjbGU3NTgiCiAgICAgICAgIGN4PSI2MS42NzcyOTIiCiAgICAgICAgIGN5PSIyMi43MjE4NTciCiAgICAgICAgIHI9IjMuNjQ3MDQ1OSIgLz4KICAgIDwvY2xpcFBhdGg+CiAgICA8bWFya2VyCiAgICAgICBzdHlsZT0ib3ZlcmZsb3c6dmlzaWJsZSIKICAgICAgIGlkPSJtYXJrZXIyNTk0IgogICAgICAgcmVmWD0iMCIKICAgICAgIHJlZlk9IjAiCiAgICAgICBvcmllbnQ9ImF1dG8tc3RhcnQtcmV2ZXJzZSIKICAgICAgIGlua3NjYXBlOnN0b2NraWQ9IkFycm93MiIKICAgICAgIG1hcmtlcldpZHRoPSI3LjY5OTk5OTgiCiAgICAgICBtYXJrZXJIZWlnaHQ9IjUuNTk5OTk5OSIKICAgICAgIHZpZXdCb3g9IjAgMCA3LjcgNS42IgogICAgICAgaW5rc2NhcGU6aXNzdG9jaz0idHJ1ZSIKICAgICAgIGlua3NjYXBlOmNvbGxlY3Q9ImFsd2F5cyIKICAgICAgIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIj4KICAgICAgPHBhdGgKICAgICAgICAgdHJhbnNmb3JtPSJzY2FsZSgwLjcpIgogICAgICAgICBkPSJNIC0yLC00IDksMCAtMiw0IGMgMiwtMi4zMyAyLC01LjY2IDAsLTggeiIKICAgICAgICAgc3R5bGU9ImZpbGw6Y29udGV4dC1zdHJva2U7ZmlsbC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlOm5vbmUiCiAgICAgICAgIGlkPSJwYXRoMjU5MiIgLz4KICAgIDwvbWFya2VyPgogICAgPG1hcmtlcgogICAgICAgc3R5bGU9Im92ZXJmbG93OnZpc2libGUiCiAgICAgICBpZD0ibWFya2VyMjY5OCIKICAgICAgIHJlZlg9IjAiCiAgICAgICByZWZZPSIwIgogICAgICAgb3JpZW50PSJhdXRvLXN0YXJ0LXJldmVyc2UiCiAgICAgICBpbmtzY2FwZTpzdG9ja2lkPSJBcnJvdzIiCiAgICAgICBtYXJrZXJXaWR0aD0iNy42OTk5OTk4IgogICAgICAgbWFya2VySGVpZ2h0PSI1LjU5OTk5OTkiCiAgICAgICB2aWV3Qm94PSIwIDAgNy43IDUuNiIKICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiCiAgICAgICBpbmtzY2FwZTpjb2xsZWN0PSJhbHdheXMiCiAgICAgICBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCI+CiAgICAgIDxwYXRoCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC43KSIKICAgICAgICAgZD0iTSAtMiwtNCA5LDAgLTIsNCBjIDIsLTIuMzMgMiwtNS42NiAwLC04IHoiCiAgICAgICAgIHN0eWxlPSJmaWxsOmNvbnRleHQtc3Ryb2tlO2ZpbGwtcnVsZTpldmVub2RkO3N0cm9rZTpub25lIgogICAgICAgICBpZD0icGF0aDI2OTYiIC8+CiAgICA8L21hcmtlcj4KICAgIDxjbGlwUGF0aAogICAgICAgY2xpcFBhdGhVbml0cz0idXNlclNwYWNlT25Vc2UiCiAgICAgICBpZD0iY2xpcFBhdGg3NTYtNiI+CiAgICAgIDxjaXJjbGUKICAgICAgICAgc3R5bGU9ImRpc3BsYXk6bm9uZTtmaWxsOiM1NjU2NTY7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMyIKICAgICAgICAgaWQ9ImNpcmNsZTc1OC0yIgogICAgICAgICBjeD0iNjEuNjc3MjkyIgogICAgICAgICBjeT0iMjIuNzIxODU3IgogICAgICAgICByPSIzLjY0NzA0NTkiIC8+CiAgICAgIDxwYXRoCiAgICAgICAgIGlkPSJscGVfcGF0aC1lZmZlY3Q3NjYiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM1NjU2NTY7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMyIKICAgICAgICAgY2xhc3M9InBvd2VyY2xpcCIKICAgICAgICAgZD0ibSA5LjE5MzIxOCw3LjQxNjk4MSBoIDY4LjQzODYzIFYgMzguMDI2NzM1IEggOS4xOTMyMTggWiBtIDU2LjEzMTEyLDE1LjMwNDg3NiBhIDMuNjQ3MDQ1OSwzLjY0NzA0NTkgMCAwIDAgLTMuNjQ3MDQ2LC0zLjY0NzA0NiAzLjY0NzA0NTksMy42NDcwNDU5IDAgMCAwIC0zLjY0NzA0NiwzLjY0NzA0NiAzLjY0NzA0NTksMy42NDcwNDU5IDAgMCAwIDMuNjQ3MDQ2LDMuNjQ3MDQ2IDMuNjQ3MDQ1OSwzLjY0NzA0NTkgMCAwIDAgMy42NDcwNDYsLTMuNjQ3MDQ2IHoiIC8+CiAgICA8L2NsaXBQYXRoPgogICAgPGlua3NjYXBlOnBhdGgtZWZmZWN0CiAgICAgICBlZmZlY3Q9InBvd2VyY2xpcCIKICAgICAgIGlkPSJwYXRoLWVmZmVjdDc2Ni0xIgogICAgICAgaXNfdmlzaWJsZT0idHJ1ZSIKICAgICAgIGxwZXZlcnNpb249IjEiCiAgICAgICBpbnZlcnNlPSJ0cnVlIgogICAgICAgZmxhdHRlbj0iZmFsc2UiCiAgICAgICBoaWRlX2NsaXA9ImZhbHNlIgogICAgICAgbWVzc2FnZT0iZmlsbDojNTMwNmI1O3N0cm9rZTojNTMwNmI1Oy1pbmtzY2FwZS1mb250LXNwZWNpZmljYXRpb246J0FyaWFsLCBzYW5zLXNlcmlmLCBCb2xkJztmb250LWZhbWlseTpBcmlhbCwgc2Fucy1zZXJpZjtmb250LXdlaWdodDpib2xkO2ZvbnQtc2l6ZToxNHB4O3N0cm9rZS13aWR0aDowLjk2MztmaWxsLW9wYWNpdHk6MC4xNDYwMDYyNCIgLz4KICAgIDxtYXJrZXIKICAgICAgIHN0eWxlPSJvdmVyZmxvdzp2aXNpYmxlIgogICAgICAgaWQ9IkFycm93MiIKICAgICAgIHJlZlg9IjAiCiAgICAgICByZWZZPSIwIgogICAgICAgb3JpZW50PSJhdXRvLXN0YXJ0LXJldmVyc2UiCiAgICAgICBpbmtzY2FwZTpzdG9ja2lkPSJBcnJvdzIiCiAgICAgICBtYXJrZXJXaWR0aD0iNy42OTk5OTk4IgogICAgICAgbWFya2VySGVpZ2h0PSI1LjU5OTk5OTkiCiAgICAgICB2aWV3Qm94PSIwIDAgNy43IDUuNiIKICAgICAgIGlua3NjYXBlOmlzc3RvY2s9InRydWUiCiAgICAgICBpbmtzY2FwZTpjb2xsZWN0PSJhbHdheXMiCiAgICAgICBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJ4TWlkWU1pZCI+CiAgICAgIDxwYXRoCiAgICAgICAgIHRyYW5zZm9ybT0ic2NhbGUoMC43KSIKICAgICAgICAgZD0iTSAtMiwtNCA5LDAgLTIsNCBjIDIsLTIuMzMgMiwtNS42NiAwLC04IHoiCiAgICAgICAgIHN0eWxlPSJmaWxsOmNvbnRleHQtc3Ryb2tlO2ZpbGwtcnVsZTpldmVub2RkO3N0cm9rZTpub25lIgogICAgICAgICBpZD0iYXJyb3cyTCIgLz4KICAgIDwvbWFya2VyPgogICAgPGNsaXBQYXRoCiAgICAgICBjbGlwUGF0aFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIKICAgICAgIGlkPSJjbGlwYXRoX2xwZV9wYXRoLWVmZmVjdDc2Ni0xIj4KICAgICAgPGNpcmNsZQogICAgICAgICBzdHlsZT0iZGlzcGxheTpub25lO2ZpbGw6IzU2NTY1NjtzdHJva2U6IzAwMDAwMDtzdHJva2Utd2lkdGg6MS4zIgogICAgICAgICBpZD0iY2lyY2xlMjAzOSIKICAgICAgICAgY3g9IjYxLjY3NzI5MiIKICAgICAgICAgY3k9IjIyLjcyMTg1NyIKICAgICAgICAgcj0iMy42NDcwNDU5IgogICAgICAgICBkPSJtIDY1LjMyNDMzOCwyMi43MjE4NTcgYSAzLjY0NzA0NTksMy42NDcwNDU5IDAgMCAxIC0zLjY0NzA0NiwzLjY0NzA0NiAzLjY0NzA0NTksMy42NDcwNDU5IDAgMCAxIC0zLjY0NzA0NiwtMy42NDcwNDYgMy42NDcwNDU5LDMuNjQ3MDQ1OSAwIDAgMSAzLjY0NzA0NiwtMy42NDcwNDYgMy42NDcwNDU5LDMuNjQ3MDQ1OSAwIDAgMSAzLjY0NzA0NiwzLjY0NzA0NiB6IiAvPgogICAgICA8cGF0aAogICAgICAgICBpZD0ibHBlX3BhdGgtZWZmZWN0NzY2LTEiCiAgICAgICAgIHN0eWxlPSJmaWxsOiM1NjU2NTY7c3Ryb2tlOiMwMDAwMDA7c3Ryb2tlLXdpZHRoOjEuMyIKICAgICAgICAgY2xhc3M9InBvd2VyY2xpcCIKICAgICAgICAgZD0ibSA5LjE5MzIxOCw3LjQxNjk4MSBoIDY4LjQzODYzIFYgMzguMDI2NzM1IEggOS4xOTMyMTggWiBtIDU2LjEzMTEyLDE1LjMwNDg3NiBhIDMuNjQ3MDQ1OSwzLjY0NzA0NTkgMCAwIDAgLTMuNjQ3MDQ2LC0zLjY0NzA0NiAzLjY0NzA0NTksMy42NDcwNDU5IDAgMCAwIC0zLjY0NzA0NiwzLjY0NzA0NiAzLjY0NzA0NTksMy42NDcwNDU5IDAgMCAwIDMuNjQ3MDQ2LDMuNjQ3MDQ2IDMuNjQ3MDQ1OSwzLjY0NzA0NTkgMCAwIDAgMy42NDcwNDYsLTMuNjQ3MDQ2IHoiIC8+CiAgICA8L2NsaXBQYXRoPgogIDwvZGVmcz4KICA8Y2lyY2xlCiAgICAgY3g9IjEyOC4yOTg1OCIKICAgICBjeT0iNjQuNDM5MDQ5IgogICAgIHI9IjUiCiAgICAgZmlsbD0iIzAwMDAwMCIKICAgICBpZD0iY2lyY2xlMTIiIC8+Cjwvc3ZnPgo=" width=400>
+</div>
+
+<div class="admonition warning">
+<p class="admonition-title">Attention</p>
+<p>La liste chaînée est accessible uniquement par sa <strong>tête</strong> : c'est elle que l'on référence par un nom de variable.
+<strong>Si on perd la référence vers la tête, la liste entière devient <em>inaccessible</em> !</strong></p>
+</div>
+<details class="rem">
+<summary>variantes</summary>
+<ul>
+<li>On peut aussi nommer chaque nœud. Cela donne un code plus verbeux :
+    <div class="highlight"><pre><span></span><code><span class="n">nd3</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">nd2</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">nd2</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">nd3</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">lst</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">nd2</span>
+</code></pre></div></li>
+<li>
+<p>On peut souhaiter être en mesure de déclarer dès l'instanciation la valeur du nœud <em>et</em> le nœud suivant.
+    Le code suivant convient :
+    <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Noeud</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">valeur</span><span class="p">,</span> <span class="n">suivant</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">valeur</span> <span class="o">=</span> <span class="n">valeur</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">suivant</span>      <span class="c1"># Par défaut : pas de suivant</span>
+</code></pre></div></p>
+<p>À utiliser ainsi :
+<div class="highlight"><pre><span></span><code><span class="n">nd3</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">nd2</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">nd3</span><span class="p">)</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nd2</span><span class="p">)</span>
+</code></pre></div></p>
+<p>Ou directement :
+<div class="highlight"><pre><span></span><code><span class="n">lst</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">Noeud</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span>
+</code></pre></div></p>
+</li>
+</ul>
+</details>
+<details class="rem">
+<summary>difficulté analogue à celle des arbres (2/2)</summary>
+<p>Dans le code présenté ici, <code>lst</code> désigne uniquement le nœud de tête.
+Comme indiqué dans <a href="#rem_queue">une remarque plus haut</a>, on lui donne <em>par convention</em> le rôle de « représentant » de toute la liste.</p>
+<p>Cela a une conséquence importante : toutes les fonctions qui <em>modifient la <strong>tête</strong></em> (voir plus bas) doivent renvoyer le <strong><em>nouveau</em> nœud de tête</strong>,
+et il <strong>faut <em>impérativement</em></strong> récupérer cette valeur de retour.</p>
+<p>Une alternative consiste à envelopper la liste dans une classe <code>ListeChainee</code> contenant un attribut <code>tete</code>.
+La liste aurait alors une existence propre, et les modifications de tête n'imposeraient plus de retour explicite.
+Ce choix est courant en POO, mais moins pertinent pour comprendre les mécanismes sous-jacents.</p>
+</details>
+<h2>Opérations fondamentales</h2>
+<h3>Parcours</h3>
+<p>Pour parcourir une liste chaînée, on avance de nœud en nœud depuis la tête.
+On fait « glisser de proche en proche » le maillon pointé par une variable :</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">afficher</span><span class="p">(</span><span class="n">tete</span><span class="p">):</span>
+    <span class="n">courant</span> <span class="o">=</span> <span class="n">tete</span>
+    <span class="k">while</span> <span class="n">courant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">courant</span><span class="o">.</span><span class="n">valeur</span><span class="p">)</span>
+        <span class="n">courant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span>       <span class="c1"># On « glisse » vers le nœud suivant</span>
+</code></pre></div>
+<p><strong>Utilisation :</strong>
+<div class="highlight"><pre><span></span><code><span class="n">afficher</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>   <span class="c1"># Affichera 1 puis 2 puis 3</span>
+</code></pre></div></p>
+<h3>Longueur</h3>
+<p>Même principe, en incrémentant un compteur à chaque tour de boucle :</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">longueur</span><span class="p">(</span><span class="n">tete</span><span class="p">):</span>
+    <span class="n">compteur</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">courant</span> <span class="o">=</span> <span class="n">tete</span>
+    <span class="k">while</span> <span class="n">courant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">compteur</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">courant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span>       <span class="c1"># On « glisse » vers le nœud suivant</span>
+    <span class="k">return</span> <span class="n">compteur</span>
+</code></pre></div>
+<p><strong>Utilisation :</strong>
+<div class="highlight"><pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">longueur</span><span class="p">(</span><span class="n">lst</span><span class="p">))</span>                    <span class="c1"># Affichera 3</span>
+</code></pre></div></p>
+<h3>Insertion en tête</h3>
+<p>Il suffit de créer un nouveau noeud (ou maillon), et d'y rattacher « l'ancienne » liste (par sa tête bien sûr).</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inserer_en_tete</span><span class="p">(</span><span class="n">valeur</span><span class="p">,</span> <span class="n">tete</span><span class="p">):</span>
+    <span class="n">nouveau</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>
+    <span class="n">nouveau</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">tete</span>
+    <span class="k">return</span> <span class="n">nouveau</span>          <span class="c1"># Le nouveau nœud devient la nouvelle tête</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Piège</p>
+<p><code>inserer_en_tete</code> renvoie la nouvelle tête : il faut impérativement récupérer
+ce retour et le mémoriser (le plus souvent en le réaffectant au nom de la liste d'origine).
+<div class="highlight"><pre><span></span><code><span class="n">tete</span> <span class="o">=</span> <span class="n">inserer_en_tete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tete</span><span class="p">)</span>     <span class="c1"># ✅ correct</span>
+<span class="n">inserer_en_tete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tete</span><span class="p">)</span>            <span class="c1"># ❌ la nouvelle tête est perdue !</span>
+</code></pre></div></p>
+</div>
+<h3>Suppression du premier nœud de valeur donnée</h3>
+<p>L'idée est de faire glisser notre « regard » jusqu'au nœud qu'on veut supprimer,
+<strong>tout en conservant la mémoire du nœud précédent.</strong> Il suffit alors de « sauter » le nœud à supprimer :
+on rattache sa queue à celle du nœud précédent.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">supprimer</span><span class="p">(</span><span class="n">valeur</span><span class="p">,</span> <span class="n">tete</span><span class="p">):</span>
+    <span class="c1"># Cas particulier : la tête est le nœud à supprimer</span>
+    <span class="k">if</span> <span class="n">tete</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>                         <span class="c1"># Liste vide : rien à faire</span>
+    <span class="k">if</span> <span class="n">tete</span><span class="o">.</span><span class="n">valeur</span> <span class="o">==</span> <span class="n">valeur</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">tete</span><span class="o">.</span><span class="n">suivant</span>                 <span class="c1"># La nouvelle tête est le nœud suivant</span>
+
+    <span class="c1"># Cas général : on cherche le nœud précédant celui à supprimer</span>
+    <span class="n">courant</span> <span class="o">=</span> <span class="n">tete</span>
+    <span class="k">while</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span><span class="o">.</span><span class="n">valeur</span> <span class="o">==</span> <span class="n">valeur</span><span class="p">:</span>
+            <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span><span class="o">.</span><span class="n">suivant</span>   <span class="c1"># On « saute » le nœud</span>
+            <span class="k">return</span> <span class="n">tete</span>
+        <span class="n">courant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span>
+    <span class="k">return</span> <span class="n">tete</span>                             <span class="c1"># Valeur absente : liste inchangée</span>
+</code></pre></div>
+<p><strong>Utilisation :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">tete</span> <span class="o">=</span> <span class="n">supprimer</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">tete</span><span class="p">)</span>           <span class="c1"># Supprime le premier nœud de valeur 2</span>
+</code></pre></div>
+<details class="rem">
+<summary>pourquoi chercher le nœud <em>précédent</em> ?</summary>
+<p>Dans une liste <em>simplement</em> chaînée, chaque nœud ne connaît que son successeur —
+pas son prédécesseur.
+Pour « sauter » un nœud, il faut donc modifier le lien <code>suivant</code> de celui qui
+le précède : <code>precedent.suivant = precedent.suivant.suivant</code>.
+C'est pour cela qu'on s'arrête sur le nœud <em>avant</em> celui à supprimer,
+et non sur le nœud lui-même.</p>
+</details>
+<details class="rem">
+<summary>liste doublement chaînée</summary>
+<p>Une <strong>liste doublement chaînée</strong> ajoute à chaque nœud un lien vers le nœud <em>précédent</em> en plus du suivant.
+Dans l'analogie du train, cela signifierait qu'un wagon peut voir <em>aussi</em> celui qui le précède.
+Cela simplifie la suppression (plus besoin de chercher le prédécesseur) et
+permet de parcourir la liste dans les deux sens — au prix d'une légère
+augmentation de la mémoire utilisée.</p>
+</details>
+<h3>Insertion à une position donnée (au-delà de la tête)</h3>
+<p>Insérer un nœud à une position donnée repose sur le principe suivant :
+une fois le nœud précédant la position atteint, deux redirections suffisent — sans toucher aux autres nœuds :
+<div class="highlight"><pre><span></span><code><span class="n">nouveau</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span>
+<span class="n">courant</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">nouveau</span>
+</code></pre></div></p>
+<div class="admonition warning">
+<p class="admonition-title">L'ordre des deux lignes est crucial !</p>
+<p>Si on inversait, <code>courant.suivant</code> serait écrasé avant d'avoir été sauvegardé, et la suite de la liste serait perdue.</p>
+</div>
+<p>Voici le code complet.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inserer</span><span class="p">(</span><span class="n">valeur</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">tete</span><span class="p">):</span>
+    <span class="c1"># Précautions nécessaires</span>
+    <span class="k">assert</span> <span class="n">position</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Pour insérer en tête, utiliser inserer_en_tete()&quot;</span>
+    <span class="k">assert</span> <span class="n">tete</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Impossible d&#39;insérer dans une liste vide&quot;</span>
+    <span class="c1"># Cas général : on cherche la position où insérer</span>
+    <span class="n">courant</span> <span class="o">=</span> <span class="n">tete</span>
+    <span class="n">pos_courant</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Avec la condition ci-dessous, si la position spécifiée pour l&#39;insertion</span>
+    <span class="c1"># est supérieure à la longueur de la liste, la valeur sera insérée en queue</span>
+    <span class="k">while</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">pos_courant</span> <span class="o">&lt;</span> <span class="n">position</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">courant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span>           <span class="c1"># On « glisse » vers le nœud suivant</span>
+        <span class="n">pos_courant</span> <span class="o">+=</span> <span class="mi">1</span>                    <span class="c1"># On incrémente le compteur de nœuds</span>
+    <span class="c1"># On a enfin atteint la position d&#39;insertion</span>
+    <span class="n">nouveau</span> <span class="o">=</span> <span class="n">Noeud</span><span class="p">(</span><span class="n">valeur</span><span class="p">)</span>
+    <span class="n">nouveau</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span>       <span class="c1"># On rattache la queue au nouveau nœud</span>
+    <span class="n">courant</span><span class="o">.</span><span class="n">suivant</span> <span class="o">=</span> <span class="n">nouveau</span>               <span class="c1"># On accroche le nouveau nœud après courant</span>
+</code></pre></div>
+<details class="rem">
+<summary>pourquoi un <code>assert</code> dans ce code ?</summary>
+<p><code>inserer_en_tete</code> <strong>renvoie</strong> la nouvelle tête, ce qui impose une réaffectation à la variable.
+<code>inserer</code> <em>modifie</em> la liste en place et <strong><em>ne</em> renvoie <em>rien</em></strong>.
+Utiliser <code>inserer</code> en position 0 ne planterait pas forcément, mais produirait un résultat silencieusement incorrect :
+le nœud inséré ne deviendrait jamais la vraie tête. L'<code>assert</code> rend cette erreur immédiatement visible.</p>
+</details>
+<details class="rem">
+<summary>position d'insertion trop grande ?</summary>
+<p>Si la position où l'insertion est demandée dépasse la longueur de la liste, il y a deux approches possibles :</p>
+<ul>
+<li>refuser et afficher un message (ou mieux : lever une exception avec un <code>assert</code>) ;</li>
+<li>insérer silencieusement en queue. C'est le choix fait dans le code ci-dessus. </li>
+</ul>
+</details>
+<h2>Complexité des opérations</h2>
+<table>
+<thead>
+<tr>
+<th>Opération</th>
+<th>Liste chaînée</th>
+<th>Tableau (liste Python)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accès au <code>i</code>-ème élément</td>
+<td>$\mathcal{O}(n)$</td>
+<td>$\mathcal{O}(1)$</td>
+</tr>
+<tr>
+<td>Insertion / suppression <strong>en tête</strong></td>
+<td>$\mathcal{O}(1)$</td>
+<td>$\mathcal{O}(n)$</td>
+</tr>
+<tr>
+<td>Insertion / suppression <strong>en milieu</strong> (nœud connu)</td>
+<td>$\mathcal{O}(1)$</td>
+<td>$\mathcal{O}(n)$</td>
+</tr>
+<tr>
+<td>Insertion / suppression <strong>en milieu</strong> (position par indice)</td>
+<td>$\mathcal{O}(n)$</td>
+<td>$\mathcal{O}(n)$</td>
+</tr>
+<tr>
+<td>Parcours complet</td>
+<td>$\mathcal{O}(n)$</td>
+<td>$\mathcal{O}(n)$</td>
+</tr>
+</tbody>
+</table>
+<p>La liste chaînée est donc avantageuse lorsque les <strong>insertions et suppressions sont
+fréquentes</strong> et qu'on dispose déjà d'une référence vers le nœud concerné.
+Elle est désavantageuse pour l'<strong>accès direct par indice</strong>.</p>
+<h2>Points d'attention</h2>
+<div class="admonition warning">
+<p class="admonition-title">Erreurs classiques</p>
+<ul>
+<li><strong>Oublier de vérifier <code>None</code></strong> avant d'accéder à <code>noeud.valeur</code> ou <code>noeud.suivant</code>
+    → erreur <code>AttributeError</code> si le nœud n'existe pas.</li>
+<li><strong>Ne pas récupérer la nouvelle tête</strong> après une insertion ou suppression en tête
+    → la variable <code>tete</code> pointe toujours sur l'ancienne tête.</li>
+<li><strong>Inverser l'ordre des redirections</strong> lors d'une insertion ou suppression
+    → perte de la suite de la liste.</li>
+<li><strong>Confondre liste chaînée et liste Python</strong> : la liste Python offre l'accès
+    par indice en $\mathcal{O}(1)$ ; la liste chaînée non.</li>
+</ul>
+</div>
+<h2>Liens avec d'autres notions</h2>
+<ul>
+<li><strong>Tableau :</strong> structure complémentaire — accès direct efficace, insertion coûteuse.
+    Le choix entre les deux dépend des opérations dominantes du problème.</li>
+<li><strong>Piles et files :</strong> peuvent s'implémenter efficacement avec une liste chaînée
+    (insertion et suppression en tête en $\mathcal{O}(1)$).</li>
+<li><strong>Arbres :</strong> généralisation de la liste chaînée où chaque nœud peut avoir
+    plusieurs successeurs.</li>
+<li><strong>Complexité :</strong> la notation $\mathcal{O}$ permet de comparer objectivement les
+    structures indépendamment de la machine utilisée.</li>
+</ul>
+
+    <script>
+// ── Numérotation automatique des titres du document ──────────────────
+function numeroterTitres() {
+    var compteurs = {h2: 0, h3: 0, h4: 0};
+    var titres = document.querySelectorAll('h2, h3, h4');
+    for (var i = 0; i < titres.length; i++) {
+        var titre = titres[i];
+        var niveau = titre.tagName.toLowerCase();
+        if (!titre.textContent.match(/^\d+\./)) {
+            if (niveau === 'h2') {
+                compteurs.h2++; compteurs.h3 = 0; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '. ' + titre.textContent;
+            } else if (niveau === 'h3') {
+                compteurs.h3++; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '. ' + titre.textContent;
+            } else if (niveau === 'h4') {
+                compteurs.h4++;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '.' + compteurs.h4 + '. ' + titre.textContent;
+            }
+        }
+    }
+}
+
+
+// ── Génère un slug à partir d'un texte ───────────────────────────────
+function slugifier(texte) {
+  return texte
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // supprime accents
+    .replace(/[^a-z0-9\s-]/g, "")                    // supprime ponctuation
+    .trim()
+    .replace(/\s+/g, "-");                            // espaces → tirets
+}
+
+
+// ── Fabrique des ancres convenables pour les titres du document ──────
+// À appeler au DOMContentLoaded, AVANT numeroterTitres() !
+function assignerAncres() {
+  const titres = document.querySelectorAll('h2, h3, h4');
+  titres.forEach((t) => {
+    if (!t.id) {
+      t.id = slugifier(t.textContent.trim());
+    }
+  });
+}
+
+
+// ── Thème clair / sombre ─────────────────────────────────────────────
+function basculerTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+
+// ── Cycle des polices (pour dyslexie ; double-clic : reset) ──────────
+let policeCourante = localStorage.getItem('police') || '0';
+let dernierClicPolice = 0;
+
+function basculerPolice() {
+    // Double-clic reset
+    const maintenant = Date.now();
+    if (maintenant - dernierClicPolice < 400) {
+        document.body.classList.remove('police-1', 'police-2', 'police-3');
+        localStorage.setItem('police', '0');
+        policeCourante = '0';
+        return;
+    }
+    dernierClicPolice = maintenant;
+
+    // Cycle 3 polices : 0→1→2→3→0
+    const nouvellePolice = (parseInt(policeCourante) + 1) % 4;
+
+    // Nettoyer classes précédentes
+    document.body.classList.remove('police-1', 'police-2', 'police-3');
+
+    if (nouvellePolice === 0) {
+        // Retour normal
+        localStorage.setItem('police', '0');
+    } else {
+        document.body.classList.add('police-' + nouvellePolice);
+        localStorage.setItem('police', nouvellePolice.toString());
+    }
+
+    policeCourante = nouvellePolice.toString();
+}
+
+
+// ── Fabrique un sommaire automatique pour le document HTML ───────────
+// Nécessite que les ancres aient été préalablement calculées
+function construireSommaire() {
+  const panneau = document.getElementById('toc-overlay');
+  if (panneau.dataset.built) return;
+  const titres = document.querySelectorAll('h2, h3, h4');
+  if (titres.length === 0) {
+    panneau.innerHTML = '<p style="padding:0.5em 1em;color:#888;">Aucun titre trouvé.</p>';
+    panneau.dataset.built = '1';
+    return;
+  }
+  titres.forEach((t) => {
+    const cls = 'toc-' + t.tagName.toLowerCase();
+    const texte = t.textContent.trim();
+    // html += `<a href="#${t.id}" class="${cls}" onclick='fermerSommaire()'>${texte}</a>`;
+    const a = document.createElement('a');
+    a.href = '#' + t.id;
+    a.className = cls;
+    a.textContent = texte;
+    a.addEventListener('click', fermerSommaire);
+    panneau.appendChild(a);
+  });
+  panneau.dataset.built = '1';
+}
+
+function basculerSommaire() {
+    construireSommaire();
+    document.getElementById('toc-overlay').classList.toggle('open');
+}
+
+function fermerSommaire() {
+    document.getElementById('toc-overlay').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+    const controles = document.getElementById('controls');
+    const sommaire = document.getElementById('toc-overlay');
+    if (!controles.contains(e.target) && !sommaire.contains(e.target)) fermerSommaire();
+});
+
+
+// ── Mode pagination par bloc (viewport-height scroll) ────────────────
+// Gestion des touches pour block-scroll à l'appui sur barre d'espacement, page up & down
+document.addEventListener('keydown', (e) => {
+    // Pas dans les champs de saisie !
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    } else if (e.key === 'PageUp') {
+        e.preventDefault();
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    }
+});
+
+
+// ── Impression : ouvrir les <details> avant, puis revenir à leur état
+// Prépare le DOM avant impression
+window.addEventListener('beforeprint', function () {
+    window._impressionEnCours = true;          // ← flag AVANT d'ouvrir les details
+
+    // 1. Ouvrir tous les <details> (admonitions dépliables)
+    //    et mémoriser leur état pour restauration après impression
+    document.querySelectorAll('details').forEach(function (d) {
+        d._etaitOuvert = d.open;
+        d.open = true;
+    });
+
+    // 2. Injecter le titre de chaque onglet juste avant son bloc
+    //    (les labels et blocs sont dans le même ordre : label[i] ↔ block[i])
+    document.querySelectorAll('.tabbed-set').forEach(function (set) {
+        const labels = Array.from(set.querySelectorAll('.tabbed-labels > label'));
+        const blocks = Array.from(set.querySelectorAll('.tabbed-content > .tabbed-block'));
+        labels.forEach(function (label, i) {
+            if (blocks[i]) {
+                const titre = document.createElement('div');
+                titre.className = 'tabbed-print-label';
+                titre.textContent = label.textContent;
+                titre.setAttribute('data-print-injected', '1'); // marqueur de nettoyage
+                blocks[i].prepend(titre);
+            }
+        });
+    });
+});
+
+window.addEventListener('afterprint', function () {
+    window._impressionEnCours = false;         // ← reset du flag
+
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+// Restauration du DOM après impression (retour à l'état avant impression
+window.addEventListener('afterprint', function () {
+
+    // 1. Restaurer l'état d'ouverture initial des <details>
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+
+    // 2. Supprimer les titres d'onglets injectés
+    //    (le marqueur data-print-injected évite tout risque de suppression parasite)
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+
+// ── Bouton copier sur les blocs de code ──────────────────────────────
+function ajouterBoutonsCopier() {
+    document.querySelectorAll('.highlight').forEach(bloc => {
+        // Conteneur relatif pour positionner le bouton
+        bloc.style.position = 'relative';
+
+        const btn = document.createElement('button');
+        btn.textContent = '📋';
+        btn.title = 'Copier le code';
+        btn.style.cssText = `
+            position: absolute;
+            top: 0.4em;
+            right: 0.4em;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0.2em 0.4em;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        `;
+
+        // Afficher au survol du bloc
+        bloc.addEventListener('mouseenter', () => btn.style.opacity = '1');
+        bloc.addEventListener('mouseleave', () => btn.style.opacity = '0');
+
+        btn.addEventListener('click', () => {
+            const cellCode = bloc.querySelector('td.code pre') || bloc.querySelector('pre');
+            const code = cellCode.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✅';
+                setTimeout(() => btn.textContent = '📋', 1500);
+            });
+        });
+
+        bloc.appendChild(btn);
+    });
+}
+
+
+// ── Barre de progression de lecture ──────────────────────────────────
+function majBarreProgression() {
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (docHeight <= 0) return;
+  document.body.style.setProperty('--progress', window.scrollY / docHeight);
+}
+
+window.addEventListener('scroll', majBarreProgression, { passive: true });
+window.addEventListener('resize', majBarreProgression, { passive: true });
+document.addEventListener('DOMContentLoaded', majBarreProgression);
+
+
+// ── Positionnement des notes de bas de page / infobulles ─────────────
+// Il s'agit d'éviter qu'elles soient coupées lorsqu'utilisées dans un bloc
+function positionnerInfobulles() {
+    document.querySelectorAll('.infobulle-note').forEach(note => {
+        const bulle = note.querySelector('.infobulle-contenu');
+
+        note.addEventListener('mouseenter', () => {
+            bulle.style.display = 'block';
+            const rect = note.getBoundingClientRect();
+            const bw   = bulle.offsetWidth;
+            const bh   = bulle.offsetHeight;
+
+            // Position par défaut : centré au-dessus du sup
+            let left = rect.left + rect.width / 2 - bw / 2;
+            let top  = rect.top - bh - 6;
+
+            // Correction débordement droit
+            if (left + bw > window.innerWidth - 8)
+                left = window.innerWidth - bw - 8;
+            // Correction débordement gauche
+            if (left < 8) left = 8;
+            // Si ça dépasse en haut → afficher en dessous
+            if (top < 8) top = rect.bottom + 6;
+
+            bulle.style.left = left + 'px';
+            bulle.style.top  = top  + 'px';
+        });
+
+        note.addEventListener('mouseleave', () => {
+            bulle.style.display = 'none';
+        });
+    });
+}
+
+
+// ── Auto target="_blank" pour liens externes ─────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])')
+        .forEach(link => {
+            if (!link.target) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        });
+});
+
+
+// ── Initialisation complète du document HTML ─────────────────────────
+function initialiser() {
+    assignerAncres();
+    numeroterTitres();
+    positionnerInfobulles();
+
+    // Thème
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // ← Police restaurée au chargement
+    const police = localStorage.getItem('police') || '0';
+    if (parseInt(police) > 0) {
+        document.body.classList.add('police-' + police);
+    }
+    
+    // Bouton copier-coller
+    ajouterBoutonsCopier();   // ← ajouter cette ligne
+    
+    // Pour scroll souris dans le sommaire
+    document.getElementById('toc-overlay').addEventListener(
+        'wheel', function(e) { e.stopPropagation(); }, { passive: true });
+}
+
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+
+    </script>
+</body>
+</html>

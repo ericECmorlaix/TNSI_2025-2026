@@ -3,18 +3,18 @@
 
 - [La représentation des données (le binaire et ses usages)](./Fiche%20sur%20la%20représentation%20des%20données%20(le%20binaire%20et%20ses%20usages).pdf){target=_blank} ;
 
-
 - [Synthèse sur Python](./Fiche%20de%20synthèse%20sur%20Python.pdf){target=_blank} ;
 - [La Programmation Orientée Objet (POO) - Version courte](./Fiche%20sur%20la%20Programmation%20Orientée%20Objet%20(POO)%20-%20Version%20courte.pdf){target=_blank} ;
 - [La Programmation Orientée Objet (POO)](./Fiche%20sur%20la%20Programmation%20Orientée%20Objet%20(POO).pdf){target=_blank} ;
 - [La récursivité](./Fiche%20sur%20la%20récursivité.pdf){target=_blank} ;
 - [La programmation dynamique](./Fiche%20sur%20la%20programmation%20dynamique.pdf){target=_blank} ;
-
+- [Les paradigmes de programmation et la programmation fonctionnelle](./Fiche%20sur%20les%20paradigmes%20de%20programmation%20et%20la%20programmation%20fonctionnelle.pdf){target=_blank} ;
 
 - [Les technologies web (HTML, CSS, JavaScript, HTTP et sécurité)](./Fiche%20sur%20les%20technologies%20web%20(HTML,%20CSS,%20JavaScript,%20HTTP%20et%20sécurité).pdf){target=_blank} ;
 - [GNU-Linux  et les commandes Bash essentielles](./Fiche%20sur%20GNU-Linux%20%20et%20les%20commandes%20Bash%20essentielles.pdf){target=_blank} ;
+- [Les architectures matérielles.pdf](./Fiche%20sur%20les%20architectures%20matérielles.pdf){target=_blank} ;
 - [Les processus et l'interblocage](./Fiche%20sur%20les%20processus%20et%20l'interblocage.pdf){target=_blank} ;
-
+- [Le réseau et les protocoles de routage](./Fiche%20sur%20le%20réseau%20et%20les%20protocoles%20de%20routage.pdf){target=_blank} ;
 
 - [La complexité et le logarithme en base 2](./Fiche%20sur%20la%20complexité%20et%20le%20logarithme%20en%20base%202.pdf){target=_blank} ;
 - [Les algorithmes de tri](./Fiche%20sur%20les%20algorithmes%20de%20tri.pdf){target=_blank} ;
@@ -23,10 +23,9 @@
 - [Les algorithmes gloutons](./Fiche%20sur%20les%20algorithmes%20gloutons.pdf){target=_blank} ;
 - [Le rendu de monnaie et le problème du sac à dos](./Fiche%20sur%20le%20rendu%20de%20monnaie%20et%20le%20problème%20du%20sac%20à%20dos.pdf){target=_blank} ;
 - [Les k plus proches voisins (k-PPV ou k-NN)](./Fiche%20sur%20les%20k%20plus%20proches%20voisins%20(k-PPV%20ou%20k-NN).pdf){target=_blank} ;
-
+- [La recherche textuelle](./Fiche%20sur%20la%20recherche%20textuelle.pdf){target=_blank} ;
 - [La correction et la terminaison des algorithmes](./Fiche%20sur%20la%20correction%20et%20la%20terminaison%20des%20algorithmes.pdf){target=_blank} ;
 - [La calculabilité, la décidabilité et problème de l'arrêt](./Fiche%20sur%20la%20calculabilité,%20la%20décidabilité%20et%20problème%20de%20l'arrêt.pdf){target=_blank} ;
-
 
 - [Les bases de données relationnelles](./Fiche%20sur%20les%20bases%20de%20données%20relationnelles.pdf){target=_blank} ;
 - [Les requêtes SQL](./Fiche%20sur%20les%20requêtes%20SQL.pdf){target=_blank} ;
