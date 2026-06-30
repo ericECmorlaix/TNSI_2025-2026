@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architectures matérielles</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <style>
+/* ── Google Font accessibilité ───────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Andika:wght@400;700&display=swap');
+
+/* ── Base ────────────────────────────────────────────────────────── */
+body {
+    font-family: Cantarell, Roboto, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    transition: background-color 0.3s, color 0.3s;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+}
+
+/* ── Pour barre de défilement ────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: #6b46c1;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  z-index: 2000;
+}
+
+/* ── Cycle polices dyslexie ──────────────────────────────── */
+body.police-1 { font-family: 'Andika', sans-serif !important; }
+body.police-2 { font-family: 'Atkinson Hyperlegible', sans-serif !important; }
+body.police-3 { font-family: 'Ubuntu', sans-serif !important; }
+body.police-1, body.police-2, body.police-3 {
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.8 !important;
+}
+
+/* ── H1 ──────────────────────────────────────────────────── */
+body h1 {
+    color: #6b46c1;
+    border: 0.15em solid #6b46c1;
+    border-radius: 0.5em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    background: none;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* ── H2 / H3 / H4 : dégradé via ::after, pas de boîte ───── */
+body h2, body h3, body h4 {
+    position: relative;
+    z-index: 0;
+    background: none;
+    border-radius: 0;
+    padding: 0.15em 0 0.15em 0.2em;
+}
+
+body h2 { font-size: 1.75rem; color: #2d3748; margin-top: 1.5em; }
+body h3 { font-size: 1.4rem;  color: #2d3748; margin-top: 1.2em; }
+body h4 { font-size: 1.2rem;  color: #2d3748; margin-top: 0.9em; }
+
+/* Premier titre : pas d'espace parasite en haut de page */
+body > :is(h2, h3, h4):first-child { margin-top: 0.5em; }
+
+body h2 em, body h2 i {
+    font-style: italic !important;
+    font-weight: 600 !important;
+    font-synthesis: none;
+    font-family: Georgia, 'Times New Roman', serif !important;
+}
+
+/* Dégradé vertical via ::after (texte jamais affecté) */
+body h2::after, body h3::after, body h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 4px 4px 0 0;
+}
+
+body h2::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(262, 52%, 65%, 0.28) 0%,
+        hsla(262, 52%, 65%, 0.10) 33%,
+        transparent 100%
+    );
+    border-bottom: 4px solid hsla(262, 52%, 65%, 0.55);
+}
+
+body h3::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(35, 95%, 58%, 0.22) 0%,
+        transparent 33%
+    );
+    border-bottom: 3px solid hsla(35, 95%, 58%, 0.45);
+}
+
+body h4::after {
+    height: 0;
+    border-bottom: 2px solid hsla(100, 56%, 55%, 0.40);
+}
+
+    /* Listes */
+    body ul, body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    body li {
+        margin: 0.5rem 0;
+    }
+
+    /* Code inline */
+    body code {
+        background-color: #edf2f7;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c7254e;
+    }
+
+    /* Annuler padding pour code dans pre (évite espace initial) */
+    body pre code,
+    body .highlight pre code {
+        padding: 0;
+        background: none;
+    }
+
+    /* Blocs de code */
+    body .highlight {
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0
+        overflow-x: auto;
+        margin: 1rem 0;
+        /* Forcer le scrollbar visible sur WebKit (Chrome/Safari) */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .highlight pre {
+        margin: 0;
+        background: none;
+        padding: 1rem;
+        overflow-x: auto;  /* ← ajouter aussi ici par sécurité */
+        white-space: pre;  /* ← garantir le non-wrap */
+    }
+
+    /* Masquer les spans vides de Pygments qui créent un espace initial */
+    body .highlight pre span:empty {
+        display: none !important;
+    }
+    body.dark-mode .highlight pre span:empty {
+        display: none !important;
+    }
+
+    /* Tableaux */
+    body table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        background-color: white;
+    }
+
+    body th, body td {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    body th {
+        background-color: #9f7aea;
+        color: white;
+        font-weight: 600;
+    }
+
+    body tr:nth-child(even) {
+        background-color: #f7fafc;
+    }
+
+
+
+/* ── Texte à lignes numérotées (pour littéraires) ────────────────── */
+.texte-numerote,
+.texte-numerote * {
+    text-align: left !important;
+}
+
+.texte-numerote {
+    margin: 1.2em 0;
+    font-family: Andika, sans-serif;
+    font-size: 1em;
+}
+
+.texte-lignes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.texte-ligne {
+    display: flex;
+    flex-direction: row;           /* ← row, pas row-reverse */
+    align-items: baseline;
+    padding: 0;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.texte-ligne::before {
+    content: attr(data-num);
+    min-width: 2.5em;
+    text-align: right;
+    padding-right: 0.6em;
+    margin-right: 0.8em;
+    border-right: 1px solid #d0dae6;
+    color: #999;
+    font-size: 0.82em;
+    font-family: ui-monospace, monospace;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.dark-mode .texte-ligne::before {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+
+
+
+
+.highlight [data-linenos]::before {
+    content: attr(data-linenos);
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+
+
+
+    /* ── Bloc contrôles haut-droite ───────────────────────────── */
+    #controls {
+        position: fixed;
+        top: 0.8rem;
+        display: flex;
+        font-size: clamp(0.6rem, 1.5vw, 1rem); /* ajuster la taille des boutons selon le zoom */
+        flex-direction: row;
+        align-items: center;
+        gap: 0.2em;
+        background: var(--ctrl-bg, #ccc);
+        border: 1px solid var(--ctrl-border, #ccc);
+        border-radius: 2em;
+        padding: 0.2em 0.5em;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        box-sizing: border-box;
+        overflow: visible;
+        width: auto;
+        max-width: none;
+        /* Positionner les boutons à droite dans le bloc de texte */
+        /* right: max(0.8rem, calc(50% - 450px + 0.8rem)); */
+        /* right: 0.8rem; */
+        right: max(0.8rem, calc(50vw - 450px - 7.5rem));
+    }
+
+    #controls button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        width: 1.8em;
+        height: 1.8em;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border-radius: 50%;
+        transition: background 0.15s;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    #controls button:hover {
+        background: var(--ctrl-hover, rgba(0,0,0,0.08));
+    }
+
+    /* Tooltip natif amélioré : on s'appuie sur [title] + pseudo CSS */
+    #controls button[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        top: 2.8em;
+        right: 0;
+        background: var(--tooltip-bg, #333);
+        color: var(--tooltip-fg, #fff);
+        font-size: 0.75rem;
+        font-family: sans-serif;
+        white-space: nowrap;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 1100;
+    }
+
+    #controls {
+        position: fixed; /* redéclaré pour que ::after soit relatif au bouton */
+    }
+
+    #controls button {
+        position: relative;
+    }
+
+    /* ── Overlay sommaire ─────────────────────────────────────── */
+    #toc-overlay {
+        display: none;
+        position: fixed;
+        top: 3.8rem;
+        right: 1rem;
+        width: clamp(200px, 25vw, 340px);
+        max-height: 70vh;
+        overflow-y: auto;
+        background: var(--toc-bg, #fafafa);
+        border: 1px solid var(--toc-border, #ddd);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        z-index: 999;
+        padding: 0.6em 0;
+        font-size: 0.9rem;
+    }
+    #toc-overlay.open {
+        display: block;
+    }
+    #toc-overlay a {
+        display: block;
+        padding: 0.3em 1em;
+        color: var(--toc-link, #1a1a1a);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        transition: background 0.12s, border-color 0.12s;
+    }
+    #toc-overlay a:hover {
+        background: var(--toc-hover, #e8f0fe);
+        border-left-color: #448aff;
+    }
+    #toc-overlay a.toc-h2 {
+        font-weight: bold;
+        padding-left: 1em;
+    }
+    #toc-overlay a.toc-h3 {
+        padding-left: 2em;
+        font-weight: normal;
+        color: var(--toc-link-h3, #444);
+    }
+    #toc-overlay a.toc-h4 {
+        padding-left: 3em;
+        font-weight: normal;
+        font-size: 0.85em;
+        color: var(--toc-link-h4, #666);
+    }
+
+    /* ── Variables thème clair ────────────────────────────────── */
+    :root {
+        --ctrl-bg:       #ccc;
+        --ctrl-border:   #eee;
+        --ctrl-hover:    rgba(0,0,0,0.08);
+        --tooltip-bg:    #ccc;
+        --tooltip-fg:    #fff;
+        --toc-bg:        #fafafa;
+        --toc-border:    #ddd;
+        --toc-link:      #1a1a1a;
+        --toc-link-h3:   #444;
+        --toc-link-h4:   #666;
+        --toc-hover:     #e8f0fe;
+    }
+    
+/* ── Liens lisibles (thème clair) ────────────────────────────────── */
+body a               { color: #0066cc; }
+body a:hover         { color: #004499; text-decoration: underline; }
+body a:visited       { color: #6b46c1; }
+
+/* ── Liens lisibles (thème sombre) ───────────────────────────────── */
+body.dark-mode a         { color: #90cdf4; }
+body.dark-mode a:hover   { color: #63b3ed; }
+body.dark-mode a:visited { color: #d6bcfa; }
+
+/* ── Variables thème sombre ──────────────────────────────────────── */
+body.dark-mode {
+    background-color: #1a202c;
+    color: #e2e8f0;
+    --ctrl-bg:       #888;
+    --ctrl-border:   #ddd;
+    --ctrl-hover:    rgba(255,255,255,0.4);
+    --tooltip-bg:    #eee;
+    --tooltip-fg:    #111;
+    --toc-bg:        #1e1e1e;
+    --toc-border:    #444;
+    --toc-link:      #ddd;
+    --toc-link-h3:   #aaa;
+    --toc-link-h4:   #888;
+    --toc-hover:     #1a2a3a;
+}
+
+    /* dark-mode h1 : voir section dark-mode titres */
+
+    /* ── Dark-mode H1 ────────────────────────────────────────────── */
+    body.dark-mode h1  { color: #b794f4; border-color: #b794f4; }
+    body.dark-mode h2  { color: #e2e8f0; }
+    body.dark-mode h3  { color: #e2e8f0; }
+    body.dark-mode h4  { color: #e2e8f0; }
+
+    /* ── Dark-mode ::after dégradés ──────────────────────────────── */
+    body.dark-mode h2::after {
+        background: linear-gradient(
+            to top,
+            hsla(262, 70%, 75%, 0.35) 0%,
+            hsla(262, 70%, 75%, 0.12) 33%,
+            transparent 100%
+        );
+        border-bottom: 4px solid hsla(262, 70%, 75%, 0.60);
+    }
+    body.dark-mode h3::after {
+        background: linear-gradient(
+            to top,
+            hsla(35, 90%, 68%, 0.28) 0%,
+            transparent 33%
+        );
+        border-bottom: 3px solid hsla(35, 90%, 68%, 0.50);
+    }
+    body.dark-mode h4::after {
+        border-bottom: 2px solid hsla(100, 56%, 65%, 0.45);
+    }
+
+    body.dark-mode code {
+        background-color: #2d3748;
+        color: #fc8181;
+    }
+    
+    body.dark-mode a:visited {
+        color: #d6bcfa !important;
+    }
+
+    body.dark-mode table {
+        background-color: #2d3748;
+    }
+
+    body.dark-mode th {
+        background-color: #6b46c1;
+    }
+
+    body.dark-mode tr:nth-child(even) {
+        background-color: #374151;
+    }
+
+    body.dark-mode td {
+        border-color: #4a5568;
+    }
+    
+    body.dark-mode .admonition,
+    body.dark-mode details {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    body.dark-mode .admonition a,
+    body.dark-mode details a {
+        color: #90cdf4;
+    }
+    
+    body.dark-mode .admonition a:hover,
+    body.dark-mode details a:hover {
+        color: #63b3ed;
+    }
+
+    body.dark-mode .admonition a:visited,
+    body.dark-mode details a:visited {
+        color: #d6bcfa !important;
+    }
+
+
+    /* ── Coloration syntaxique mode clair — thème "vs" (Visual Studio) */
+    /* Fond légèrement bleuté ajouté pour délimiter visuellement le bloc */
+    td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    .highlight .hll { background-color: #ffffcc }
+    .highlight  { background: #f0f4f8; }
+    .highlight .c  { color: #008000 }                      /* Comment */
+    .highlight .err { border: 1px solid #F00 }             /* Error */
+    .highlight .k  { color: #0000FF; font-weight: bold }   /* Keyword */
+    .highlight .ch { color: #008000 }                      /* Comment.Hashbang */
+    .highlight .cm { color: #008000 }                      /* Comment.Multiline */
+    .highlight .cp { color: #0000FF }                      /* Comment.Preproc */
+    .highlight .cpf { color: #008000 }                     /* Comment.PreprocFile */
+    .highlight .c1 { color: #008000 }                      /* Comment.Single */
+    .highlight .cs { color: #008000 }                      /* Comment.Special */
+    .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    .highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+    .highlight .gh { font-weight: bold }                   /* Generic.Heading */
+    .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    .highlight .gu { color: #800080; font-weight: bold }   /* Generic.Subheading */
+    .highlight .kc { color: #0000FF; font-weight: bold }   /* Keyword.Constant */
+    .highlight .kd { color: #0000FF; font-weight: bold }   /* Keyword.Declaration */
+    .highlight .kn { color: #0000FF; font-weight: bold }   /* Keyword.Namespace */
+    .highlight .kp { color: #0000FF }                      /* Keyword.Pseudo */
+    .highlight .kr { color: #0000FF; font-weight: bold }   /* Keyword.Reserved */
+    .highlight .kt { color: #2B91AF }                      /* Keyword.Type */
+    .highlight .s  { color: #A31515 }                      /* Literal.String */
+    .highlight .na { color: #FF0000 }                      /* Name.Attribute */
+    .highlight .nb { color: #00F }                         /* Name.Builtin */
+    .highlight .nc { color: #2B91AF }                      /* Name.Class */
+    .highlight .no { color: #2B91AF }                      /* Name.Constant */
+    .highlight .nd { color: #2B91AF }                      /* Name.Decorator */
+    .highlight .nf { color: #000000 }                      /* Name.Function */
+    .highlight .nt { color: #800000 }                      /* Name.Tag */
+    .highlight .nv { color: #000000 }                      /* Name.Variable */
+    .highlight .ow { color: #0000FF; font-weight: bold }   /* Operator.Word */
+    .highlight .sa { color: #A31515 }                      /* Literal.String.Affix */
+    .highlight .sb { color: #A31515 }                      /* Literal.String.Backtick */
+    .highlight .sc { color: #A31515 }                      /* Literal.String.Char */
+    .highlight .dl { color: #A31515 }                      /* Literal.String.Delimiter */
+    .highlight .sd { color: #A31515 }                      /* Literal.String.Doc */
+    .highlight .s2 { color: #A31515 }                      /* Literal.String.Double */
+    .highlight .se { color: #A31515 }                      /* Literal.String.Escape */
+    .highlight .sh { color: #A31515 }                      /* Literal.String.Heredoc */
+    .highlight .si { color: #A31515 }                      /* Literal.String.Interpol */
+    .highlight .sx { color: #A31515 }                      /* Literal.String.Other */
+    .highlight .sr { color: #A31515 }                      /* Literal.String.Regex */
+    .highlight .s1 { color: #A31515 }                      /* Literal.String.Single */
+    .highlight .ss { color: #A31515 }                      /* Literal.String.Symbol */
+    .highlight .vc { color: #000000 }                      /* Name.Variable.Class */
+    .highlight .vg { color: #000000 }                      /* Name.Variable.Global */
+    .highlight .vi { color: #000000 }                      /* Name.Variable.Instance */
+    .highlight .il { color: #098658 }                      /* Literal.Number.Integer.Long */
+    .highlight .m  { color: #098658 }                      /* Literal.Number */
+    .highlight .mb { color: #098658 }                      /* Literal.Number.Bin */
+    .highlight .mf { color: #098658 }                      /* Literal.Number.Float */
+    .highlight .mh { color: #098658 }                      /* Literal.Number.Hex */
+    .highlight .mi { color: #098658 }                      /* Literal.Number.Integer */
+    .highlight .mo { color: #098658 }                      /* Literal.Number.Oct */
+
+    /* ── Coloration syntaxique mode sombre — thème "one-dark" ────── */
+    body.dark-mode .highlight { background: #282C34; color: #ABB2BF; }
+    body.dark-mode .highlight .hll { background-color: #3E4451; }
+    body.dark-mode .highlight .c  { color: #7F848E; font-style: italic } /* Comment */
+    body.dark-mode .highlight .err { color: #E06C75 }                    /* Error */
+    body.dark-mode .highlight .esc { color: #ABB2BF }                    /* Escape */
+    body.dark-mode .highlight .k  { color: #C678DD }                     /* Keyword */
+    body.dark-mode .highlight .l  { color: #ABB2BF }                     /* Literal */
+    body.dark-mode .highlight .n  { color: #E06C75 }                     /* Name */
+    body.dark-mode .highlight .o  { color: #56B6C2 }                     /* Operator */
+    body.dark-mode .highlight .p  { color: #ABB2BF }                     /* Punctuation */
+    body.dark-mode .highlight .ch { color: #7F848E; font-style: italic } /* Comment.Hashbang */
+    body.dark-mode .highlight .cm { color: #7F848E; font-style: italic } /* Comment.Multiline */
+    body.dark-mode .highlight .cp { color: #7F848E; font-style: italic } /* Comment.Preproc */
+    body.dark-mode .highlight .cpf { color: #7F848E; font-style: italic }/* Comment.PreprocFile */
+    body.dark-mode .highlight .c1 { color: #7F848E; font-style: italic } /* Comment.Single */
+    body.dark-mode .highlight .cs { color: #7F848E; font-style: italic } /* Comment.Special */
+    body.dark-mode .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    body.dark-mode .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    body.dark-mode .highlight .kc { color: #C678DD }                     /* Keyword.Constant */
+    body.dark-mode .highlight .kd { color: #C678DD }                     /* Keyword.Declaration */
+    body.dark-mode .highlight .kn { color: #C678DD }                     /* Keyword.Namespace */
+    body.dark-mode .highlight .kp { color: #C678DD }                     /* Keyword.Pseudo */
+    body.dark-mode .highlight .kr { color: #C678DD }                     /* Keyword.Reserved */
+    body.dark-mode .highlight .kt { color: #E5C07B }                     /* Keyword.Type */
+    body.dark-mode .highlight .ld { color: #98C379 }                     /* Literal.Date */
+    body.dark-mode .highlight .m  { color: #D19A66 }                     /* Literal.Number */
+    body.dark-mode .highlight .s  { color: #98C379 }                     /* Literal.String */
+    body.dark-mode .highlight .na { color: #E06C75 }                     /* Name.Attribute */
+    body.dark-mode .highlight .nb { color: #61AFEF }                     /* Name.Builtin */
+    body.dark-mode .highlight .nc { color: #E5C07B }                     /* Name.Class */
+    body.dark-mode .highlight .no { color: #E06C75 }                     /* Name.Constant */
+    body.dark-mode .highlight .nd { color: #61AFEF }                     /* Name.Decorator */
+    body.dark-mode .highlight .ni { color: #ABB2BF }                     /* Name.Entity */
+    body.dark-mode .highlight .ne { color: #E06C75 }                     /* Name.Exception */
+    body.dark-mode .highlight .nf { color: #61AFEF }                     /* Name.Function */
+    body.dark-mode .highlight .nl { color: #E06C75 }                     /* Name.Label */
+    body.dark-mode .highlight .nn { color: #E5C07B }                     /* Name.Namespace */
+    body.dark-mode .highlight .nt { color: #E06C75 }                     /* Name.Tag */
+    body.dark-mode .highlight .nv { color: #E06C75 }                     /* Name.Variable */
+    body.dark-mode .highlight .ow { color: #56B6C2 }                     /* Operator.Word */
+    body.dark-mode .highlight .sa { color: #98C379 }                     /* Literal.String.Affix */
+    body.dark-mode .highlight .sb { color: #98C379 }                     /* Literal.String.Backtick */
+    body.dark-mode .highlight .sc { color: #98C379 }                     /* Literal.String.Char */
+    body.dark-mode .highlight .dl { color: #98C379 }                     /* Literal.String.Delimiter */
+    body.dark-mode .highlight .sd { color: #7F848E; font-style: italic } /* Literal.String.Doc */
+    body.dark-mode .highlight .s2 { color: #98C379 }                     /* Literal.String.Double */
+    body.dark-mode .highlight .se { color: #56B6C2 }                     /* Literal.String.Escape */
+    body.dark-mode .highlight .sh { color: #98C379 }                     /* Literal.String.Heredoc */
+    body.dark-mode .highlight .si { color: #D19A66 }                     /* Literal.String.Interpol */
+    body.dark-mode .highlight .sx { color: #98C379 }                     /* Literal.String.Other */
+    body.dark-mode .highlight .sr { color: #56B6C2 }                     /* Literal.String.Regex */
+    body.dark-mode .highlight .s1 { color: #98C379 }                     /* Literal.String.Single */
+    body.dark-mode .highlight .ss { color: #98C379 }                     /* Literal.String.Symbol */
+    body.dark-mode .highlight .mb { color: #D19A66 }                     /* Literal.Number.Bin */
+    body.dark-mode .highlight .mf { color: #D19A66 }                     /* Literal.Number.Float */
+    body.dark-mode .highlight .mh { color: #D19A66 }                     /* Literal.Number.Hex */
+    body.dark-mode .highlight .mi { color: #D19A66 }                     /* Literal.Number.Integer */
+    body.dark-mode .highlight .mo { color: #D19A66 }                     /* Literal.Number.Oct */
+    body.dark-mode .highlight .il { color: #D19A66 }                     /* Literal.Number.Integer.Long */
+    body.dark-mode .highlight .vc { color: #E06C75 }                     /* Name.Variable.Class */
+    body.dark-mode .highlight .vg { color: #E06C75 }                     /* Name.Variable.Global */
+    body.dark-mode .highlight .vi { color: #E06C75 }                     /* Name.Variable.Instance */
+    body.dark-mode .highlight .bp { color: #61AFEF }                     /* Name.Builtin.Pseudo */
+    body.dark-mode .highlight .fm { color: #61AFEF }                     /* Name.Function.Magic */
+
+/* ── Numérotation de lignes — style inline (pymdownx.highlight défaut) */
+/* Les numéros ne se copient pas avec le code — meilleur pour les élèves */
+.highlight .linenos {
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+body.dark-mode .highlight .linenos {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+    
+    /* ── ONGLETS — pymdownx.tabbed (alternate_style) ────────────────── 
+       Structure : .tabbed-set > input[radio]
+                               > .tabbed-labels > label
+                               > .tabbed-content > .tabbed-block */
+    .tabbed-set {
+      margin: 1.2em 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* Cacher les radio buttons */
+    .tabbed-set > input { display: none; }
+
+    /* Barre d'onglets */
+    .tabbed-labels {
+      display: flex;
+      flex-wrap: wrap;
+      background: #f7fafc;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tabbed-labels > label {
+      display: inline-block;
+      padding: 0.5em 1.2em;
+      cursor: pointer;
+      font-size: 0.92em;
+      font-weight: 600;
+      color: #4a5568;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      margin: 0;
+      user-select: none;
+    }
+
+    .tabbed-labels > label:hover {
+      color: #6b46c1;
+      background: #ede9fe;
+    }
+
+    /* Contenu : tous les blocs cachés par défaut */
+    .tabbed-content { padding: 0; }
+
+    .tabbed-block {
+      display: none;
+      padding: 1em 1.2em;
+    }
+
+    /* Afficher le bon bloc selon l'onglet actif */
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #6b46c1;
+      border-bottom: 2px solid #6b46c1;
+      background: white;
+    }
+
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-content > .tabbed-block:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-content > .tabbed-block:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-content > .tabbed-block:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-content > .tabbed-block:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-content > .tabbed-block:nth-child(5) {
+      display: block;
+    }
+
+    /* ---- Dark mode ---- */
+    body.dark-mode .tabbed-set { border-color: #4a5568; }
+
+    body.dark-mode .tabbed-labels {
+      background: #2d3748;
+      border-bottom-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label {
+      color: #a0aec0;
+      border-right-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label:hover {
+      color: #b794f4;
+      background: #3d2d5e;
+    }
+
+    body.dark-mode .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    body.dark-mode .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    body.dark-mode .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    body.dark-mode .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    body.dark-mode .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #b794f4;
+      border-bottom-color: #b794f4;
+      background: #1a202c;
+    }
+
+    body.dark-mode .tabbed-block { background: #1a202c; }
+
+
+    /* ── CSS bouton "copier" des blocs de code sur écrans tactiles ─ */
+    @media (hover: none) {
+      .highlight button[title="Copier le code"] {
+        opacity: 0.5 !important;
+      }
+    }
+    
+    /* ── Indicateur de progression CSS pur ───────────────────────── */
+    @keyframes grow-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── Figures GeoGebra ────────────────────────────────────────── */
+    .ggb-container {
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    body.dark-mode .ggb-container {
+      border-color: #4a5568;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ── Notes "de bas de page" -> infobulles ────────────────────── */
+    .infobulle-note {
+        position: relative;
+        cursor: help;
+    }
+    .infobulle-note sup {
+        color: #6b46c1;
+        font-weight: bold;
+    }
+    .infobulle-contenu {    /* Il faut éviter qu'elles soient coupées dans
+        un bloc, donc plus de bottom/left/transform : ce sera géré en JS */
+        display: none;
+        position: fixed;   /* ← Et plus d'absolute non plus */
+        background: #2d3748;
+        color: #e2e8f0;
+        font-size: 0.82em;
+        line-height: 1.5;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        width: max-content;
+        max-width: 28em;
+        white-space: normal;
+        z-index: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        pointer-events: none;
+    }
+    /* Cacher les footnotes en affichage écran, afficher en impression */
+    .footnote-impression { display: none; }
+    
+    /* ── Gestion des légendes / titres d'images ──────────────────── */
+    figure {
+        margin: 1.5em auto;
+        text-align: center;
+    }
+    figure img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    figcaption {
+        font-size: 0.85em;
+        color: #718096;
+        font-style: oblique 8deg;
+        margin-top: 0.4em;
+    }
+    body.dark-mode figcaption {
+        color: #a0aec0;
+    }
+
+
+    /* ── CSS pour impression sur feuille A4 ──────────────────────── */
+    @media print {
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        /* Pour les textes à lignes numérotées */
+        .texte-ligne::after { color: #666; }
+
+        /* Gestion des légendes */
+        figcaption {
+            color: #444 !important;
+            font-size: 0.8em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px 8px;
+        }
+
+        body {
+            background-color: white !important;
+            color: black !important;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            padding-top: 0.5cm !important;  /* tentative pour impression PDF */
+            padding-bottom: 0.5cm !important;
+        }
+
+        #controls {
+            display: none !important;
+        }
+
+        /* Définitions et propriétés : encadrées, sans couleur */
+        .admonition.def, details.def,
+        .admonition.prop, details.prop {
+            border: 1.5px solid #000 !important;
+            background: white !important;
+            border-left-width: 1.5px !important;
+        }
+        .admonition.def > .admonition-title,
+        details.def > summary,
+        .admonition.prop > .admonition-title,
+        details.prop > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+            border-bottom: 1px solid #000;
+        }
+        /* Toutes admonitions : fond blanc à l'impression */
+        .admonition, details {
+            background: white !important;
+            border-color: #888 !important;
+        }
+        .admonition-title, details > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+        }
+        /* Exemples et remarques : forcer l'affichage déplié */
+        details.ex, details.rem {
+            display: block !important;
+        }
+        details.ex > summary,
+        details.rem > summary {
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            background: none !important;
+            color: black !important;
+            border-color: black !important;
+        }
+
+        /* ── Traits sous les titres à l'impression ───────────────── */
+        /* Modifié le 18/02/2026 par intégration aux règles principales
+        h2::after { border-bottom-width: 4px !important; }
+        h3::after { border-bottom-width: 3px !important; }
+        h4::after { border-bottom-width: 2px !important; } */
+
+        pre, blockquote, table {
+            page-break-inside: avoid;
+        }
+
+        img {
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+
+        * {
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        /* APRÈS */
+        .highlight, pre {
+            background-color: #f5f5f5 !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* Code inline : fond léger, sans bordure */
+        code {
+            background-color: #f0f0f0 !important;
+            color: black !important;
+            border: none !important;
+            padding: 0.1em 0.2em !important;
+        }
+
+        /* Annuler le fond pour code dans pre (évite double fond) */
+        pre code {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        table, th, td {
+            border-color: black !important;
+        }
+
+        th {
+            background-color: #ddd !important;
+            color: black !important;
+        }
+
+        a {
+            color: #000 !important;
+            text-decoration: underline !important;
+        }
+
+        a[href^="http"]:after {
+            content: none !important;
+            font-size: 0.8em;
+        }
+        
+        /* Onglets à l'impression */
+        .tabbed-set { border: 1px solid #aaa !important; }
+        .tabbed-labels { display: flex !important; background: #eee !important; border-bottom: 1px solid #aaa !important; }
+        .tabbed-labels > label { display: inline-block !important; padding: 0.3em 0.8em !important; font-weight: bold !important; color: black !important; border-right: 1px solid #aaa !important; font-size: 0.85em !important; }
+        .tabbed-block { display: block !important; border-top: 1px dashed #ccc !important; padding: 0.5em 0.8em !important; }
+
+        .tabbed-print-label {
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #444;
+            background: #eee;
+            padding: 0.2em 0.6em;
+            margin-bottom: 0.4em;
+            border-left: 3px solid #aaa;
+        }
+        
+        .tabbed-labels { display: none !important; }
+        .tabbed-set { border: none !important; }
+        
+        /* Notes de bas de page à la fin */
+        .infobulle-contenu  { display: none !important; }
+        .footnote-impression {
+            display: block !important;
+            border-top: 1px solid #000;
+            margin-top: 2em;
+            font-size: 0.85em;
+        }
+    }
+
+    /* ── Admonitions (!!! et ???) ─────────────────────────────────── */
+    .admonition, details {
+        margin: 1.2em 0;
+        /* padding: 0 0 0.6em; */
+        padding: 0 0 0.6em;
+        border-left: 4px solid #999;
+        border-radius: 4px;
+        background: #f8f8f8;
+        /* overflow: hidden; */
+    }
+    .admonition-title, details > summary {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        padding: 0.45em 0.8em;
+        background: #e0e0e0;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+    }
+    details > summary { justify-content: space-between; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* Flèche droite / bas selon état */
+    details > summary::after {
+        content: '▶';
+        font-size: 0.75em;
+        transition: transform 0.2s;
+        margin-left: auto;
+        padding-left: 0.8em;
+        flex-shrink: 0;
+    }
+    details[open] > summary::after {
+        content: '▼';
+    }
+
+    /* Corps du contenu */
+    .admonition > *:not(.admonition-title),
+    details > *:not(summary) {
+        margin: 0.5em 0.9em;
+    }
+    
+    /* Annuler l'espace entre bandeau et premier contenu */
+    .admonition > .admonition-title + * {
+        margin-top: 0;
+    }
+
+    details > summary + * {
+        margin-top: 0 !important;
+    }
+
+    /* ── Icônes par type ──────────────────────────────────────────── */
+    .admonition-title::before,
+    details > summary .admonition-icon {
+        font-style: normal;
+    }
+
+    /* note */
+    .admonition.note, details.note {
+        border-color: #448aff;
+    }
+    .admonition.note > .admonition-title,
+    details.note > summary {
+        background: #e3ecff;
+        color: #1a4ab5;
+    }
+    .admonition.note > .admonition-title::before,
+    details.note > summary::before {
+        content: '📝';
+    }
+
+    /* abstract / summary / tldr */
+    .admonition.abstract, details.abstract,
+    .admonition.summary,  details.summary,
+    .admonition.tldr,     details.tldr {
+        border-color: #00b0ff;
+    }
+    .admonition.abstract > .admonition-title,
+    details.abstract > summary,
+    .admonition.summary > .admonition-title,
+    details.summary > summary,
+    .admonition.tldr > .admonition-title,
+    details.tldr > summary {
+        background: #e1f5fe;
+        color: #0060a0;
+    }
+    .admonition.abstract > .admonition-title::before,
+    details.abstract > summary::before,
+    .admonition.summary > .admonition-title::before,
+    details.summary > summary::before,
+    .admonition.tldr > .admonition-title::before,
+    details.tldr > summary::before {
+        content: '📋';
+    }
+
+    /* info */
+    .admonition.info, details.info {
+        border-color: #26c6da;
+    }
+    .admonition.info > .admonition-title,
+    details.info > summary {
+        background: #e0f7fa;
+        color: #006270;
+    }
+    .admonition.info > .admonition-title::before,
+    details.info > summary::before {
+        content: 'ℹ️';
+    }
+
+    /* tip / hint / important */
+    .admonition.tip,       details.tip,
+    .admonition.hint,      details.hint,
+    .admonition.important, details.important {
+        border-color: #00bfa5;
+    }
+    .admonition.tip > .admonition-title,
+    details.tip > summary,
+    .admonition.hint > .admonition-title,
+    details.hint > summary,
+    .admonition.important > .admonition-title,
+    details.important > summary {
+        background: #e0f7f4;
+        color: #007a6a;
+    }
+    .admonition.tip > .admonition-title::before,
+    details.tip > summary::before,
+    .admonition.hint > .admonition-title::before,
+    details.hint > summary::before,
+    .admonition.important > .admonition-title::before,
+    details.important > summary::before {
+        content: '💡';
+    }
+
+    /* success / check / done */
+    .admonition.success, details.success,
+    .admonition.check,   details.check,
+    .admonition.done,    details.done {
+        border-color: #4caf50;
+    }
+    .admonition.success > .admonition-title,
+    details.success > summary,
+    .admonition.check > .admonition-title,
+    details.check > summary,
+    .admonition.done > .admonition-title,
+    details.done > summary {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .admonition.success > .admonition-title::before,
+    details.success > summary::before,
+    .admonition.check > .admonition-title::before,
+    details.check > summary::before,
+    .admonition.done > .admonition-title::before,
+    details.done > summary::before {
+        content: '✅';
+    }
+
+    /* question / help / faq */
+    .admonition.question, details.question,
+    .admonition.help,     details.help,
+    .admonition.faq,      details.faq {
+        border-color: #64dd17;
+    }
+    .admonition.question > .admonition-title,
+    details.question > summary,
+    .admonition.help > .admonition-title,
+    details.help > summary,
+    .admonition.faq > .admonition-title,
+    details.faq > summary {
+        background: #f1f8e9;
+        color: #387002;
+    }
+    .admonition.question > .admonition-title::before,
+    details.question > summary::before,
+    .admonition.help > .admonition-title::before,
+    details.help > summary::before,
+    .admonition.faq > .admonition-title::before,
+    details.faq > summary::before {
+        content: '❓';
+    }
+
+    /* warning / caution / attention */
+    .admonition.warning,   details.warning,
+    .admonition.caution,   details.caution,
+    .admonition.attention, details.attention {
+        border-color: #ff9100;
+    }
+    .admonition.warning > .admonition-title,
+    details.warning > summary,
+    .admonition.caution > .admonition-title,
+    details.caution > summary,
+    .admonition.attention > .admonition-title,
+    details.attention > summary {
+        background: #fff3e0;
+        color: #b35e00;
+    }
+    .admonition.warning > .admonition-title::before,
+    details.warning > summary::before,
+    .admonition.caution > .admonition-title::before,
+    details.caution > summary::before,
+    .admonition.attention > .admonition-title::before,
+    details.attention > summary::before {
+        content: '⚠️';
+    }
+
+    /* failure / fail / missing */
+    .admonition.failure, details.failure,
+    .admonition.fail,    details.fail,
+    .admonition.missing, details.missing {
+        border-color: #ff5252;
+    }
+    .admonition.failure > .admonition-title,
+    details.failure > summary,
+    .admonition.fail > .admonition-title,
+    details.fail > summary,
+    .admonition.missing > .admonition-title,
+    details.missing > summary {
+        background: #fde8e8;
+        color: #b00020;
+    }
+    .admonition.failure > .admonition-title::before,
+    details.failure > summary::before,
+    .admonition.fail > .admonition-title::before,
+    details.fail > summary::before,
+    .admonition.missing > .admonition-title::before,
+    details.missing > summary::before {
+        content: '❌';
+    }
+
+    /* danger / error */
+    .admonition.danger, details.danger,
+    .admonition.error,  details.error {
+        border-color: #e53935;
+    }
+    .admonition.danger > .admonition-title,
+    details.danger > summary,
+    .admonition.error > .admonition-title,
+    details.error > summary {
+        background: #fde8e8;
+        color: #a00;
+    }
+    .admonition.danger > .admonition-title::before,
+    details.danger > summary::before,
+    .admonition.error > .admonition-title::before,
+    details.error > summary::before {
+        content: '🛑';
+    }
+
+    /* bug */
+    .admonition.bug, details.bug {
+        border-color: #f50057;
+    }
+    .admonition.bug > .admonition-title,
+    details.bug > summary {
+        background: #fce4ec;
+        color: #9b0039;
+    }
+    .admonition.bug > .admonition-title::before,
+    details.bug > summary::before {
+        content: '🐛';
+    }
+
+    /* example */
+    .admonition.example, details.example {
+        border-color: #7c4dff;
+    }
+    .admonition.example > .admonition-title,
+    details.example > summary {
+        background: #ede7f6;
+        color: #4a148c;
+    }
+    .admonition.example > .admonition-title::before,
+    details.example > summary::before {
+        content: '🔬';
+    }
+
+    /* quote / cite */
+    .admonition.quote, details.quote,
+    .admonition.cite,  details.cite {
+        border-color: #9e9e9e;
+    }
+    .admonition.quote > .admonition-title,
+    details.quote > summary,
+    .admonition.cite > .admonition-title,
+    details.cite > summary {
+        background: #f5f5f5;
+        color: #424242;
+    }
+    .admonition.quote > .admonition-title::before,
+    details.quote > summary::before,
+    .admonition.cite > .admonition-title::before,
+    details.cite > summary::before {
+        content: '💬';
+    }
+    
+    .admonition.quote em, .admonition.quote i, details.quote em, 
+    details.quote i {
+        font-family: Andika, sans-serif;
+        font-style: oblique 8deg;  /* inclinaison légère, non cursive */
+    }
+
+
+    /* Correction mode sombre : titres d'admonition */
+    body.dark-mode .admonition.algo > .admonition-title {
+        color: #1a202c !important;
+    }
+
+    
+    /* ── Définitions (def) ────────────────────────────────────── */
+    .admonition.def, details.def {
+        border-color: #2b6cb0;
+        background: #ebf8ff;
+    }
+    .admonition.def > .admonition-title,
+    details.def > summary {
+        background: #bee3f8;
+        color: #1a365d;
+    }
+    .admonition.def > .admonition-title::before,
+    details.def > summary::before {
+        content: '🎓';
+    }
+
+    /* ── Propriétés (prop) ────────────────────────────────────── */
+    .admonition.prop, details.prop {
+        border-color: #276749;
+        background: #f0fff4;
+    }
+    .admonition.prop > .admonition-title,
+    details.prop > summary {
+        background: #c6f6d5;
+        color: #1c4532;
+    }
+    .admonition.prop > .admonition-title::before,
+    details.prop > summary::before {
+        content: '⚙️';
+    }
+
+    /* ── Exemples (ex) : filet droit, zéro boîte ────────────── */
+    .admonition.ex, details.ex {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        margin-left: 0;
+        padding-right: 0.8em;
+        border-right: 2px solid #a0aec0;
+    }
+    .admonition.ex > .admonition-title,
+    details.ex > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .admonition.ex > .admonition-title::before,
+    details.ex > summary::before { content: '✏️ Exemple : '; }
+
+    /* ── Remarques (rem) : filet droit pointillé, zéro boîte ── */
+    .admonition.rem, details.rem {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        position: relative;
+        padding-right: 0.8em;
+        border-right: 2px dashed #cbd5e0;
+    }
+    details.rem[open]::after { display: none; }
+    .admonition.rem > .admonition-title,
+    details.rem > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px dotted #e2e8f0;
+    }
+    .admonition.rem > .admonition-title::before,
+    details.rem > summary::before { content: '💭 Remarque : '; }
+
+    /* dark-mode ex + rem */
+    body.dark-mode .admonition.ex,
+    body.dark-mode details.ex       { border-right-color: #4a5568; }
+    body.dark-mode .admonition.ex > .admonition-title,
+    body.dark-mode details.ex > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+    body.dark-mode .admonition.rem,
+    body.dark-mode details.rem      { border-right-color: #4a5568; }
+    body.dark-mode .admonition.rem > .admonition-title,
+    body.dark-mode details.rem > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+
+    /* ── Défi (defi) ──────────────────────────────────────────── */
+    .admonition.defi, details.defi {
+        border-color: #e53e3e;
+        background: linear-gradient(
+            135deg,
+            #fff5f5 0%,
+            #fffaf0 40%,
+            #fefcbf 100%
+        );
+    }
+    .admonition.defi > .admonition-title,
+    details.defi > summary {
+        background: linear-gradient(
+            135deg,
+            #fc8181 0%,
+            #f6ad55 50%,
+            #f6e05e 100%
+        );
+        color: #7b341e;
+        font-weight: bold;
+    }
+    .admonition.defi > .admonition-title::before,
+    details.defi > summary::before {
+        content: '💪';
+    }
+
+    /* Admonitions imbriquées */
+    .admonition .admonition,
+    details details {
+        margin: 0.8em 0.4em;
+        font-size: 0.97em;
+    }
+
+    </style>
+    <!-- MathJax pour le rendu LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [["$", "$"]],
+                displayMath: [["$$", "$$"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    
+</head>
+<body>
+    <div id="controls">
+        <button id="btn-police" title="Police standard / Polices pour dys (double-clic pour annuler)" onclick="basculerPolice()">Aa</button>
+        <button id="theme-btn"  title="Thème clair / thème sombre"                                    onclick="basculerTheme()">🌓</button>
+        <button id="btn-toc"    title="Sommaire"                                                      onclick="basculerSommaire()">📑</button>
+    </div>
+    <div id="toc-overlay"></div>
+
+    <h1>Architectures matérielles</h1>
+<h2>Des transistors aux portes logiques</h2>
+<h3>Le transistor : un interrupteur piloté</h3>
+<p>Un transistor possède trois bornes et peut être vu, dans ce contexte, comme
+un interrupteur commandé.</p>
+<ul>
+<li>
+<p>Une <strong>borne de commande</strong> reçoit en entrée un signal logique : une tension
+    basse correspond au 0, une tension haute correspond au 1 (c'est ainsi
+    que la logique binaire se traduit en électronique).</p>
+</li>
+<li>
+<p>Les deux autres bornes forment un chemin électrique distinct, que ce signal
+    de commande peut ouvrir ou fermer.</p>
+<ul>
+<li>Si la commande active le transistor, le courant passe : l’interrupteur est fermé.</li>
+<li>Sinon, le courant est bloqué : l’interrupteur est ouvert.</li>
+</ul>
+</li>
+</ul>
+<p>Selon le type de transistor et le montage utilisé, la sortie obtenue peut
+être directe ou inversée. Mais l’idée essentielle est qu’<strong>un signal logique
+permet de commander le passage du courant</strong>.</p>
+<p>En associant des transistors de manière appropriée, on construit des <strong>portes
+logiques</strong>, briques élémentaires de tout circuit numérique. Un processeur
+moderne en contient plusieurs <em>milliards</em>. Ces portes logiques manipulent
+des valeurs booléennes — 0 ou 1, vrai ou faux — et réalisent des opérations
+définies par la <em>logique booléenne</em>.</p>
+<h3>Rappels de logique booléenne</h3>
+<p>Inventée par le mathématicien <a href="https://fr.wikipedia.org/wiki/George_Boole">George Boole</a>,
+c'est l'algèbre (les « règles de calcul ») du <em>vrai</em> et du <em>faux</em> :</p>
+<ul>
+<li>elle ne manipule que deux valeurs, 0 (faux) et 1 (vrai) ;</li>
+<li>et comporte trois opérations fondamentales à partir desquelles toute expression
+    logique peut être construite.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Opération</th>
+<th style="text-align: center;">Notation mathématique</th>
+<th style="text-align: center;">Python</th>
+<th>Sens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>NON</strong> (NOT)</td>
+<td style="text-align: center;">$\overline{a}$</td>
+<td style="text-align: center;"><code>not a</code></td>
+<td>Inverse la valeur (1 → 0 ; 0 → 1)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>ET</strong> (AND)</td>
+<td style="text-align: center;">$a \cdot b$</td>
+<td style="text-align: center;"><code>a and b</code></td>
+<td>1 si et seulement si les deux entrées sont à 1</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>OU</strong> (OR)</td>
+<td style="text-align: center;">$a + b$</td>
+<td style="text-align: center;"><code>a or b</code></td>
+<td>1 si au moins une entrée est à 1</td>
+</tr>
+</tbody>
+</table>
+<details class="rem">
+<summary>sens de ces « formules » ?</summary>
+<ul>
+<li>L'opération $\cdot$ est bien la multiplication : quand $a$ et $b$
+    prennent pour valeur 0 ou 1, $a \times b = a \cdot b$ vaut 1 si
+    et seulement si $a$ <strong>et</strong> $b$ valent 1. Toutes les autres combinaisons
+    donnent 0 pour résultat. Cela correspond bien à l'opération logique <strong>ET</strong>.</li>
+<li>L'opération $+$ est à comprendre de façon un peu particulière : si
+    $a=1$ et $b=1$, alors <em>dans ce contexte</em> $a+b$ vaudra 1 (et non 2,
+    au contraire de l'addition ordinaire). Alors, pour que le résultat
+    $a+b$ vale 1, il faut et il suffit que $a$ <strong>ou</strong> $b$ vale 1 : c'est
+    bien l'opération logique <strong>OU</strong>.</li>
+</ul>
+</details>
+<p>Enfin, les <strong>lois de De Morgan</strong> sont deux relations bien utiles :</p>
+<p>$$\overline{a \cdot b} = \overline{a} + \overline{b} \qquad\qquad \overline{a + b} = \overline{a} \cdot \overline{b}$$</p>
+<p>Avec les opérations logiques :</p>
+<div style="text-align: center">
+ <b>NON</b>(A <b>ET</b> B) = (<b>NON</b> A) <b>OU</b> (<b>NON</b> B) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>NON</b>(A <b>OU</b> B) = (<b>NON</b> A) <b>ET</b> (<b>NON</b> B).
+</div>
+
+<p>Elles permettent de transformer toute combinaison de ET et de OU en son
+équivalent exprimé avec l'opération inverse — ce qui est fondamental en
+électronique (voir plus loin les <a href="#porte-logique-universelle">portes logiques universelles</a>).</p>
+<details class="rem">
+<summary>minuscules et majuscules dans les expressions</summary>
+<p>Par convention, on utilise des minuscules ($a$, $b$, $s$…) pour désigner
+des variables booléennes (les valeurs 0 ou 1 manipulées dans les formules
+mathématiques), et des majuscules (A, B, S…) pour désigner les signaux
+électriques aux entrées et sorties des portes logiques dans les schémas
+de circuits. Mais cette distinction n'est pas toujours respectée…</p>
+</details>
+<h3>Les portes logiques</h3>
+<p>Une <strong>porte logique</strong> est un circuit élémentaire qui réalise une opération
+booléenne. Les différentes portes sont listées ci-dessous.</p>
+<p>Dans la symbologie <strong>européenne</strong>, chaque porte est représentée par un
+<em>rectangle</em> avec un symbole intérieur assez explicite : c'est lui qui indique
+la nature de la porte. Un petit cercle tangent au rectangle en sortie indique
+une négation.</p>
+<style>
+/* ── Variables portes logiques ───────────────────────────── */
+:root {
+  --gl-bg:        #fbfbf9;
+  --gl-surface:   #f0f0ec;
+  --gl-text:      #28251d;
+  --gl-muted:     #7a7974;
+  --gl-primary:   #01696f;
+  --gl-hi:        #cedcd8;
+  --gl-border:    rgba(40,37,29,0.15);
+  --gl-font-body: 'Inter', sans-serif;
+  --gl-font-mono: 'JetBrains Mono', monospace;
+}
+body.dark-mode {
+  --gl-bg:      #1c1b19;
+  --gl-surface: #2a2926;
+  --gl-text:    #cdccca;
+  --gl-muted:   #9a9896;
+  --gl-primary: #4f98a3;
+  --gl-hi:      #313b3b;
+  --gl-border:  rgba(205,204,202,0.15);
+}
+
+/* ── Tableau des portes ──────────────────────────────────── */
+table.portes td, table.portes th {
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+table.portes td.desc { text-align: left !important; }
+
+/* ── Cellule SVG ─────────────────────────────────────────── */
+td.svg-cell { width: 140px !important; padding: 0.75rem !important; }
+svg.gate    { display: block; margin: auto; overflow: visible; }
+.gate-rect   { fill: var(--gl-surface); stroke: var(--gl-text); stroke-width: 1.8; }
+.gate-line   { stroke: var(--gl-text);  stroke-width: 1.8; fill: none; }
+.gate-circle { fill: var(--gl-bg);      stroke: var(--gl-text); stroke-width: 1.8; }
+.gate-label  { font-family: var(--gl-font-mono); font-size: 14px; font-weight: bold;
+               fill: var(--gl-primary); }
+.io-label    { font-family: var(--gl-font-body); font-size: 12px; font-weight: bold;
+               fill: var(--gl-muted); }
+
+/* ── Nom de la porte ─────────────────────────────────────── */
+td.name-cell { font-weight: 600 !important; white-space: nowrap; }
+.tag {
+  display: inline-block;
+  font-family: var(--gl-font-mono); font-size: 0.75rem;
+  background: var(--gl-hi); color: var(--gl-primary);
+  padding: 0.1em 0.45em; border-radius: 0.25rem; margin-left: 0.4rem;
+}
+
+/* ── Table de vérité ─────────────────────────────────────── */
+.tv {
+  display: inline-grid;
+  font-family: var(--gl-font-mono); font-size: 0.85rem;
+  column-gap: 0.6rem;
+  border: 1px solid var(--gl-border); border-radius: 0.4rem;
+  padding: 0.4rem 0.6rem;
+  background: var(--gl-surface);
+  color: var(--gl-text) !important;
+}
+.tv.one-in { grid-template-columns: auto auto; }
+.tv.two-in { grid-template-columns: auto auto auto; }
+.tv-head {
+  color: var(--gl-muted) !important; font-weight: 600;
+  border-bottom: 1px solid var(--gl-border);
+  padding-bottom: 0.2rem; margin-bottom: 0.2rem;
+}
+.v1 { color: var(--gl-primary) !important; font-weight: 600; }
+
+/* ── Porte universelle ───────────────────────────────────── */
+.univ {
+  display: block; text-align: center;
+  font-weight: bold; font-style: italic;
+  color: #c0392b; margin-bottom: 0.3em;
+}
+body.dark-mode .univ { color: #fc8181; }
+</style>
+
+<table class="portes">
+<thead>
+  <tr>
+    <th>Symbole</th>
+    <th>Nom de la porte</th>
+    <th>Table de vérité</th>
+    <th>Description</th>
+  </tr>
+</thead>
+<tbody>
+
+  <tr>
+    <td class="svg-cell">
+      <svg class="gate" width="120" height="66" viewBox="0 0 120 66">
+        <line class="gate-line" x1="6" y1="33" x2="30" y2="33"/>
+        <rect class="gate-rect" x="30" y="8" width="44" height="50" rx="3"/>
+        <text class="gate-label" x="52" y="38" text-anchor="middle">1</text>
+        <circle class="gate-circle" cx="79" cy="33" r="5"/>
+        <line class="gate-line" x1="84" y1="33" x2="114" y2="33"/>
+        <text class="io-label" x="8" y="29">A</text>
+        <text class="io-label" x="106" y="29">S</text>
+      </svg>
+    </td>
+    <td class="name-cell">NON <span style="font-weight:normal;font-style:italic">ou</span> <span class="tag">NOT</span></td>
+    <td>
+      <div class="tv one-in">
+        <span class="tv-head">A</span><span class="tv-head">S</span>
+        <span>0</span><span class="v1">1</span>
+        <span>1</span><span class="v1">0</span>
+      </div>
+    </td>
+    <td class="desc">Inverse le signal. S vaut 1 si A vaut 0, et _vice versa_.<br><br>
+      <b>Expression :</b> $s = \overline{a}$</td>
+  </tr>
+
+  <tr>
+    <td class="svg-cell">
+      <svg class="gate" width="120" height="66" viewBox="0 0 120 66">
+        <line class="gate-line" x1="6" y1="22" x2="30" y2="22"/>
+        <line class="gate-line" x1="6" y1="44" x2="30" y2="44"/>
+        <rect class="gate-rect" x="30" y="8" width="44" height="50" rx="3"/>
+        <text class="gate-label" x="52" y="38" text-anchor="middle">&amp;</text>
+        <line class="gate-line" x1="74" y1="33" x2="114" y2="33"/>
+        <text class="io-label" x="8" y="19">A</text>
+        <text class="io-label" x="8" y="57">B</text>
+        <text class="io-label" x="106" y="29">S</text>
+      </svg>
+    </td>
+    <td class="name-cell">ET <span style="font-weight:normal;font-style:italic">ou</span> <span class="tag">AND</span></td>
+    <td>
+      <div class="tv two-in">
+        <span class="tv-head">A</span><span class="tv-head">B</span><span class="tv-head">S</span>
+        <span>0</span><span>0</span><span class="v1">0</span>
+        <span>0</span><span>1</span><span class="v1">0</span>
+        <span>1</span><span>0</span><span class="v1">0</span>
+        <span>1</span><span>1</span><span class="v1">1</span>
+      </div>
+    </td>
+    <td class="desc">S vaut 1 <em>seulement si</em> A <strong>et</strong> B valent 1 simultanément.<br><br>
+      <b>Expression :</b> $s = a \cdot b$</td>
+  </tr>
+
+  <tr>
+    <td class="svg-cell">
+      <svg class="gate" width="120" height="66" viewBox="0 0 120 66">
+        <line class="gate-line" x1="6" y1="22" x2="30" y2="22"/>
+        <line class="gate-line" x1="6" y1="44" x2="30" y2="44"/>
+        <rect class="gate-rect" x="30" y="8" width="44" height="50" rx="3"/>
+        <text class="gate-label" x="52" y="38" text-anchor="middle">≥1</text>
+        <line class="gate-line" x1="74" y1="33" x2="114" y2="33"/>
+        <text class="io-label" x="8" y="19">A</text>
+        <text class="io-label" x="8" y="57">B</text>
+        <text class="io-label" x="106" y="29">S</text>
+      </svg>
+    </td>
+    <td class="name-cell">OU <span style="font-weight:normal;font-style:italic">ou</span> <span class="tag">OR</span></td>
+    <td>
+      <div class="tv two-in">
+        <span class="tv-head">A</span><span class="tv-head">B</span><span class="tv-head">S</span>
+        <span>0</span><span>0</span><span class="v1">0</span>
+        <span>0</span><span>1</span><span class="v1">1</span>
+        <span>1</span><span>0</span><span class="v1">1</span>
+        <span>1</span><span>1</span><span class="v1">1</span>
+      </div>
+    </td>
+    <td class="desc">S vaut 1 si A <strong>ou</strong> B (ou les deux) valent 1.<br><br>
+      <b>Expression :</b> $s = a + b$</td>
+  </tr>
+
+  <tr>
+    <td class="svg-cell">
+      <svg class="gate" width="120" height="66" viewBox="0 0 120 66">
+        <line class="gate-line" x1="6" y1="22" x2="30" y2="22"/>
+        <line class="gate-line" x1="6" y1="44" x2="30" y2="44"/>
+        <rect class="gate-rect" x="30" y="8" width="44" height="50" rx="3"/>
+        <text class="gate-label" x="52" y="38" text-anchor="middle">=1</text>
+        <line class="gate-line" x1="74" y1="33" x2="114" y2="33"/>
+        <text class="io-label" x="8" y="19">A</text>
+        <text class="io-label" x="8" y="57">B</text>
+        <text class="io-label" x="106" y="29">S</text>
+      </svg>
+    </td>
+    <td class="name-cell">OU exclusif <span style="font-weight:normal;font-style:italic">ou</span> <span class="tag">XOR</span></td>
+    <td>
+      <div class="tv two-in">
+        <span class="tv-head">A</span><span class="tv-head">B</span><span class="tv-head">S</span>
+        <span>0</span><span>0</span><span class="v1">0</span>
+        <span>0</span><span>1</span><span class="v1">1</span>
+        <span>1</span><span>0</span><span class="v1">1</span>
+        <span>1</span><span>1</span><span class="v1">0</span>
+      </div>
+    </td>
+    <td class="desc">S vaut 1 si A et B sont <em>différents</em> (l’un et pas l’autre).<br><br>
+      <b>Expression :</b> $s = a \oplus b = a \cdot \overline{b} + \overline{a} \cdot b$</td>
+  </tr>
+
+  <tr>
+    <td class="svg-cell">
+      <svg class="gate" width="120" height="66" viewBox="0 0 120 66">
+        <line class="gate-line" x1="6" y1="22" x2="30" y2="22"/>
+        <line class="gate-line" x1="6" y1="44" x2="30" y2="44"/>
+        <rect class="gate-rect" x="30" y="8" width="44" height="50" rx="3"/>
+        <text class="gate-label" x="52" y="38" text-anchor="middle">&amp;</text>
+        <circle class="gate-circle" cx="79" cy="33" r="5"/>
+        <line class="gate-line" x1="84" y1="33" x2="114" y2="33"/>
+        <text class="io-label" x="8" y="19">A</text>
+        <text class="io-label" x="8" y="57">B</text>
+        <text class="io-label" x="106" y="29">S</text>
+      </svg>
+    </td>
+    <td class="name-cell">NON-ET <span style="font-weight:normal;font-style:italic">ou</span> <span class="tag">NAND</span></td>
+    <td>
+      <div class="tv two-in">
+        <span class="tv-head">A</span><span class="tv-head">B</span><span class="tv-head">S</span>
+        <span>0</span><span>0</span><span class="v1">1</span>
+        <span>0</span><span>1</span><span class="v1">1</span>
+        <span>1</span><span>0</span><span class="v1">1</span>
+        <span>1</span><span>1</span><span class="v1">0</span>
+      </div>
+    </td>
+    <td class="desc">
+      <span class="univ">Porte universelle !</span>
+      Inverse de <b>ET</b>. S vaut 0 <em>seulement si</em> A et B valent 1.<br>
+      <span style="display:block; font-size:0.4em;">&nbsp;</span>
+      <b>Expression :</b> $s = \overline{a \cdot b}$</td>
+  </tr>
+
+  <tr>
+    <td class="svg-cell">
+      <svg class="gate" width="120" height="66" viewBox="0 0 120 66">
+        <line class="gate-line" x1="6" y1="22" x2="30" y2="22"/>
+        <line class="gate-line" x1="6" y1="44" x2="30" y2="44"/>
+        <rect class="gate-rect" x="30" y="8" width="44" height="50" rx="3"/>
+        <text class="gate-label" x="52" y="38" text-anchor="middle">≥1</text>
+        <circle class="gate-circle" cx="79" cy="33" r="5"/>
+        <line class="gate-line" x1="84" y1="33" x2="114" y2="33"/>
+        <text class="io-label" x="8" y="19">A</text>
+        <text class="io-label" x="8" y="57">B</text>
+        <text class="io-label" x="106" y="29">S</text>
+      </svg>
+    </td>
+    <td class="name-cell">NON-OU <span style="font-weight:normal;font-style:italic">ou</span> <span class="tag">NOR</span></td>
+    <td>
+      <div class="tv two-in">
+        <span class="tv-head">A</span><span class="tv-head">B</span><span class="tv-head">S</span>
+        <span>0</span><span>0</span><span class="v1">1</span>
+        <span>0</span><span>1</span><span class="v1">0</span>
+        <span>1</span><span>0</span><span class="v1">0</span>
+        <span>1</span><span>1</span><span class="v1">0</span>
+      </div>
+    </td>
+    <td class="desc">
+      <span class="univ">Porte universelle !</span>
+      Inverse de <b>OU</b>. S vaut 1 <em>seulement si</em> A et B valent 0.<br>
+      <span style="display:block; font-size:0.4em;">&nbsp;</span>
+      <b>Expression :</b> $s = \overline{a + b}$</td>
+  </tr>
+
+</tbody>
+</table>
+
+<details class="rem">
+<summary>symboles européens <em>vs</em> américains</summary>
+<p>La table précédente montre les symboles <strong>européens</strong>. Les <a href="https://fr.wikipedia.org/wiki/Porte_logique#D%C3%A9signation">symboles <strong>américains</strong></a>
+ont des formes différentes, qui identifient chaque porte. Ces symboles,
+antérieurs à leurs équivalents européens, sont très répandus dans les
+ressources en ligne (on les trouve même dans
+<a href="https://www.sujetdebac.fr/annales-pdf/2026/spe-numerique-informatique-2026-centres-etranger-2-sujet-officiel.pdf">au moins un sujet de bac… français !</a>).</p>
+<p><style>
+/<em> ── Tableau symboles US ─────────────────────────────────── </em>/
+table.portes-us {
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+table.portes-us td, table.portes-us th {
+  border: 1px solid var(--gl-border, #ccc) !important;
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 0.5rem 0.4rem !important;
+  font-size: 0.9rem;
+}
+table.portes-us th {
+  background-color: #9f7aea !important;
+  color: white !important;
+  font-weight: 600;
+}
+body.dark-mode table.portes-us th { background-color: #6b46c1 !important; }</p>
+<p>svg.gate-us { display: block; margin: auto; overflow: visible; }
+.gu-line   { stroke: var(--gl-text, #28251d); stroke-width: 1.8; fill: none; }
+.gu-shape  { fill: var(--gl-surface, #f0f0ec); stroke: var(--gl-text, #28251d); stroke-width: 1.8; }
+.gu-circle { fill: var(--gl-bg, #fbfbf9); stroke: var(--gl-text, #28251d); stroke-width: 1.8; }
+.gu-label  { font-size: 11px; font-weight: bold; fill: var(--gl-muted, #7a7974);
+             font-family: sans-serif; }
+</style></p>
+<p><div style="text-align: center">
+<table class="portes-us" width="95%">
+<thead>
+  <tr>
+    <th>NON</th>
+    <th>ET</th>
+    <th>OU</th>
+    <th>OU exclusif</th>
+    <th>NON-ET</th>
+    <th>NON-OU</th>
+    <th>NON-OU exclusif</th>
+  </tr>
+</thead>
+<tbody><tr></p>
+<p><td>
+    <svg class="gate-us" width="90" height="60" viewBox="0 0 90 60">
+      <line class="gu-line" x1="4" y1="30" x2="18" y2="30"/>
+      <polygon class="gu-shape" points="18,10 18,50 52,30"/>
+      <circle class="gu-circle" cx="57" cy="30" r="5"/>
+      <line class="gu-line" x1="62" y1="30" x2="76" y2="30"/>
+      <text class="gu-label" x="8" y="26">A</text>
+      <text class="gu-label" x="68" y="26">S</text>
+    </svg>
+  </td></p>
+<p><td>
+    <svg class="gate-us" width="90" height="70" viewBox="0 0 90 70">
+      <line class="gu-line" x1="4" y1="24" x2="20" y2="24"/>
+      <line class="gu-line" x1="4" y1="46" x2="20" y2="46"/>
+      <path class="gu-shape" d="M20,12 H44 A22,22 0 0,1 44,58 H20 Z"/>
+      <line class="gu-line" x1="66" y1="35" x2="80" y2="35"/>
+      <text class="gu-label" x="6"  y="20">A</text>
+      <text class="gu-label" x="6"  y="55">B</text>
+      <text class="gu-label" x="72" y="31">S</text>
+    </svg>
+  </td></p>
+<p><td>
+    <svg class="gate-us" width="90" height="70" viewBox="0 0 90 70">
+      <line class="gu-line" x1="4" y1="24" x2="22" y2="24"/>
+      <line class="gu-line" x1="4" y1="46" x2="22" y2="46"/>
+      <path class="gu-shape" d="M18,12 Q28,12 46,35 Q28,58 18,58 Q26,45 26,35 Q26,25 18,12 Z"/>
+      <line class="gu-line" x1="46" y1="35" x2="80" y2="35"/>
+      <text class="gu-label" x="6"  y="20">A</text>
+      <text class="gu-label" x="6"  y="55">B</text>
+      <text class="gu-label" x="72" y="31">S</text>
+    </svg>
+  </td></p>
+<p><td>
+    <svg class="gate-us" width="90" height="70" viewBox="0 0 90 70">
+      <line class="gu-line" x1="4" y1="24" x2="24" y2="24"/>
+      <line class="gu-line" x1="4" y1="46" x2="24" y2="46"/>
+      <path class="gu-line" d="M14,12 Q22,25 22,35 Q22,45 14,58"/>
+      <path class="gu-shape" d="M20,12 Q30,12 48,35 Q30,58 20,58 Q28,45 28,35 Q28,25 20,12 Z"/>
+      <line class="gu-line" x1="48" y1="35" x2="80" y2="35"/>
+      <text class="gu-label" x="6"  y="20">A</text>
+      <text class="gu-label" x="6"  y="55">B</text>
+      <text class="gu-label" x="72" y="31">S</text>
+    </svg>
+  </td></p>
+<p><td>
+    <svg class="gate-us" width="90" height="70" viewBox="0 0 90 70">
+      <line class="gu-line" x1="4" y1="24" x2="20" y2="24"/>
+      <line class="gu-line" x1="4" y1="46" x2="20" y2="46"/>
+      <path class="gu-shape" d="M20,12 H44 A22,22 0 0,1 44,58 H20 Z"/>
+      <circle class="gu-circle" cx="71" cy="35" r="5"/>
+      <line class="gu-line" x1="76" y1="35" x2="86" y2="35"/>
+      <text class="gu-label" x="6"  y="20">A</text>
+      <text class="gu-label" x="6"  y="55">B</text>
+      <text class="gu-label" x="78" y="31">S</text>
+    </svg>
+  </td></p>
+<p><td>
+    <svg class="gate-us" width="90" height="70" viewBox="0 0 90 70">
+      <line class="gu-line" x1="4" y1="24" x2="22" y2="24"/>
+      <line class="gu-line" x1="4" y1="46" x2="22" y2="46"/>
+      <path class="gu-shape" d="M18,12 Q28,12 46,35 Q28,58 18,58 Q26,45 26,35 Q26,25 18,12 Z"/>
+      <circle class="gu-circle" cx="51" cy="35" r="5"/>
+      <line class="gu-line" x1="56" y1="35" x2="80" y2="35"/>
+      <text class="gu-label" x="6"  y="20">A</text>
+      <text class="gu-label" x="6"  y="55">B</text>
+      <text class="gu-label" x="72" y="31">S</text>
+    </svg>
+  </td></p>
+<p><td>
+    <svg class="gate-us" width="90" height="70" viewBox="0 0 90 70">
+      <line class="gu-line" x1="4" y1="24" x2="24" y2="24"/>
+      <line class="gu-line" x1="4" y1="46" x2="24" y2="46"/>
+      <path class="gu-line" d="M14,12 Q22,25 22,35 Q22,45 14,58"/>
+      <path class="gu-shape" d="M20,12 Q30,12 48,35 Q30,58 20,58 Q28,45 28,35 Q28,25 20,12 Z"/>
+      <circle class="gu-circle" cx="53" cy="35" r="5"/>
+      <line class="gu-line" x1="58" y1="35" x2="80" y2="35"/>
+      <text class="gu-label" x="6"  y="20">A</text>
+      <text class="gu-label" x="6"  y="55">B</text>
+      <text class="gu-label" x="72" y="31">S</text>
+    </svg>
+  </td></p>
+<p></tr></tbody>
+</table>
+</div></p>
+</details>
+<h3>Porte logique <em>universelle</em></h3>
+<div class="admonition success">
+<p class="admonition-title">Portes universelles : NAND et NOR</p>
+<p>La porte <strong>NAND</strong> seule (ou <strong>NOR</strong> seule) suffit à construire <em>toutes</em>
+les autres portes — et donc tout circuit numérique.</p>
+<p>On dit que ces portes sont <strong>universelles</strong> ou <strong>fonctionnellement complètes</strong>.</p>
+</div>
+<details class="ex">
+<summary>construire avec NAND et NOR</summary>
+<p>Recréons logiquement les portes <strong>NOT</strong>, <strong>AND</strong> et <strong>OR</strong> à l'aide
+de la seule porte <strong>NAND</strong>.</p>
+<ul>
+<li><strong>NOT</strong> : relier les deux entrées ensemble → <strong>NAND</strong>(A, A) = <strong>NOT</strong>(A).</li>
+<li><strong>AND</strong> : un <strong>NAND</strong> suivi d'un <strong>NOT</strong> (lui-même fait avec un <strong>NAND</strong>).</li>
+<li><strong>OR</strong> : on l'obtient depuis ce <strong>AND</strong> et la formule de De Morgan
+    indiquée en premier ci-dessus. En appliquant <strong>NOT</strong> des deux côtés,
+    on trouve A <strong>OR</strong> B = <strong>NOT</strong>( <strong>NOT</strong>(A) <strong>AND</strong> <strong>NOT</strong>(B) ).
+    On a pu exprimer <strong>NOT</strong> et <strong>AND</strong> à partir de <strong>NAND</strong> : c'est
+    gagné !</li>
+</ul>
+<p>On peut faire de même avec la porte <strong>NOR</strong>.</p>
+<ul>
+<li><strong>NOT</strong> : relier les deux entrées ensemble → <strong>NOR</strong>(A, A) = <strong>NOT</strong>(A).</li>
+<li><strong>OR</strong> : un <strong>NOR</strong> suivi d'un <strong>NOT</strong> (lui-même fait avec un <strong>NOR</strong>).</li>
+<li><strong>AND</strong> : maintenant qu'on a le <strong>OR</strong>, il suffit d'utiliser l'autre
+    loi de De Morgan.</li>
+</ul>
+</details>
+<h3>Circuits combinatoires</h3>
+<p>Un <strong>circuit combinatoire</strong> est un assemblage de portes logiques dont la
+sortie ne dépend que des entrées <em>actuelles</em> (pas d'état mémorisé).
+Pour analyser un circuit, on construit sa <strong>table de vérité</strong> en appliquant
+chaque porte successivement.</p>
+<details class="ex">
+<summary>demi-additionneur 1 bit</summary>
+<p>Pour additionner deux bits $a$ et $b$ :</p>
+<ul>
+<li><strong>Somme</strong> $s = a \oplus b$ (porte XOR)</li>
+<li><strong>Retenue</strong> $r = a \cdot b$ (porte ET)</li>
+</ul>
+<p><table style="border-collapse:collapse; width:fit-content; margin:0 auto; font-family:monospace;">
+  <thead>
+    <tr>
+      <th style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;"><b>a</b></th>
+      <th style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;"><b>b</b></th>
+      <th style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;"><b>s</b></th>
+      <th style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;"><b>r</b></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+    </tr>
+    <tr>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">0</td>
+      <td style="border:1px solid #ccc; padding:0.4em 2em; text-align:center;">1</td>
+    </tr>
+  </tbody>
+</table></p>
+<p>En combinant des demi-additionneurs pour former des additionneurs complets,
+puis en les chaînant, on obtient un <strong>additionneur $n$ bits</strong>, capable
+d'additionner des nombres de $n$ bits en propageant correctement les
+éventuelles retenues : c'est un élément central de l'UAL (voir ci-après).</p>
+</details>
+<h2>Architecture Von Neumann</h2>
+<p>Proposée en 1945 par John von Neumann, c'est le modèle de référence de la
+quasi-totalité des ordinateurs actuels. Il repose sur plusieurs <strong>composants</strong>
+reliés par un <strong>bus</strong> :</p>
+<h3>Organisation schématique</h3>
+<table>
+<tr>
+<th style="text-align:center">Schéma</th>
+<th>Composant</th>
+<th>Rôle</th>
+</tr>
+<tr>
+<td rowspan="4">
+<pre style="line-height:90%; text-align: left">
+┌─────────────────────────────────┐
+│ PROCESSEUR ou CPU               │
+│  ┌───────────┐ ┌─────────────┐  │
+│  │ UAL       │ │ Unité de    │  │
+│  │           │ │ contrôle    │  │
+│  └───────────┘ └─────────────┘  │
+│  Registres                      │
+│   ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐ ┌─┐   │
+│   └─┘ └─┘ └─┘ └─┘ └─┘ └─┘ └─┘   │
+├───────────────┬─┬─┬─┬─┬─┬─┬─┬─┬─┤
+│               │ │ │ │ │ │ │ │ │ │ ← Cache
+└──────┬────────┴─┴─┴─┴─┴─┴─┴─┴─┴─┘
+       │
+       ├───────────┐ ← Bus : données, adresses,
+       │           │         contrôle
+  ┌────┴────┐      │
+  │ MÉMOIRE │    ┌─┴───────────────┐   Clavier,
+  │  VIVE   │    │ ENTRÉES/SORTIES │ ← souris,
+  │  (RAM)  │    └─────────────────┘   réseau…
+  └─────────┘↖
+              instructions et données
+</pre>
+</td>
+<td style="text-align:center"><b>UAL</b></td>
+<td>L'<b>U</b>nité <b>A</b>rithmétique et <b>L</b>ogique effectue les calculs arithmétiques et les opérations logiques</td>
+</tr>
+<tr>
+<td style="text-align:center"><b>UC</b></td>
+<td>L'<b>U</b>nité de <b>C</b>ontrôle décode les instructions et pilote leur séquencement</td>
+</tr>
+<tr>
+<td style="text-align:center"><b>Registres</b></td>
+<td>Mémoires de petite taille internes au CPU, ultra-rapides</td>
+</tr>
+<tr>
+<td style="text-align:center"><b>RAM</b></td>
+<td>Mémoire de travail qui stocke à la fois les instructions <b>et</b> les données. Elle est volatile (perdue hors tension)</td>
+</tr>
+</table>
+
+<p><strong>Idée fondamentale</strong> : programme et données partagent la <em>même</em> mémoire et le <em>même</em>
+bus — c'est le principe du <strong>programme enregistré</strong> (<em>stored program</em>).</p>
+<p>Hiérarchie des mémoires (de la plus rapide à la plus lente) :
+<strong>Registres</strong> &gt; <strong>Cache</strong> &gt; <strong>RAM</strong> &gt; <strong>Stockage de masse</strong> (SSD / disque dur).</p>
+<div class="admonition warning">
+<p class="admonition-title">Goulot d'étranglement de Von Neumann</p>
+<p>Instructions et données empruntent le <em>même</em> bus : le CPU ne peut pas
+charger une instruction et lire une donnée <em>simultanément</em>.
+C'est le principal défaut de cette architecture.</p>
+</div>
+<h3>Registres importants</h3>
+<p>Un registre est une toute petite mémoire ultra-rapide, située à l'intérieur
+même du processeur, qui stocke temporairement une valeur le temps d'un calcul
+ou d'une opération. Trois registres jouent un rôle central :</p>
+<ul>
+<li>
+<p><strong>PC</strong> (<strong>P</strong>rogram <strong>C</strong>ounter, compteur de programme) : contient l'adresse
+    mémoire de la prochaine instruction à exécuter. Après chaque instruction,
+    il s'incrémente automatiquement pour passer à la suivante — c'est lui
+    qui « sait où on en est » dans le programme.</p>
+</li>
+<li>
+<p><strong>IR</strong> (<strong>I</strong>nstruction <strong>R</strong>egister, registre d'instruction) : contient
+    l'instruction en cours de traitement. Une fois lue en mémoire, l'instruction
+    y est copiée le temps que l'unité de contrôle la décode et l'exécute.</p>
+</li>
+<li>
+<p><strong>Accumulateur</strong> : registre de travail de l'UAL. C'est là que sont déposés
+    les opérandes (valeurs à traiter) et que l'UAL écrit le résultat d'un
+    calcul avant de le renvoyer en mémoire ou de l'utiliser dans la suite
+    du programme.</p>
+</li>
+</ul>
+<details class="rem">
+<summary>position de l'accumulateur au sein du CPU</summary>
+<p>Historiquement, l'accumulateur des premiers processeurs (type 8080 ou
+Z80) était le registre de travail <em>intégré</em> à l'UAL, qu'elle seule pouvait
+utiliser, câblé directement à ses entrées / sorties.</p>
+<p>C'est encore vrai pour certains microcontrôleurs. Mais sur les processeurs
+modernes, l'accumulateur n'est plus un registre spécifique : tous les
+registres généraux peuvent jouer ce rôle.</p>
+</details>
+<h3>Cycle d'exécution</h3>
+<p>Le processeur répète indéfiniment le même enchaînement de trois phases,
+appelé cycle <em>Fetch – Decode – Execute</em> (en français : Récupérer – Décoder
+ – Exécuter, ou Lecture – Décodage – Exécution) :</p>
+<ol>
+<li>
+<p><strong><em>Fetch</em></strong> (récupérer) : le processeur lit en mémoire l'instruction
+    dont l'adresse est dans le PC, la copie dans l'IR, puis incrémente le PC.</p>
+</li>
+<li>
+<p><strong><em>Decode</em></strong> (décoder) : l'unité de contrôle analyse l'instruction contenue
+    dans l'IR pour déterminer quelle opération effectuer et quelles données
+    utiliser.</p>
+</li>
+<li>
+<p><strong><em>Execute</em></strong> (exécuter) : l'UAL effectue l'opération (calcul, lecture/écriture
+    en mémoire, saut…) et écrit le résultat.</p>
+</li>
+</ol>
+<p>Puis le cycle recommence immédiatement au <em>Fetch</em> — des <em>milliards</em> de fois
+par seconde sur un processeur moderne.</p>
+<h3>Fonctionnement global</h3>
+<p>Un programme est, de nos jours, une suite d'instructions écrites dans un
+<strong>langage de <em>haut niveau</em></strong> (C, Java, Python…), conçu pour être lisible
+par un humain. Ces instructions doivent être traduites en <strong>langage machine</strong>
+ — une suite d'opérations élémentaires binaires que le processeur (ou CPU,
+pour <em><strong>C</strong>entral <strong>P</strong>rocessing <strong>U</strong>nit</em>) exécute grâce à ses circuits
+implémentés matériellement (on dit souvent « câblés en dur » mais c'est
+un abus de langage).</p>
+<p>Cette traduction est assurée par un <strong>compilateur</strong> (pour C, C++…) ou un
+<strong>interpréteur</strong> accompagné d'une <strong>machine virtuelle</strong> (pour Python).
+Python fait ainsi une étape intermédiaire : le code source est d'abord
+converti en <em>bytecode</em> (un code <em>intermédiaire</em>), puis ce <em>bytecode</em> est
+exécuté par la machine virtuelle Python. Au final, comme pour tout programme,
+ce sont bien des instructions machine natives qui sont exécutées par le
+processeur.</p>
+<p>Le résultat final est dans tous les cas le même : une suite d'opérations
+élémentaires que le CPU traite une par une dans son cycle <em>Fetch – Decode – Execute</em>.</p>
+<p>Il existe donc deux niveaux de langage bien distincts :</p>
+<ul>
+<li>
+<p>Le langage de haut niveau (voire « <em>très</em> haut niveau » pour des langages
+    tels que Python), expressif et lisible, dans lequel le développeur écrit
+    son programme.</p>
+</li>
+<li>
+<p>Le langage machine (suite de bits), très difficilement lisible pour un
+    humain (c'est pourtant ainsi que les tout premiers programmes étaient
+    écrits !), mais seul langage que le processeur comprend réellement.</p>
+</li>
+</ul>
+<p>Chaque opération élémentaire est identifiée par un code binaire unique,
+appelé <strong><em>opcode</em></strong>. C'est cet <em>opcode</em> — suivi des données ou adresses
+nécessaires — que le processeur va lire en RAM à l'adresse indiquée par
+le <strong>registre PC</strong> lors de la phase <em>Fetch</em>.</p>
+<p><strong>L'ensemble des <em>opcodes</em> disponibles sur un processeur est son <em>jeu d'instructions</em></strong>,
+qui varie selon les architectures (x86 pour les PC, ARM pour les smartphones
+et les puces Apple récentes).</p>
+<h2>Architecture Harvard et microcontrôleurs</h2>
+<p>L'architecture de <strong>Harvard</strong> a été mise en œuvre dès 1944, à l'université
+du même nom.</p>
+<h3>Organisation schématique</h3>
+<p>Contrairement à l'architecture proposée par Von Neumann, celle de Harvard
+<strong>sépare physiquement</strong> les mémoires d'instructions et de données, avec des
+bus distincts pour les relier au processeur : cela élimine le goulot d'étranglement
+de l'architecture concurrente.</p>
+<p>En effet, le CPU peut <em>simultanément</em> lire la prochaine instruction (<em>via</em>
+le bus d'instructions) et lire/écrire une donnée (<em>via</em> le bus de données)
+— là où Von Neumann voit son bus devoir alterner (d'où ledit goulot d'étranglement).</p>
+<pre style="line-height:90%; text-align: left; width: fit-content; margin-left: auto; margin-right: auto;">
+┌──────────────────┐  Bus d'instructions  ┌────────────────────────┐
+│ PROCESSEUR       ├──────────────────────┤    MÉMOIRE PROGRAMME   │
+│  ┌────────┐      │                      │ (ROM / EEPROM / Flash) │
+│  │ UAL    │      │     Bus de données   └────────────────────────┘
+│  └────────┘      ├──────────┬─────────────────────────┐
+│  ┌────────────┐  │          │                         │
+│  │ UC         │  │   ┌──────┴──────────┐   ┌──────────┴─────────┐
+│  └────────────┘  │   │ MÉMOIRE DONNÉES │   │  ENTRÉES / SORTIES │
+│  ┌─┐┌─┐┌─┐┌─┐┌─┐ │   │      (RAM)      │   │  clavier, réseau…  │
+│  └─┘└─┘└─┘└─┘└─┘ │   └─────────────────┘   └────────────────────┘
+└──────────────────┘
+</pre>
+
+<h3>Harvard <em>vs</em> Von Neumann</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Von Neumann</th>
+<th>Harvard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mémoire</td>
+<td>Unique (instructions + données)</td>
+<td>Deux mémoires séparées</td>
+</tr>
+<tr>
+<td>Bus</td>
+<td>Unique</td>
+<td>Deux bus distincts</td>
+</tr>
+<tr>
+<td>Parallélisme</td>
+<td>Limité</td>
+<td>Instructions et données en parallèle</td>
+</tr>
+<tr>
+<td>Usage typique</td>
+<td>PC, serveurs</td>
+<td>Microcontrôleurs, DSP</td>
+</tr>
+</tbody>
+</table>
+<details class="rem">
+<summary>et de nos jours ?</summary>
+<p>L'architecture de Harvard est toujours utilisée dans les microcontrôleurs
+(<a href="https://fr.wikipedia.org/wiki/Arduino">Arduino</a>,
+<a href="https://fr.wikipedia.org/wiki/Microcontr%C3%B4leur_PIC">PIC</a>…) et les
+<a href="https://fr.wikipedia.org/wiki/Processeur_de_signal_num%C3%A9rique">processeurs de signal numérique</a> (ou <em>DSP</em>).</p>
+<p><strong>Pour la culture :</strong> les processeurs modernes (x86, ARM) utilisent
+<em>en apparence</em> une architecture Von Neumann : instructions et données
+cohabitent dans la même mémoire principale (la RAM). Mais, pour gagner
+en vitesse, ils sont dirigés en interne vers deux caches L1 différents :
+l'un dédié aux instructions, l'autre aux données. Ces deux caches fonctionnent
+exactement selon le principe Harvard : deux chemins d'accès parallèles,
+sans conflit. On parle d'<em>architecture de Harvard modifiée</em> : Von Neumann
+côté mémoire principale, Harvard côté cache.</p>
+<p><strong>Note :</strong> on parle de cache L1 car il existe souvent
+<a href="https://www.gamingdeputy.com/fr/cache-cpu-explique-l1-l2-et-l3-et-comment-ils-fonctionnent-pour-des-performances-optimales/">différents niveaux de mémoire cache</a>
+au sein d'un processeur.</p>
+</details>
+<h3>Microcontrôleurs et informatique embarquée</h3>
+<p>Un <strong>microcontrôleur</strong> (<a href="https://fr.wikipedia.org/wiki/Arduino">Arduino</a>,
+<a href="https://fr.wikipedia.org/wiki/Raspberry_Pi_Pico">Raspberry Pi Pico</a>,
+<a href="https://fr.wikipedia.org/wiki/STM32">STM32</a>…) s'apprente à un
+<strong><a href="https://fr.wikipedia.org/wiki/Syst%C3%A8me_sur_une_puce">SoC</a></strong> (<em>System
+on a Chip</em>) simplifié conçu pour les systèmes embarqués (des systèmes autonomes
+ — encombrement limité, fonctionnement sur batteries, devant fonctionner
+en conditions difficiles… — ayant des besoins informatiques mais des ressources
+très contraintes pour les satisfaire).</p>
+<p>Il intègre sur une même puce CPU, mémoire (souvent Harvard ou Harvard modifiée),
+et des entrées/sorties directement connectables à des capteurs et actionneurs.</p>
+<ul>
+<li><strong>Capteur</strong> : convertit une grandeur physique (température, distance…)
+    en signal électrique lisible par le CPU. C'est une <strong>entrée</strong>.</li>
+<li><strong>Actionneur</strong> : convertit une commande du CPU en action physique
+    (moteur, LED, buzzer…). C'est une <strong>sortie</strong>.</li>
+</ul>
+<pre style="text-align: center; font-size: 130%">
+Monde physique → [Capteur] → CPU → [Actionneur] → Monde physique
+</pre>
+
+<h2>L'assembleur</h2>
+<h3>Présentation</h3>
+<p>Un processeur n'exécute que du <em>langage machine</em> : une suite de bits que
+les circuits interprètent directement. Ce langage est difficilement utilisable
+par un humain : une instruction se présente sous la forme d'un opcode
+binaire comme <code>10110000 01100001</code>.</p>
+<p>Le <em>langage <strong>assembleur</strong></em> (souvent abrégé en <em>assembleur</em> tout court) en
+est la transcription lisible : chaque instruction machine y est représentée
+par un <strong>mnémonique</strong>, c'est-à-dire une abréviation évocatrice — <code>MOV</code> pour
+déplacer une valeur, <code>ADD</code> pour additionner, <code>JMP</code> pour « sauter » à une
+adresse.</p>
+<p>L'opération qui consiste à convertir du code assembleur en langage machine
+binaire s'appelle l'<strong>assemblage</strong>, et l'outil qui l'effectue est <strong><em>UN</em>
+assembleur</strong> (attention à la confusion !).</p>
+<details class="rem">
+<summary>illisible pour un humain ? et pourtant…</summary>
+<p>Les tout premiers programmes informatiques — saisis sur cartes perforées
+dans les années 1940-1950 — étaient directement écrits en langage machine :
+chaque trou perforé à la bonne position encodait un bit, et le programmeur
+devait connaître par cœur les <em>opcodes</em> binaires du processeur.</p>
+<p>L'assembleur a précisément été inventé pour épargner aux programmeurs
+cette fastidieuse manipulation de bits.</p>
+</details>
+<p>L'assembleur est un langage de <em><strong>très bas</strong> niveau</em> : il ne dispose ni
+de boucles (<code>for</code>, <code>while</code>), ni de fonctions au sens habituel, ni de types
+de données — chaque ligne correspond généralement à <em><strong>une</strong> instruction machine</em>.
+Il est en cela radicalement différent des langages de haut niveau comme
+C ou Python.</p>
+<h3>Note culturelle</h3>
+<p>Il est rare de nos jours de programmer directement en assembleur : la plupart
+du code « bas niveau » est écrit en C ou en C++ (Rust prend de l'ampleur).
+Cependant, l’assembleur reste utile — voire indispensable ponctuellement
+ — dans certains contextes très proches du matériel.</p>
+<ul>
+<li>
+<p><strong>Microcode des CPU :</strong> dans certains processeurs, des instructions complexes
+    sont décomposées en micro-opérations internes plus élémentaires. Cette
+    traduction est pilotée par un microcode propre au processeur. Ce n’est
+    pas de l’assembleur au sens habituel, mais cela montre qu’il existe
+    encore des niveaux de programmation situés « sous » le langage machine
+    visible par le programmeur. Il y a donc littéralement du code <strong>dans</strong>
+    le CPU !</p>
+</li>
+<li>
+<p><strong>Firmwares :</strong> les logiciels embarqués dans des composants matériels
+    (carte réseau, disque dur, BIOS/UEFI, microcontrôleurs…) pilotent le
+    matériel au plus bas niveau. Ils sont le plus souvent écrits en C/C++,
+    mais peuvent contenir de petites portions d’assembleur lorsque le contrôle
+    précis du matériel ou du démarrage l’exige.</p>
+</li>
+<li>
+<p><strong>Optimisations dans les pilotes GPU :</strong> les <em>shaders</em> sont de petits
+    programmes exécutés massivement en parallèle par les milliers de cœurs
+    d'un GPU, pour calculer l'éclairage, les ombres ou les effets visuels
+    d'une scène 3D. Les pilotes graphiques (NVIDIA, AMD…) contiennent des
+    portions d'assembleur GPU finement optimisées pour tirer le maximum de
+    performances dans des jeux ou applications spécifiques.</p>
+</li>
+<li>
+<p><strong>Systèmes embarqués critiques :</strong> dans l’automobile, l’aérospatiale ou
+    le médical, certains logiciels doivent respecter des contraintes fortes
+    (exécution en temps réel, sûreté, consommation…). Ils sont généralement
+    écrits dans des langages comme C, mais certaines portions très sensibles
+    peuvent être codées ou vérifiées au niveau assembleur pour maîtriser
+    précisément ce que fait le processeur.</p>
+</li>
+</ul>
+<h3>Exemple : instructions de base (jeu RISC-V)</h3>
+<p>Inutile de retenir cela par cœur ! Ce thème a été abordé dans au moins
+<a href="https://www.sujetdebac.fr/annales-pdf/2026/spe-numerique-informatique-2026-centres-etranger-2-sujet-officiel.pdf">un sujet de bac</a>,
+et les informations utiles y ont été intégralement exposées.</p>
+<table>
+<thead>
+<tr>
+<th>Instruction</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addi rA, rB, v</code></td>
+<td><code>rA ← rB + v</code> (v : valeur immédiate)</td>
+</tr>
+<tr>
+<td><code>add rA, rB, rC</code></td>
+<td><code>rA ← rB + rC</code></td>
+</tr>
+<tr>
+<td><code>sub rA, rB, rC</code></td>
+<td><code>rA ← rB − rC</code></td>
+</tr>
+<tr>
+<td><code>beq rA, rB, label</code></td>
+<td>Saute à <code>label</code> si <code>rA == rB</code></td>
+</tr>
+<tr>
+<td><code>bne rA, rB, label</code></td>
+<td>Saute à <code>label</code> si <code>rA ≠ rB</code></td>
+</tr>
+<tr>
+<td><code>bgt rA, rB, label</code></td>
+<td>Saute à <code>label</code> si <code>rA &gt; rB</code></td>
+</tr>
+<tr>
+<td><code>ble rA, rB, label</code></td>
+<td>Saute à <code>label</code> si <code>rA ≤ rB</code></td>
+</tr>
+</tbody>
+</table>
+<p>Une <strong>étiquette</strong> (<code>LABEL:</code>) identifie une position dans le code vers
+laquelle un branchement peut sauter.</p>
+<h3>Lire un programme assembleur</h3>
+<div class="admonition info">
+<p class="admonition-title">Ce qui est attendu à l'examen</p>
+<p>Il ne <em>devr<strong>ait</strong></em> pas être demandé de programmer en assembleur, mais
+savoir <em>lire</em> une courte séquence et <em>dérouler son exécution</em> en suivant
+les valeurs des registres instruction par instruction l'a déjà été (cf.
+<a href="https://www.sujetdebac.fr/annales-pdf/2026/spe-numerique-informatique-2026-centres-etranger-2-sujet-officiel.pdf">26-NSIJ2G11</a>).</p>
+</div>
+<details class="ex">
+<summary>maximum de deux registres</summary>
+<p>On veut mettre dans <code>r3</code> le maximum de <code>r1</code> et <code>r2</code>.</p>
+<div class="highlight"><pre><span></span><code>bgt r1, r2, PLUS_GRAND   # si r1 &gt; r2, sauter à PLUS_GRAND
+add r3, r2, r0           # sinon r3 ← r2  (r0 vaut toujours 0 en RISC-V)
+beq r1, r1, FIN          # astuce : r1 est toujours égal à r1 ⟹ saut inconditionnel
+PLUS_GRAND:
+add r3, r1, r0           # r3 ← r1
+FIN:
+</code></pre></div>
+<p><strong>Remarque :</strong> ce qu'on a ici est en réalité une simplifcation de l'assembleur RISC-V.</p>
+</details>
+<details class="ex">
+<summary>l'échange de registres (un classique !)</summary>
+<p>Pour échanger <code>r1</code> et <code>r2</code>, on utilise <code>r3</code> comme registre temporaire.</p>
+<div class="highlight"><pre><span></span><code>add r3, r1, r0    # r3 ← r1  (sauvegarde)
+add r1, r2, r0    # r1 ← r2
+add r2, r3, r0    # r2 ← ancienne valeur de r1
+</code></pre></div>
+<p>Cette situation se rencontre à l'identique dans <em>tous</em> les langages
+de programmation quels que soient leurs « niveaux ». Néanmoins, Python
+facilite l'échange des valeurs de deux variables <code>a</code> et <code>b</code> en permettant
+d'écrire simplement <code>a, b = b, a</code>. </p>
+</details>
+
+    <script>
+// ── Numérotation automatique des titres du document ──────────────────
+function numeroterTitres() {
+    var compteurs = {h2: 0, h3: 0, h4: 0};
+    var titres = document.querySelectorAll('h2, h3, h4');
+    for (var i = 0; i < titres.length; i++) {
+        var titre = titres[i];
+        var niveau = titre.tagName.toLowerCase();
+        if (!titre.textContent.match(/^\d+\./)) {
+            if (niveau === 'h2') {
+                compteurs.h2++; compteurs.h3 = 0; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '. ' + titre.textContent;
+            } else if (niveau === 'h3') {
+                compteurs.h3++; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '. ' + titre.textContent;
+            } else if (niveau === 'h4') {
+                compteurs.h4++;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '.' + compteurs.h4 + '. ' + titre.textContent;
+            }
+        }
+    }
+}
+
+
+// ── Génère un slug à partir d'un texte ───────────────────────────────
+function slugifier(texte) {
+  return texte
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // supprime accents
+    .replace(/[^a-z0-9\s-]/g, "")                    // supprime ponctuation
+    .trim()
+    .replace(/\s+/g, "-");                            // espaces → tirets
+}
+
+
+// ── Fabrique des ancres convenables pour les titres du document ──────
+// À appeler au DOMContentLoaded, AVANT numeroterTitres() !
+function assignerAncres() {
+  const titres = document.querySelectorAll('h2, h3, h4');
+  titres.forEach((t) => {
+    if (!t.id) {
+      t.id = slugifier(t.textContent.trim());
+    }
+  });
+}
+
+
+// ── Thème clair / sombre ─────────────────────────────────────────────
+function basculerTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+
+// ── Cycle des polices (pour dyslexie ; double-clic : reset) ──────────
+let policeCourante = localStorage.getItem('police') || '0';
+let dernierClicPolice = 0;
+
+function basculerPolice() {
+    // Double-clic reset
+    const maintenant = Date.now();
+    if (maintenant - dernierClicPolice < 400) {
+        document.body.classList.remove('police-1', 'police-2', 'police-3');
+        localStorage.setItem('police', '0');
+        policeCourante = '0';
+        return;
+    }
+    dernierClicPolice = maintenant;
+
+    // Cycle 3 polices : 0→1→2→3→0
+    const nouvellePolice = (parseInt(policeCourante) + 1) % 4;
+
+    // Nettoyer classes précédentes
+    document.body.classList.remove('police-1', 'police-2', 'police-3');
+
+    if (nouvellePolice === 0) {
+        // Retour normal
+        localStorage.setItem('police', '0');
+    } else {
+        document.body.classList.add('police-' + nouvellePolice);
+        localStorage.setItem('police', nouvellePolice.toString());
+    }
+
+    policeCourante = nouvellePolice.toString();
+}
+
+
+// ── Fabrique un sommaire automatique pour le document HTML ───────────
+// Nécessite que les ancres aient été préalablement calculées
+function construireSommaire() {
+  const panneau = document.getElementById('toc-overlay');
+  if (panneau.dataset.built) return;
+  const titres = document.querySelectorAll('h2, h3, h4');
+  if (titres.length === 0) {
+    panneau.innerHTML = '<p style="padding:0.5em 1em;color:#888;">Aucun titre trouvé.</p>';
+    panneau.dataset.built = '1';
+    return;
+  }
+  titres.forEach((t) => {
+    const cls = 'toc-' + t.tagName.toLowerCase();
+    const texte = t.textContent.trim();
+    // html += `<a href="#${t.id}" class="${cls}" onclick='fermerSommaire()'>${texte}</a>`;
+    const a = document.createElement('a');
+    a.href = '#' + t.id;
+    a.className = cls;
+    a.textContent = texte;
+    a.addEventListener('click', fermerSommaire);
+    panneau.appendChild(a);
+  });
+  panneau.dataset.built = '1';
+}
+
+function basculerSommaire() {
+    construireSommaire();
+    document.getElementById('toc-overlay').classList.toggle('open');
+}
+
+function fermerSommaire() {
+    document.getElementById('toc-overlay').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+    const controles = document.getElementById('controls');
+    const sommaire = document.getElementById('toc-overlay');
+    if (!controles.contains(e.target) && !sommaire.contains(e.target)) fermerSommaire();
+});
+
+
+// ── Mode pagination par bloc (viewport-height scroll) ────────────────
+// Gestion des touches pour block-scroll à l'appui sur barre d'espacement, page up & down
+document.addEventListener('keydown', (e) => {
+    // Pas dans les champs de saisie !
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    } else if (e.key === 'PageUp') {
+        e.preventDefault();
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    }
+});
+
+
+// ── Impression : ouvrir les <details> avant, puis revenir à leur état
+// Prépare le DOM avant impression
+window.addEventListener('beforeprint', function () {
+    window._impressionEnCours = true;          // ← flag AVANT d'ouvrir les details
+
+    // 1. Ouvrir tous les <details> (admonitions dépliables)
+    //    et mémoriser leur état pour restauration après impression
+    document.querySelectorAll('details').forEach(function (d) {
+        d._etaitOuvert = d.open;
+        d.open = true;
+    });
+
+    // 2. Injecter le titre de chaque onglet juste avant son bloc
+    //    (les labels et blocs sont dans le même ordre : label[i] ↔ block[i])
+    document.querySelectorAll('.tabbed-set').forEach(function (set) {
+        const labels = Array.from(set.querySelectorAll('.tabbed-labels > label'));
+        const blocks = Array.from(set.querySelectorAll('.tabbed-content > .tabbed-block'));
+        labels.forEach(function (label, i) {
+            if (blocks[i]) {
+                const titre = document.createElement('div');
+                titre.className = 'tabbed-print-label';
+                titre.textContent = label.textContent;
+                titre.setAttribute('data-print-injected', '1'); // marqueur de nettoyage
+                blocks[i].prepend(titre);
+            }
+        });
+    });
+});
+
+window.addEventListener('afterprint', function () {
+    window._impressionEnCours = false;         // ← reset du flag
+
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+// Restauration du DOM après impression (retour à l'état avant impression
+window.addEventListener('afterprint', function () {
+
+    // 1. Restaurer l'état d'ouverture initial des <details>
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+
+    // 2. Supprimer les titres d'onglets injectés
+    //    (le marqueur data-print-injected évite tout risque de suppression parasite)
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+
+// ── Bouton copier sur les blocs de code ──────────────────────────────
+function ajouterBoutonsCopier() {
+    document.querySelectorAll('.highlight').forEach(bloc => {
+        // Conteneur relatif pour positionner le bouton
+        bloc.style.position = 'relative';
+
+        const btn = document.createElement('button');
+        btn.textContent = '📋';
+        btn.title = 'Copier le code';
+        btn.style.cssText = `
+            position: absolute;
+            top: 0.4em;
+            right: 0.4em;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0.2em 0.4em;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        `;
+
+        // Afficher au survol du bloc
+        bloc.addEventListener('mouseenter', () => btn.style.opacity = '1');
+        bloc.addEventListener('mouseleave', () => btn.style.opacity = '0');
+
+        btn.addEventListener('click', () => {
+            const cellCode = bloc.querySelector('td.code pre') || bloc.querySelector('pre');
+            const code = cellCode.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✅';
+                setTimeout(() => btn.textContent = '📋', 1500);
+            });
+        });
+
+        bloc.appendChild(btn);
+    });
+}
+
+
+// ── Barre de progression de lecture ──────────────────────────────────
+function majBarreProgression() {
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (docHeight <= 0) return;
+  document.body.style.setProperty('--progress', window.scrollY / docHeight);
+}
+
+window.addEventListener('scroll', majBarreProgression, { passive: true });
+window.addEventListener('resize', majBarreProgression, { passive: true });
+document.addEventListener('DOMContentLoaded', majBarreProgression);
+
+
+// ── Positionnement des notes de bas de page / infobulles ─────────────
+// Il s'agit d'éviter qu'elles soient coupées lorsqu'utilisées dans un bloc
+function positionnerInfobulles() {
+    document.querySelectorAll('.infobulle-note').forEach(note => {
+        const bulle = note.querySelector('.infobulle-contenu');
+
+        note.addEventListener('mouseenter', () => {
+            bulle.style.display = 'block';
+            const rect = note.getBoundingClientRect();
+            const bw   = bulle.offsetWidth;
+            const bh   = bulle.offsetHeight;
+
+            // Position par défaut : centré au-dessus du sup
+            let left = rect.left + rect.width / 2 - bw / 2;
+            let top  = rect.top - bh - 6;
+
+            // Correction débordement droit
+            if (left + bw > window.innerWidth - 8)
+                left = window.innerWidth - bw - 8;
+            // Correction débordement gauche
+            if (left < 8) left = 8;
+            // Si ça dépasse en haut → afficher en dessous
+            if (top < 8) top = rect.bottom + 6;
+
+            bulle.style.left = left + 'px';
+            bulle.style.top  = top  + 'px';
+        });
+
+        note.addEventListener('mouseleave', () => {
+            bulle.style.display = 'none';
+        });
+    });
+}
+
+
+// ── Auto target="_blank" pour liens externes ─────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])')
+        .forEach(link => {
+            if (!link.target) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        });
+});
+
+
+// ── Initialisation complète du document HTML ─────────────────────────
+function initialiser() {
+    assignerAncres();
+    numeroterTitres();
+    positionnerInfobulles();
+
+    // Thème
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // ← Police restaurée au chargement
+    const police = localStorage.getItem('police') || '0';
+    if (parseInt(police) > 0) {
+        document.body.classList.add('police-' + police);
+    }
+    
+    // Bouton copier-coller
+    ajouterBoutonsCopier();   // ← ajouter cette ligne
+    
+    // Pour scroll souris dans le sommaire
+    document.getElementById('toc-overlay').addEventListener(
+        'wheel', function(e) { e.stopPropagation(); }, { passive: true });
+}
+
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+
+    </script>
+</body>
+</html>

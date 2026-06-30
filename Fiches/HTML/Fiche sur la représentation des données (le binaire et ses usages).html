@@ -1,0 +1,2578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Représentation des données :le binaire et ses usages</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <style>
+/* ── Google Font accessibilité ───────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Andika:wght@400;700&display=swap');
+
+/* ── Base ────────────────────────────────────────────────────────── */
+body {
+    font-family: Cantarell, Roboto, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    transition: background-color 0.3s, color 0.3s;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+}
+
+/* ── Pour barre de défilement ────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: #6b46c1;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  z-index: 2000;
+}
+
+/* ── Cycle polices dyslexie ──────────────────────────────── */
+body.police-1 { font-family: 'Andika', sans-serif !important; }
+body.police-2 { font-family: 'Atkinson Hyperlegible', sans-serif !important; }
+body.police-3 { font-family: 'Ubuntu', sans-serif !important; }
+body.police-1, body.police-2, body.police-3 {
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.8 !important;
+}
+
+/* ── H1 ──────────────────────────────────────────────────── */
+body h1 {
+    color: #6b46c1;
+    border: 0.15em solid #6b46c1;
+    border-radius: 0.5em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    background: none;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* ── H2 / H3 / H4 : dégradé via ::after, pas de boîte ───── */
+body h2, body h3, body h4 {
+    position: relative;
+    z-index: 0;
+    background: none;
+    border-radius: 0;
+    padding: 0.15em 0 0.15em 0.2em;
+}
+
+body h2 { font-size: 1.75rem; color: #2d3748; margin-top: 1.5em; }
+body h3 { font-size: 1.4rem;  color: #2d3748; margin-top: 1.2em; }
+body h4 { font-size: 1.2rem;  color: #2d3748; margin-top: 0.9em; }
+
+/* Premier titre : pas d'espace parasite en haut de page */
+body > :is(h2, h3, h4):first-child { margin-top: 0.5em; }
+
+body h2 em, body h2 i {
+    font-style: italic !important;
+    font-weight: 600 !important;
+    font-synthesis: none;
+    font-family: Georgia, 'Times New Roman', serif !important;
+}
+
+/* Dégradé vertical via ::after (texte jamais affecté) */
+body h2::after, body h3::after, body h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 4px 4px 0 0;
+}
+
+body h2::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(262, 52%, 65%, 0.28) 0%,
+        hsla(262, 52%, 65%, 0.10) 33%,
+        transparent 100%
+    );
+    border-bottom: 4px solid hsla(262, 52%, 65%, 0.55);
+}
+
+body h3::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(35, 95%, 58%, 0.22) 0%,
+        transparent 33%
+    );
+    border-bottom: 3px solid hsla(35, 95%, 58%, 0.45);
+}
+
+body h4::after {
+    height: 0;
+    border-bottom: 2px solid hsla(100, 56%, 55%, 0.40);
+}
+
+    /* Listes */
+    body ul, body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    body li {
+        margin: 0.5rem 0;
+    }
+
+    /* Code inline */
+    body code {
+        background-color: #edf2f7;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c7254e;
+    }
+
+    /* Annuler padding pour code dans pre (évite espace initial) */
+    body pre code,
+    body .highlight pre code {
+        padding: 0;
+        background: none;
+    }
+
+    /* Blocs de code */
+    body .highlight {
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0
+        overflow-x: auto;
+        margin: 1rem 0;
+        /* Forcer le scrollbar visible sur WebKit (Chrome/Safari) */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .highlight pre {
+        margin: 0;
+        background: none;
+        padding: 1rem;
+        overflow-x: auto;  /* ← ajouter aussi ici par sécurité */
+        white-space: pre;  /* ← garantir le non-wrap */
+    }
+
+    /* Masquer les spans vides de Pygments qui créent un espace initial */
+    body .highlight pre span:empty {
+        display: none !important;
+    }
+    body.dark-mode .highlight pre span:empty {
+        display: none !important;
+    }
+
+    /* Tableaux */
+    body table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        background-color: white;
+    }
+
+    body th, body td {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    body th {
+        background-color: #9f7aea;
+        color: white;
+        font-weight: 600;
+    }
+
+    body tr:nth-child(even) {
+        background-color: #f7fafc;
+    }
+
+
+
+/* ── Texte à lignes numérotées (pour littéraires) ────────────────── */
+.texte-numerote,
+.texte-numerote * {
+    text-align: left !important;
+}
+
+.texte-numerote {
+    margin: 1.2em 0;
+    font-family: Andika, sans-serif;
+    font-size: 1em;
+}
+
+.texte-lignes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.texte-ligne {
+    display: flex;
+    flex-direction: row;           /* ← row, pas row-reverse */
+    align-items: baseline;
+    padding: 0;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.texte-ligne::before {
+    content: attr(data-num);
+    min-width: 2.5em;
+    text-align: right;
+    padding-right: 0.6em;
+    margin-right: 0.8em;
+    border-right: 1px solid #d0dae6;
+    color: #999;
+    font-size: 0.82em;
+    font-family: ui-monospace, monospace;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.dark-mode .texte-ligne::before {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+
+
+
+
+.highlight [data-linenos]::before {
+    content: attr(data-linenos);
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+
+
+
+    /* ── Bloc contrôles haut-droite ───────────────────────────── */
+    #controls {
+        position: fixed;
+        top: 0.8rem;
+        display: flex;
+        font-size: clamp(0.6rem, 1.5vw, 1rem); /* ajuster la taille des boutons selon le zoom */
+        flex-direction: row;
+        align-items: center;
+        gap: 0.2em;
+        background: var(--ctrl-bg, #ccc);
+        border: 1px solid var(--ctrl-border, #ccc);
+        border-radius: 2em;
+        padding: 0.2em 0.5em;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        box-sizing: border-box;
+        overflow: visible;
+        width: auto;
+        max-width: none;
+        /* Positionner les boutons à droite dans le bloc de texte */
+        /* right: max(0.8rem, calc(50% - 450px + 0.8rem)); */
+        /* right: 0.8rem; */
+        right: max(0.8rem, calc(50vw - 450px - 7.5rem));
+    }
+
+    #controls button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        width: 1.8em;
+        height: 1.8em;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border-radius: 50%;
+        transition: background 0.15s;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    #controls button:hover {
+        background: var(--ctrl-hover, rgba(0,0,0,0.08));
+    }
+
+    /* Tooltip natif amélioré : on s'appuie sur [title] + pseudo CSS */
+    #controls button[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        top: 2.8em;
+        right: 0;
+        background: var(--tooltip-bg, #333);
+        color: var(--tooltip-fg, #fff);
+        font-size: 0.75rem;
+        font-family: sans-serif;
+        white-space: nowrap;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 1100;
+    }
+
+    #controls {
+        position: fixed; /* redéclaré pour que ::after soit relatif au bouton */
+    }
+
+    #controls button {
+        position: relative;
+    }
+
+    /* ── Overlay sommaire ─────────────────────────────────────── */
+    #toc-overlay {
+        display: none;
+        position: fixed;
+        top: 3.8rem;
+        right: 1rem;
+        width: clamp(200px, 25vw, 340px);
+        max-height: 70vh;
+        overflow-y: auto;
+        background: var(--toc-bg, #fafafa);
+        border: 1px solid var(--toc-border, #ddd);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        z-index: 999;
+        padding: 0.6em 0;
+        font-size: 0.9rem;
+    }
+    #toc-overlay.open {
+        display: block;
+    }
+    #toc-overlay a {
+        display: block;
+        padding: 0.3em 1em;
+        color: var(--toc-link, #1a1a1a);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        transition: background 0.12s, border-color 0.12s;
+    }
+    #toc-overlay a:hover {
+        background: var(--toc-hover, #e8f0fe);
+        border-left-color: #448aff;
+    }
+    #toc-overlay a.toc-h2 {
+        font-weight: bold;
+        padding-left: 1em;
+    }
+    #toc-overlay a.toc-h3 {
+        padding-left: 2em;
+        font-weight: normal;
+        color: var(--toc-link-h3, #444);
+    }
+    #toc-overlay a.toc-h4 {
+        padding-left: 3em;
+        font-weight: normal;
+        font-size: 0.85em;
+        color: var(--toc-link-h4, #666);
+    }
+
+    /* ── Variables thème clair ────────────────────────────────── */
+    :root {
+        --ctrl-bg:       #ccc;
+        --ctrl-border:   #eee;
+        --ctrl-hover:    rgba(0,0,0,0.08);
+        --tooltip-bg:    #ccc;
+        --tooltip-fg:    #fff;
+        --toc-bg:        #fafafa;
+        --toc-border:    #ddd;
+        --toc-link:      #1a1a1a;
+        --toc-link-h3:   #444;
+        --toc-link-h4:   #666;
+        --toc-hover:     #e8f0fe;
+    }
+    
+/* ── Liens lisibles (thème clair) ────────────────────────────────── */
+body a               { color: #0066cc; }
+body a:hover         { color: #004499; text-decoration: underline; }
+body a:visited       { color: #6b46c1; }
+
+/* ── Liens lisibles (thème sombre) ───────────────────────────────── */
+body.dark-mode a         { color: #90cdf4; }
+body.dark-mode a:hover   { color: #63b3ed; }
+body.dark-mode a:visited { color: #d6bcfa; }
+
+/* ── Variables thème sombre ──────────────────────────────────────── */
+body.dark-mode {
+    background-color: #1a202c;
+    color: #e2e8f0;
+    --ctrl-bg:       #888;
+    --ctrl-border:   #ddd;
+    --ctrl-hover:    rgba(255,255,255,0.4);
+    --tooltip-bg:    #eee;
+    --tooltip-fg:    #111;
+    --toc-bg:        #1e1e1e;
+    --toc-border:    #444;
+    --toc-link:      #ddd;
+    --toc-link-h3:   #aaa;
+    --toc-link-h4:   #888;
+    --toc-hover:     #1a2a3a;
+}
+
+    /* dark-mode h1 : voir section dark-mode titres */
+
+    /* ── Dark-mode H1 ────────────────────────────────────────────── */
+    body.dark-mode h1  { color: #b794f4; border-color: #b794f4; }
+    body.dark-mode h2  { color: #e2e8f0; }
+    body.dark-mode h3  { color: #e2e8f0; }
+    body.dark-mode h4  { color: #e2e8f0; }
+
+    /* ── Dark-mode ::after dégradés ──────────────────────────────── */
+    body.dark-mode h2::after {
+        background: linear-gradient(
+            to top,
+            hsla(262, 70%, 75%, 0.35) 0%,
+            hsla(262, 70%, 75%, 0.12) 33%,
+            transparent 100%
+        );
+        border-bottom: 4px solid hsla(262, 70%, 75%, 0.60);
+    }
+    body.dark-mode h3::after {
+        background: linear-gradient(
+            to top,
+            hsla(35, 90%, 68%, 0.28) 0%,
+            transparent 33%
+        );
+        border-bottom: 3px solid hsla(35, 90%, 68%, 0.50);
+    }
+    body.dark-mode h4::after {
+        border-bottom: 2px solid hsla(100, 56%, 65%, 0.45);
+    }
+
+    body.dark-mode code {
+        background-color: #2d3748;
+        color: #fc8181;
+    }
+    
+    body.dark-mode a:visited {
+        color: #d6bcfa !important;
+    }
+
+    body.dark-mode table {
+        background-color: #2d3748;
+    }
+
+    body.dark-mode th {
+        background-color: #6b46c1;
+    }
+
+    body.dark-mode tr:nth-child(even) {
+        background-color: #374151;
+    }
+
+    body.dark-mode td {
+        border-color: #4a5568;
+    }
+    
+    body.dark-mode .admonition,
+    body.dark-mode details {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    body.dark-mode .admonition a,
+    body.dark-mode details a {
+        color: #90cdf4;
+    }
+    
+    body.dark-mode .admonition a:hover,
+    body.dark-mode details a:hover {
+        color: #63b3ed;
+    }
+
+    body.dark-mode .admonition a:visited,
+    body.dark-mode details a:visited {
+        color: #d6bcfa !important;
+    }
+
+
+    /* ── Coloration syntaxique mode clair — thème "vs" (Visual Studio) */
+    /* Fond légèrement bleuté ajouté pour délimiter visuellement le bloc */
+    td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    .highlight .hll { background-color: #ffffcc }
+    .highlight  { background: #f0f4f8; }
+    .highlight .c  { color: #008000 }                      /* Comment */
+    .highlight .err { border: 1px solid #F00 }             /* Error */
+    .highlight .k  { color: #0000FF; font-weight: bold }   /* Keyword */
+    .highlight .ch { color: #008000 }                      /* Comment.Hashbang */
+    .highlight .cm { color: #008000 }                      /* Comment.Multiline */
+    .highlight .cp { color: #0000FF }                      /* Comment.Preproc */
+    .highlight .cpf { color: #008000 }                     /* Comment.PreprocFile */
+    .highlight .c1 { color: #008000 }                      /* Comment.Single */
+    .highlight .cs { color: #008000 }                      /* Comment.Special */
+    .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    .highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+    .highlight .gh { font-weight: bold }                   /* Generic.Heading */
+    .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    .highlight .gu { color: #800080; font-weight: bold }   /* Generic.Subheading */
+    .highlight .kc { color: #0000FF; font-weight: bold }   /* Keyword.Constant */
+    .highlight .kd { color: #0000FF; font-weight: bold }   /* Keyword.Declaration */
+    .highlight .kn { color: #0000FF; font-weight: bold }   /* Keyword.Namespace */
+    .highlight .kp { color: #0000FF }                      /* Keyword.Pseudo */
+    .highlight .kr { color: #0000FF; font-weight: bold }   /* Keyword.Reserved */
+    .highlight .kt { color: #2B91AF }                      /* Keyword.Type */
+    .highlight .s  { color: #A31515 }                      /* Literal.String */
+    .highlight .na { color: #FF0000 }                      /* Name.Attribute */
+    .highlight .nb { color: #00F }                         /* Name.Builtin */
+    .highlight .nc { color: #2B91AF }                      /* Name.Class */
+    .highlight .no { color: #2B91AF }                      /* Name.Constant */
+    .highlight .nd { color: #2B91AF }                      /* Name.Decorator */
+    .highlight .nf { color: #000000 }                      /* Name.Function */
+    .highlight .nt { color: #800000 }                      /* Name.Tag */
+    .highlight .nv { color: #000000 }                      /* Name.Variable */
+    .highlight .ow { color: #0000FF; font-weight: bold }   /* Operator.Word */
+    .highlight .sa { color: #A31515 }                      /* Literal.String.Affix */
+    .highlight .sb { color: #A31515 }                      /* Literal.String.Backtick */
+    .highlight .sc { color: #A31515 }                      /* Literal.String.Char */
+    .highlight .dl { color: #A31515 }                      /* Literal.String.Delimiter */
+    .highlight .sd { color: #A31515 }                      /* Literal.String.Doc */
+    .highlight .s2 { color: #A31515 }                      /* Literal.String.Double */
+    .highlight .se { color: #A31515 }                      /* Literal.String.Escape */
+    .highlight .sh { color: #A31515 }                      /* Literal.String.Heredoc */
+    .highlight .si { color: #A31515 }                      /* Literal.String.Interpol */
+    .highlight .sx { color: #A31515 }                      /* Literal.String.Other */
+    .highlight .sr { color: #A31515 }                      /* Literal.String.Regex */
+    .highlight .s1 { color: #A31515 }                      /* Literal.String.Single */
+    .highlight .ss { color: #A31515 }                      /* Literal.String.Symbol */
+    .highlight .vc { color: #000000 }                      /* Name.Variable.Class */
+    .highlight .vg { color: #000000 }                      /* Name.Variable.Global */
+    .highlight .vi { color: #000000 }                      /* Name.Variable.Instance */
+    .highlight .il { color: #098658 }                      /* Literal.Number.Integer.Long */
+    .highlight .m  { color: #098658 }                      /* Literal.Number */
+    .highlight .mb { color: #098658 }                      /* Literal.Number.Bin */
+    .highlight .mf { color: #098658 }                      /* Literal.Number.Float */
+    .highlight .mh { color: #098658 }                      /* Literal.Number.Hex */
+    .highlight .mi { color: #098658 }                      /* Literal.Number.Integer */
+    .highlight .mo { color: #098658 }                      /* Literal.Number.Oct */
+
+    /* ── Coloration syntaxique mode sombre — thème "one-dark" ────── */
+    body.dark-mode .highlight { background: #282C34; color: #ABB2BF; }
+    body.dark-mode .highlight .hll { background-color: #3E4451; }
+    body.dark-mode .highlight .c  { color: #7F848E; font-style: italic } /* Comment */
+    body.dark-mode .highlight .err { color: #E06C75 }                    /* Error */
+    body.dark-mode .highlight .esc { color: #ABB2BF }                    /* Escape */
+    body.dark-mode .highlight .k  { color: #C678DD }                     /* Keyword */
+    body.dark-mode .highlight .l  { color: #ABB2BF }                     /* Literal */
+    body.dark-mode .highlight .n  { color: #E06C75 }                     /* Name */
+    body.dark-mode .highlight .o  { color: #56B6C2 }                     /* Operator */
+    body.dark-mode .highlight .p  { color: #ABB2BF }                     /* Punctuation */
+    body.dark-mode .highlight .ch { color: #7F848E; font-style: italic } /* Comment.Hashbang */
+    body.dark-mode .highlight .cm { color: #7F848E; font-style: italic } /* Comment.Multiline */
+    body.dark-mode .highlight .cp { color: #7F848E; font-style: italic } /* Comment.Preproc */
+    body.dark-mode .highlight .cpf { color: #7F848E; font-style: italic }/* Comment.PreprocFile */
+    body.dark-mode .highlight .c1 { color: #7F848E; font-style: italic } /* Comment.Single */
+    body.dark-mode .highlight .cs { color: #7F848E; font-style: italic } /* Comment.Special */
+    body.dark-mode .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    body.dark-mode .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    body.dark-mode .highlight .kc { color: #C678DD }                     /* Keyword.Constant */
+    body.dark-mode .highlight .kd { color: #C678DD }                     /* Keyword.Declaration */
+    body.dark-mode .highlight .kn { color: #C678DD }                     /* Keyword.Namespace */
+    body.dark-mode .highlight .kp { color: #C678DD }                     /* Keyword.Pseudo */
+    body.dark-mode .highlight .kr { color: #C678DD }                     /* Keyword.Reserved */
+    body.dark-mode .highlight .kt { color: #E5C07B }                     /* Keyword.Type */
+    body.dark-mode .highlight .ld { color: #98C379 }                     /* Literal.Date */
+    body.dark-mode .highlight .m  { color: #D19A66 }                     /* Literal.Number */
+    body.dark-mode .highlight .s  { color: #98C379 }                     /* Literal.String */
+    body.dark-mode .highlight .na { color: #E06C75 }                     /* Name.Attribute */
+    body.dark-mode .highlight .nb { color: #61AFEF }                     /* Name.Builtin */
+    body.dark-mode .highlight .nc { color: #E5C07B }                     /* Name.Class */
+    body.dark-mode .highlight .no { color: #E06C75 }                     /* Name.Constant */
+    body.dark-mode .highlight .nd { color: #61AFEF }                     /* Name.Decorator */
+    body.dark-mode .highlight .ni { color: #ABB2BF }                     /* Name.Entity */
+    body.dark-mode .highlight .ne { color: #E06C75 }                     /* Name.Exception */
+    body.dark-mode .highlight .nf { color: #61AFEF }                     /* Name.Function */
+    body.dark-mode .highlight .nl { color: #E06C75 }                     /* Name.Label */
+    body.dark-mode .highlight .nn { color: #E5C07B }                     /* Name.Namespace */
+    body.dark-mode .highlight .nt { color: #E06C75 }                     /* Name.Tag */
+    body.dark-mode .highlight .nv { color: #E06C75 }                     /* Name.Variable */
+    body.dark-mode .highlight .ow { color: #56B6C2 }                     /* Operator.Word */
+    body.dark-mode .highlight .sa { color: #98C379 }                     /* Literal.String.Affix */
+    body.dark-mode .highlight .sb { color: #98C379 }                     /* Literal.String.Backtick */
+    body.dark-mode .highlight .sc { color: #98C379 }                     /* Literal.String.Char */
+    body.dark-mode .highlight .dl { color: #98C379 }                     /* Literal.String.Delimiter */
+    body.dark-mode .highlight .sd { color: #7F848E; font-style: italic } /* Literal.String.Doc */
+    body.dark-mode .highlight .s2 { color: #98C379 }                     /* Literal.String.Double */
+    body.dark-mode .highlight .se { color: #56B6C2 }                     /* Literal.String.Escape */
+    body.dark-mode .highlight .sh { color: #98C379 }                     /* Literal.String.Heredoc */
+    body.dark-mode .highlight .si { color: #D19A66 }                     /* Literal.String.Interpol */
+    body.dark-mode .highlight .sx { color: #98C379 }                     /* Literal.String.Other */
+    body.dark-mode .highlight .sr { color: #56B6C2 }                     /* Literal.String.Regex */
+    body.dark-mode .highlight .s1 { color: #98C379 }                     /* Literal.String.Single */
+    body.dark-mode .highlight .ss { color: #98C379 }                     /* Literal.String.Symbol */
+    body.dark-mode .highlight .mb { color: #D19A66 }                     /* Literal.Number.Bin */
+    body.dark-mode .highlight .mf { color: #D19A66 }                     /* Literal.Number.Float */
+    body.dark-mode .highlight .mh { color: #D19A66 }                     /* Literal.Number.Hex */
+    body.dark-mode .highlight .mi { color: #D19A66 }                     /* Literal.Number.Integer */
+    body.dark-mode .highlight .mo { color: #D19A66 }                     /* Literal.Number.Oct */
+    body.dark-mode .highlight .il { color: #D19A66 }                     /* Literal.Number.Integer.Long */
+    body.dark-mode .highlight .vc { color: #E06C75 }                     /* Name.Variable.Class */
+    body.dark-mode .highlight .vg { color: #E06C75 }                     /* Name.Variable.Global */
+    body.dark-mode .highlight .vi { color: #E06C75 }                     /* Name.Variable.Instance */
+    body.dark-mode .highlight .bp { color: #61AFEF }                     /* Name.Builtin.Pseudo */
+    body.dark-mode .highlight .fm { color: #61AFEF }                     /* Name.Function.Magic */
+
+/* ── Numérotation de lignes — style inline (pymdownx.highlight défaut) */
+/* Les numéros ne se copient pas avec le code — meilleur pour les élèves */
+.highlight .linenos {
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+body.dark-mode .highlight .linenos {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+    
+    /* ── ONGLETS — pymdownx.tabbed (alternate_style) ────────────────── 
+       Structure : .tabbed-set > input[radio]
+                               > .tabbed-labels > label
+                               > .tabbed-content > .tabbed-block */
+    .tabbed-set {
+      margin: 1.2em 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* Cacher les radio buttons */
+    .tabbed-set > input { display: none; }
+
+    /* Barre d'onglets */
+    .tabbed-labels {
+      display: flex;
+      flex-wrap: wrap;
+      background: #f7fafc;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tabbed-labels > label {
+      display: inline-block;
+      padding: 0.5em 1.2em;
+      cursor: pointer;
+      font-size: 0.92em;
+      font-weight: 600;
+      color: #4a5568;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      margin: 0;
+      user-select: none;
+    }
+
+    .tabbed-labels > label:hover {
+      color: #6b46c1;
+      background: #ede9fe;
+    }
+
+    /* Contenu : tous les blocs cachés par défaut */
+    .tabbed-content { padding: 0; }
+
+    .tabbed-block {
+      display: none;
+      padding: 1em 1.2em;
+    }
+
+    /* Afficher le bon bloc selon l'onglet actif */
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #6b46c1;
+      border-bottom: 2px solid #6b46c1;
+      background: white;
+    }
+
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-content > .tabbed-block:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-content > .tabbed-block:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-content > .tabbed-block:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-content > .tabbed-block:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-content > .tabbed-block:nth-child(5) {
+      display: block;
+    }
+
+    /* ---- Dark mode ---- */
+    body.dark-mode .tabbed-set { border-color: #4a5568; }
+
+    body.dark-mode .tabbed-labels {
+      background: #2d3748;
+      border-bottom-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label {
+      color: #a0aec0;
+      border-right-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label:hover {
+      color: #b794f4;
+      background: #3d2d5e;
+    }
+
+    body.dark-mode .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    body.dark-mode .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    body.dark-mode .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    body.dark-mode .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    body.dark-mode .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #b794f4;
+      border-bottom-color: #b794f4;
+      background: #1a202c;
+    }
+
+    body.dark-mode .tabbed-block { background: #1a202c; }
+
+
+    /* ── CSS bouton "copier" des blocs de code sur écrans tactiles ─ */
+    @media (hover: none) {
+      .highlight button[title="Copier le code"] {
+        opacity: 0.5 !important;
+      }
+    }
+    
+    /* ── Indicateur de progression CSS pur ───────────────────────── */
+    @keyframes grow-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── Figures GeoGebra ────────────────────────────────────────── */
+    .ggb-container {
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    body.dark-mode .ggb-container {
+      border-color: #4a5568;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ── Notes "de bas de page" -> infobulles ────────────────────── */
+    .infobulle-note {
+        position: relative;
+        cursor: help;
+    }
+    .infobulle-note sup {
+        color: #6b46c1;
+        font-weight: bold;
+    }
+    .infobulle-contenu {    /* Il faut éviter qu'elles soient coupées dans
+        un bloc, donc plus de bottom/left/transform : ce sera géré en JS */
+        display: none;
+        position: fixed;   /* ← Et plus d'absolute non plus */
+        background: #2d3748;
+        color: #e2e8f0;
+        font-size: 0.82em;
+        line-height: 1.5;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        width: max-content;
+        max-width: 28em;
+        white-space: normal;
+        z-index: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        pointer-events: none;
+    }
+    /* Cacher les footnotes en affichage écran, afficher en impression */
+    .footnote-impression { display: none; }
+    
+    /* ── Gestion des légendes / titres d'images ──────────────────── */
+    figure {
+        margin: 1.5em auto;
+        text-align: center;
+    }
+    figure img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    figcaption {
+        font-size: 0.85em;
+        color: #718096;
+        font-style: oblique 8deg;
+        margin-top: 0.4em;
+    }
+    body.dark-mode figcaption {
+        color: #a0aec0;
+    }
+
+
+    /* ── CSS pour impression sur feuille A4 ──────────────────────── */
+    @media print {
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        /* Pour les textes à lignes numérotées */
+        .texte-ligne::after { color: #666; }
+
+        /* Gestion des légendes */
+        figcaption {
+            color: #444 !important;
+            font-size: 0.8em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px 8px;
+        }
+
+        body {
+            background-color: white !important;
+            color: black !important;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            padding-top: 0.5cm !important;  /* tentative pour impression PDF */
+            padding-bottom: 0.5cm !important;
+        }
+
+        #controls {
+            display: none !important;
+        }
+
+        /* Définitions et propriétés : encadrées, sans couleur */
+        .admonition.def, details.def,
+        .admonition.prop, details.prop {
+            border: 1.5px solid #000 !important;
+            background: white !important;
+            border-left-width: 1.5px !important;
+        }
+        .admonition.def > .admonition-title,
+        details.def > summary,
+        .admonition.prop > .admonition-title,
+        details.prop > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+            border-bottom: 1px solid #000;
+        }
+        /* Toutes admonitions : fond blanc à l'impression */
+        .admonition, details {
+            background: white !important;
+            border-color: #888 !important;
+        }
+        .admonition-title, details > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+        }
+        /* Exemples et remarques : forcer l'affichage déplié */
+        details.ex, details.rem {
+            display: block !important;
+        }
+        details.ex > summary,
+        details.rem > summary {
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            background: none !important;
+            color: black !important;
+            border-color: black !important;
+        }
+
+        /* ── Traits sous les titres à l'impression ───────────────── */
+        /* Modifié le 18/02/2026 par intégration aux règles principales
+        h2::after { border-bottom-width: 4px !important; }
+        h3::after { border-bottom-width: 3px !important; }
+        h4::after { border-bottom-width: 2px !important; } */
+
+        pre, blockquote, table {
+            page-break-inside: avoid;
+        }
+
+        img {
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+
+        * {
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        /* APRÈS */
+        .highlight, pre {
+            background-color: #f5f5f5 !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* Code inline : fond léger, sans bordure */
+        code {
+            background-color: #f0f0f0 !important;
+            color: black !important;
+            border: none !important;
+            padding: 0.1em 0.2em !important;
+        }
+
+        /* Annuler le fond pour code dans pre (évite double fond) */
+        pre code {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        table, th, td {
+            border-color: black !important;
+        }
+
+        th {
+            background-color: #ddd !important;
+            color: black !important;
+        }
+
+        a {
+            color: #000 !important;
+            text-decoration: underline !important;
+        }
+
+        a[href^="http"]:after {
+            content: none !important;
+            font-size: 0.8em;
+        }
+        
+        /* Onglets à l'impression */
+        .tabbed-set { border: 1px solid #aaa !important; }
+        .tabbed-labels { display: flex !important; background: #eee !important; border-bottom: 1px solid #aaa !important; }
+        .tabbed-labels > label { display: inline-block !important; padding: 0.3em 0.8em !important; font-weight: bold !important; color: black !important; border-right: 1px solid #aaa !important; font-size: 0.85em !important; }
+        .tabbed-block { display: block !important; border-top: 1px dashed #ccc !important; padding: 0.5em 0.8em !important; }
+
+        .tabbed-print-label {
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #444;
+            background: #eee;
+            padding: 0.2em 0.6em;
+            margin-bottom: 0.4em;
+            border-left: 3px solid #aaa;
+        }
+        
+        .tabbed-labels { display: none !important; }
+        .tabbed-set { border: none !important; }
+        
+        /* Notes de bas de page à la fin */
+        .infobulle-contenu  { display: none !important; }
+        .footnote-impression {
+            display: block !important;
+            border-top: 1px solid #000;
+            margin-top: 2em;
+            font-size: 0.85em;
+        }
+    }
+
+    /* ── Admonitions (!!! et ???) ─────────────────────────────────── */
+    .admonition, details {
+        margin: 1.2em 0;
+        /* padding: 0 0 0.6em; */
+        padding: 0 0 0.6em;
+        border-left: 4px solid #999;
+        border-radius: 4px;
+        background: #f8f8f8;
+        /* overflow: hidden; */
+    }
+    .admonition-title, details > summary {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        padding: 0.45em 0.8em;
+        background: #e0e0e0;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+    }
+    details > summary { justify-content: space-between; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* Flèche droite / bas selon état */
+    details > summary::after {
+        content: '▶';
+        font-size: 0.75em;
+        transition: transform 0.2s;
+        margin-left: auto;
+        padding-left: 0.8em;
+        flex-shrink: 0;
+    }
+    details[open] > summary::after {
+        content: '▼';
+    }
+
+    /* Corps du contenu */
+    .admonition > *:not(.admonition-title),
+    details > *:not(summary) {
+        margin: 0.5em 0.9em;
+    }
+    
+    /* Annuler l'espace entre bandeau et premier contenu */
+    .admonition > .admonition-title + * {
+        margin-top: 0;
+    }
+
+    details > summary + * {
+        margin-top: 0 !important;
+    }
+
+    /* ── Icônes par type ──────────────────────────────────────────── */
+    .admonition-title::before,
+    details > summary .admonition-icon {
+        font-style: normal;
+    }
+
+    /* note */
+    .admonition.note, details.note {
+        border-color: #448aff;
+    }
+    .admonition.note > .admonition-title,
+    details.note > summary {
+        background: #e3ecff;
+        color: #1a4ab5;
+    }
+    .admonition.note > .admonition-title::before,
+    details.note > summary::before {
+        content: '📝';
+    }
+
+    /* abstract / summary / tldr */
+    .admonition.abstract, details.abstract,
+    .admonition.summary,  details.summary,
+    .admonition.tldr,     details.tldr {
+        border-color: #00b0ff;
+    }
+    .admonition.abstract > .admonition-title,
+    details.abstract > summary,
+    .admonition.summary > .admonition-title,
+    details.summary > summary,
+    .admonition.tldr > .admonition-title,
+    details.tldr > summary {
+        background: #e1f5fe;
+        color: #0060a0;
+    }
+    .admonition.abstract > .admonition-title::before,
+    details.abstract > summary::before,
+    .admonition.summary > .admonition-title::before,
+    details.summary > summary::before,
+    .admonition.tldr > .admonition-title::before,
+    details.tldr > summary::before {
+        content: '📋';
+    }
+
+    /* info */
+    .admonition.info, details.info {
+        border-color: #26c6da;
+    }
+    .admonition.info > .admonition-title,
+    details.info > summary {
+        background: #e0f7fa;
+        color: #006270;
+    }
+    .admonition.info > .admonition-title::before,
+    details.info > summary::before {
+        content: 'ℹ️';
+    }
+
+    /* tip / hint / important */
+    .admonition.tip,       details.tip,
+    .admonition.hint,      details.hint,
+    .admonition.important, details.important {
+        border-color: #00bfa5;
+    }
+    .admonition.tip > .admonition-title,
+    details.tip > summary,
+    .admonition.hint > .admonition-title,
+    details.hint > summary,
+    .admonition.important > .admonition-title,
+    details.important > summary {
+        background: #e0f7f4;
+        color: #007a6a;
+    }
+    .admonition.tip > .admonition-title::before,
+    details.tip > summary::before,
+    .admonition.hint > .admonition-title::before,
+    details.hint > summary::before,
+    .admonition.important > .admonition-title::before,
+    details.important > summary::before {
+        content: '💡';
+    }
+
+    /* success / check / done */
+    .admonition.success, details.success,
+    .admonition.check,   details.check,
+    .admonition.done,    details.done {
+        border-color: #4caf50;
+    }
+    .admonition.success > .admonition-title,
+    details.success > summary,
+    .admonition.check > .admonition-title,
+    details.check > summary,
+    .admonition.done > .admonition-title,
+    details.done > summary {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .admonition.success > .admonition-title::before,
+    details.success > summary::before,
+    .admonition.check > .admonition-title::before,
+    details.check > summary::before,
+    .admonition.done > .admonition-title::before,
+    details.done > summary::before {
+        content: '✅';
+    }
+
+    /* question / help / faq */
+    .admonition.question, details.question,
+    .admonition.help,     details.help,
+    .admonition.faq,      details.faq {
+        border-color: #64dd17;
+    }
+    .admonition.question > .admonition-title,
+    details.question > summary,
+    .admonition.help > .admonition-title,
+    details.help > summary,
+    .admonition.faq > .admonition-title,
+    details.faq > summary {
+        background: #f1f8e9;
+        color: #387002;
+    }
+    .admonition.question > .admonition-title::before,
+    details.question > summary::before,
+    .admonition.help > .admonition-title::before,
+    details.help > summary::before,
+    .admonition.faq > .admonition-title::before,
+    details.faq > summary::before {
+        content: '❓';
+    }
+
+    /* warning / caution / attention */
+    .admonition.warning,   details.warning,
+    .admonition.caution,   details.caution,
+    .admonition.attention, details.attention {
+        border-color: #ff9100;
+    }
+    .admonition.warning > .admonition-title,
+    details.warning > summary,
+    .admonition.caution > .admonition-title,
+    details.caution > summary,
+    .admonition.attention > .admonition-title,
+    details.attention > summary {
+        background: #fff3e0;
+        color: #b35e00;
+    }
+    .admonition.warning > .admonition-title::before,
+    details.warning > summary::before,
+    .admonition.caution > .admonition-title::before,
+    details.caution > summary::before,
+    .admonition.attention > .admonition-title::before,
+    details.attention > summary::before {
+        content: '⚠️';
+    }
+
+    /* failure / fail / missing */
+    .admonition.failure, details.failure,
+    .admonition.fail,    details.fail,
+    .admonition.missing, details.missing {
+        border-color: #ff5252;
+    }
+    .admonition.failure > .admonition-title,
+    details.failure > summary,
+    .admonition.fail > .admonition-title,
+    details.fail > summary,
+    .admonition.missing > .admonition-title,
+    details.missing > summary {
+        background: #fde8e8;
+        color: #b00020;
+    }
+    .admonition.failure > .admonition-title::before,
+    details.failure > summary::before,
+    .admonition.fail > .admonition-title::before,
+    details.fail > summary::before,
+    .admonition.missing > .admonition-title::before,
+    details.missing > summary::before {
+        content: '❌';
+    }
+
+    /* danger / error */
+    .admonition.danger, details.danger,
+    .admonition.error,  details.error {
+        border-color: #e53935;
+    }
+    .admonition.danger > .admonition-title,
+    details.danger > summary,
+    .admonition.error > .admonition-title,
+    details.error > summary {
+        background: #fde8e8;
+        color: #a00;
+    }
+    .admonition.danger > .admonition-title::before,
+    details.danger > summary::before,
+    .admonition.error > .admonition-title::before,
+    details.error > summary::before {
+        content: '🛑';
+    }
+
+    /* bug */
+    .admonition.bug, details.bug {
+        border-color: #f50057;
+    }
+    .admonition.bug > .admonition-title,
+    details.bug > summary {
+        background: #fce4ec;
+        color: #9b0039;
+    }
+    .admonition.bug > .admonition-title::before,
+    details.bug > summary::before {
+        content: '🐛';
+    }
+
+    /* example */
+    .admonition.example, details.example {
+        border-color: #7c4dff;
+    }
+    .admonition.example > .admonition-title,
+    details.example > summary {
+        background: #ede7f6;
+        color: #4a148c;
+    }
+    .admonition.example > .admonition-title::before,
+    details.example > summary::before {
+        content: '🔬';
+    }
+
+    /* quote / cite */
+    .admonition.quote, details.quote,
+    .admonition.cite,  details.cite {
+        border-color: #9e9e9e;
+    }
+    .admonition.quote > .admonition-title,
+    details.quote > summary,
+    .admonition.cite > .admonition-title,
+    details.cite > summary {
+        background: #f5f5f5;
+        color: #424242;
+    }
+    .admonition.quote > .admonition-title::before,
+    details.quote > summary::before,
+    .admonition.cite > .admonition-title::before,
+    details.cite > summary::before {
+        content: '💬';
+    }
+    
+    .admonition.quote em, .admonition.quote i, details.quote em, 
+    details.quote i {
+        font-family: Andika, sans-serif;
+        font-style: oblique 8deg;  /* inclinaison légère, non cursive */
+    }
+
+
+    /* Correction mode sombre : titres d'admonition */
+    body.dark-mode .admonition.algo > .admonition-title {
+        color: #1a202c !important;
+    }
+
+    
+    /* ── Définitions (def) ────────────────────────────────────── */
+    .admonition.def, details.def {
+        border-color: #2b6cb0;
+        background: #ebf8ff;
+    }
+    .admonition.def > .admonition-title,
+    details.def > summary {
+        background: #bee3f8;
+        color: #1a365d;
+    }
+    .admonition.def > .admonition-title::before,
+    details.def > summary::before {
+        content: '🎓';
+    }
+
+    /* ── Propriétés (prop) ────────────────────────────────────── */
+    .admonition.prop, details.prop {
+        border-color: #276749;
+        background: #f0fff4;
+    }
+    .admonition.prop > .admonition-title,
+    details.prop > summary {
+        background: #c6f6d5;
+        color: #1c4532;
+    }
+    .admonition.prop > .admonition-title::before,
+    details.prop > summary::before {
+        content: '⚙️';
+    }
+
+    /* ── Exemples (ex) : filet droit, zéro boîte ────────────── */
+    .admonition.ex, details.ex {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        margin-left: 0;
+        padding-right: 0.8em;
+        border-right: 2px solid #a0aec0;
+    }
+    .admonition.ex > .admonition-title,
+    details.ex > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .admonition.ex > .admonition-title::before,
+    details.ex > summary::before { content: '✏️ Exemple : '; }
+
+    /* ── Remarques (rem) : filet droit pointillé, zéro boîte ── */
+    .admonition.rem, details.rem {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        position: relative;
+        padding-right: 0.8em;
+        border-right: 2px dashed #cbd5e0;
+    }
+    details.rem[open]::after { display: none; }
+    .admonition.rem > .admonition-title,
+    details.rem > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px dotted #e2e8f0;
+    }
+    .admonition.rem > .admonition-title::before,
+    details.rem > summary::before { content: '💭 Remarque : '; }
+
+    /* dark-mode ex + rem */
+    body.dark-mode .admonition.ex,
+    body.dark-mode details.ex       { border-right-color: #4a5568; }
+    body.dark-mode .admonition.ex > .admonition-title,
+    body.dark-mode details.ex > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+    body.dark-mode .admonition.rem,
+    body.dark-mode details.rem      { border-right-color: #4a5568; }
+    body.dark-mode .admonition.rem > .admonition-title,
+    body.dark-mode details.rem > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+
+    /* ── Défi (defi) ──────────────────────────────────────────── */
+    .admonition.defi, details.defi {
+        border-color: #e53e3e;
+        background: linear-gradient(
+            135deg,
+            #fff5f5 0%,
+            #fffaf0 40%,
+            #fefcbf 100%
+        );
+    }
+    .admonition.defi > .admonition-title,
+    details.defi > summary {
+        background: linear-gradient(
+            135deg,
+            #fc8181 0%,
+            #f6ad55 50%,
+            #f6e05e 100%
+        );
+        color: #7b341e;
+        font-weight: bold;
+    }
+    .admonition.defi > .admonition-title::before,
+    details.defi > summary::before {
+        content: '💪';
+    }
+
+    /* Admonitions imbriquées */
+    .admonition .admonition,
+    details details {
+        margin: 0.8em 0.4em;
+        font-size: 0.97em;
+    }
+
+    </style>
+    <!-- MathJax pour le rendu LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [["$", "$"]],
+                displayMath: [["$$", "$$"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    
+</head>
+<body>
+    <div id="controls">
+        <button id="btn-police" title="Police standard / Polices pour dys (double-clic pour annuler)" onclick="basculerPolice()">Aa</button>
+        <button id="theme-btn"  title="Thème clair / thème sombre"                                    onclick="basculerTheme()">🌓</button>
+        <button id="btn-toc"    title="Sommaire"                                                      onclick="basculerSommaire()">📑</button>
+    </div>
+    <div id="toc-overlay"></div>
+
+    <h1>Représentation des données :<br>le binaire et ses usages</h1>
+<p>Toute machine informatique manipule des données sous forme de <strong>bits</strong> (0 ou 1).
+Un bit est l'unité minimale d'information.
+<em>Tout</em> peut être stocké et traité comme une suite de 0 et de 1 (nombres, texte, images, son...).</p>
+<p>Un groupe de 8 bits forme un <strong>octet</strong> (<em>byte</em>). Les tailles courantes en mémoire sont
+8, 16, 32 ou 64 bits.</p>
+<details class="rem">
+<summary>pourquoi <em>byte</em> ? pourquoi 8 bits ?</summary>
+<p>Le mot <strong><em>byte</em></strong> désigne en anglais la plus petite unité adressable de mémoire.
+C'est un jeu de mots volontaire avec <em>bite</em> (bouchée), pour éviter toute confusion avec <em>bit</em>.
+Un <em>byte</em> est une « bouchée de données », par analogie avec <em>bit</em> (abréviation de <em><strong>b</strong>inary dig<strong>it</strong></em>) qui signifie aussi « petit morceau » en anglais.
+La hiérarchie est donc : un <em>bit</em> est un fragment, un <em>byte</em> est une bouchée.
+Mais la <em>taille</em> de la bouchée a fluctué au fil du temps !</p>
+<p>Dans les années 1960-70, les machines utilisaient des mots de 6, 7, ou 9 bits selon
+les constructeurs. C'est l'architecture de l'<strong>IBM System/360</strong> (1964) qui a popularisé
+le <em>byte</em> de 8 bits, appelé octet en français.
+Cette taille est en effet une bonne unité de base : assez grande pour coder un caractère ASCII (7 bits + 1 bit de parité), et puissance de 2
+(pratique pour les circuits numériques).</p>
+<p>Les processeurs modernes traitent les données par mots de 32 ou 64 bits, mais
+<strong>l'octet reste l'unité d'adressage de la mémoire</strong> : chaque adresse mémoire pointe
+vers un octet, pas vers un mot entier. C'est pourquoi on dit qu'un <code>int</code> sur 64 bits
+occupe 8 <strong>adresses</strong> mémoire consécutives.</p>
+<p>En Python :
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>       <span class="c1"># 28 octets — surcoût lié à l&#39;objet Python sous-jacent</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">getsizeof</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">100</span><span class="p">)</span>   <span class="c1"># Plus grand : entier de taille arbitraire</span>
+</code></pre></div></p>
+</details>
+<h2>Bases de numération</h2>
+<h3>Principe</h3>
+<p>En base $b$, on dispose de $b$ chiffres (de 0 à $b-1$). La valeur d'un nombre s'obtient
+en multipliant chaque chiffre par la puissance de $b$ correspondant à sa position :</p>
+<p>$$
+\big(d_{n} d_{n-1} \ldots d_1 d_0\big)_b = \sum_{k=0}^{n} d_k \times b^k \ .
+$$</p>
+<p><strong>Analogie</strong></p>
+<p>On compte par paquets de $b$, avec $b$ symboles différents : $0$, $1$, $2$, ... $b-1$.
+Arrivé à $b-1$, lorsqu'on ajoute une unité, on remet un $0$ et on ajoute un $1$ devant.
+On a alors $1$ paquet de $b$ et $0$ unités.</p>
+<p>On compte habituellement en décimal (base $10$), avec les $10$ symboles habituels : on fait des paquets de $10$ (les dizaines). 
+$10$ signifie « $1$ dizaine et $0$ unité », $207$ signifie « $2$ dizaines de dizaine (aussi appelées <em>centaines</em>), $0$ dizaine et $7$ unités ».</p>
+<p>En base $2$, on n'emploie que deux symboles : on compte $0$, puis $1$, et on a déjà épuisé les symboles disponibles !
+On fait donc un paquet de $2$ (une « deuzaine »), et on inscrit $10_b$ pour signifier « $1$ paquet de $2$ unités et $0$ unité seule ».
+Le nombre suivant, $11_b$, signifie « 1 paquet de 2 et 1 paquet de 1 ».
+L'épuisement des symboles se pose à nouveau pour le nombre d'après : on écrit donc $100_b$, pour « $1$ paquet de $2$ deuzaines » (une « quatraine »), $0$ « deuzaine » et $0$ unités.
+Et ainsi de suite.</p>
+<p>On peut compter en n'importe quelle base (ex. : <a href="https://youtu.be/k7FerR7aYyM?si=JzOW6H8l0TMLio7A&amp;t=21">en base 4</a> !).</p>
+<p><strong>Bases utilisées en informatique :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Base</th>
+<th>Nom</th>
+<th>Chiffres</th>
+<th>Préfixe Python</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Binaire</td>
+<td>0, 1</td>
+<td><code>0b</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Décimale</td>
+<td>0–9</td>
+<td><em>Aucun</em></td>
+</tr>
+<tr>
+<td>16</td>
+<td>Hexadécimale</td>
+<td>0–9, A–F</td>
+<td><code>0x</code></td>
+</tr>
+</tbody>
+</table>
+<p>La base 8 (l'octal) a aussi été utilisée en informatique.</p>
+<p><strong>Exemple de lecture :</strong></p>
+<ul>
+<li>$(1011)_2 = 1 \times 2^3 + 0 \times 2^2 + 1 \times 2^1 + 1 \times 2^0 = 8 + 0 + 2 + 1 = 11$</li>
+<li>$(2A)_{16} = 2 \times 16^1 + 10 \times 16^0 = 32 + 10 = 42$</li>
+</ul>
+<details class="rem">
+<summary>poids fort, poids faible</summary>
+<p>Dans l'écriture $11010_b$, le bit le plus à <em>gauche</em> ($1$ ici) est qualifié de « bit de poids fort ».
+C'est le « constituant principal », celui qui « pèse » le <strong>plus</strong> dans le nombre $11010_b$, car il représente $2^{4} = 16$.<br />
+Le bit le plus à <em>droite</em> ($0$ ici) est qualifié de « bit de poids faible ».
+C'est celui qui « pèse » le <em>moins</em> dans le nombre $11010_b$, car il compte au mieux pour $2^{0} = 1$.  </p>
+</details>
+<details class="rem">
+<summary>notations alternatives</summary>
+<p>Pour éviter toute confusion liée à des nombres en indice écrits « un peu trop haut », il arrive qu'on écrive $42_d$ pour indiquer que le nombre $42$ s'entend ici en numération décimale.
+De même, on peut écrire $101_b$ ou $101_h$.</p>
+<p><strong>Rappel :</strong> $101_{d}$ vaut simplement $101$ en décimal. Mais $101_b = 5_d$, et $101_h=257_d$ ! </p>
+</details>
+<h3>Opérations basiques en binaire</h3>
+<p>Elles fonctionnent comme leurs équivalents en décimal. Les retenues se propagent de la même façon.
+Il est essentiel de bien maîtriser les règles de l'addition.</p>
+<h4>Addition binaire</h4>
+<p>$0+0 = 0$, $0+1 = 1 + 0 = 1$ ; $1 + 1 = 10_b$ <em>(« je pose 0 et je retiens 1 »)</em>.</p>
+<p><em><strong>Note :</strong> dans un souci d'efficacité, il est pertinent de retenir que $1 + 1 + 1 = 11_b$ (« je pose 1 et je retiens 1 »).</em></p>
+<details class="ex">
+<summary>une addition en pratique</summary>
+<p>Effectuons l'addition $111010_b + 11001_b$.</p>
+<p><div style="text-align: center">
+<table style="table-layout: fixed; width: 96%;">
+<colgroup>
+    <col style="width: 24%;">
+    <col style="width: 24%;">
+    <col style="width: 24%;">
+    <col style="width: 24%;">
+  </colgroup>
+<tr>
+    <th>Étape 1</th>
+    <th>Étape 2</th>
+    <th>Étape 3</th>
+    <th>Étape 4</th>
+</tr>
+<tr>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%;">
+&nbsp;
+   1 1 1 0 1 0
++    1 1 0 0 1
+――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;1&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;❸&nbsp;❷&nbsp;❶</pre>
+    ❶  $0 + 1 = 1$<br>
+    ❷  $1 + 0 = 1$<br>
+    ❸  $0 + 0 = 0$<br>
+    </td>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%; text-align: center">
+&nbsp;₁ ⇠ ❺
+   1 1 1 0 1 1
++    1 1 0 0 1
+――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;0&nbsp;1&nbsp;1
+&nbsp;❹</pre>
+        ▶ $1 + 1 = 10_b$<br>
+        ❹ On pose $0$ et...<br>
+        ❺ ...on retient $₁$.
+    </td>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%; text-align: center">
+&nbsp;₁ ⇠ ❼&nbsp;&nbsp;&nbsp;&nbsp;
+   1 1 1 0 1 1
++    1 1 0 0 1
+――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;1&nbsp;1
+❻&nbsp;&nbsp;&nbsp;</pre>
+        ▶ $₁ + 1 + 1 = 11_b$<br>
+        ❻ On pose $1$ et...<br>
+        ❼ ...on retient $₁$.
+    </td>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%; text-align: center">
+&nbsp;
+   1 1 1 0 1 1
++    1 1 0 0 1
+――――――――――――――
+&nbsp;1&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;1&nbsp;1
+❽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&thinsp;
+</pre>
+    ▶ $₁ + 1 = 10_b$<br>
+    ❽ On écrit $10$.<br>
+    C'est fini !
+    </td>
+</tr>
+</table>
+</div></p>
+<p><strong>Vérifications</strong><br />
+$111010_b = 32 + 16 + 8 + 2 = 58_d$ ; $11001_b = 16 + 8 + 1 = 25_d$ ; $58 + 25 = 83_d$ et $1010011_b = 64 + 16 + 2 + 1 = 83$.<br />
+✅ C'est correct !</p>
+</details>
+<h4>Soustraction binaire</h4>
+<ol>
+<li>
+<p>$0-0 = 1 - 1 = 0$, $1-0 = 1$</p>
+</li>
+<li>
+<p>Plus délicate : $0 - 1 = 1$ <em>avec prélèvement d'une « deuzaine » à gauche !</em></p>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Dangers !</p>
+<ul>
+<li>Pour des entiers relatifs, il faut que le nombre que l'on soustrait soit inférieur au nombre duquel on le soustrait.</li>
+<li>
+<p>Comme pour la soustraction décimale, il importe de se souvenir de la gymnastique des retenues, lorsqu'on emploie la règle 2 :</p>
+<ul>
+<li>« En haut », le $1$ que l'on accole à gauche du $0$ forme alors un $10$ binaire ($2$ en décimal).</li>
+<li>
+<p>« En bas », pour compenser cet « emprunt » réalisé sur le chiffre plus à gauche de la ligne supérieure, on ajoute $1$ au chiffre suivant (plus à gauche) du nombre à soustraire.</p>
+<p>Dans ce contexte, c'est bien une addition : il faut donc penser que c'est alors $1+1=10$ <em>en binaire</em>. Les retenues peuvent alors se propager.</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<details class="ex">
+<summary>une soustraction en pratique</summary>
+<p>Effectuons la soustraction $1000011_b - 111010_b$.</p>
+<p><div style="text-align: center">
+<table style="table-layout: fixed; width: 99%;">
+<colgroup>
+    <col style="width: 33%;">
+    <col style="width: 33%;">
+    <col style="width: 33%;">
+  </colgroup>
+<tr>
+    <th>Étape 1 (facile)</th>
+    <th>Étape 2 (ça se complique)</th>
+    <th>Étape 3</th>
+</tr>
+<tr>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%;">
+   1 0 0 0 0 1 1
+―    1 1 1 0 1 0
+――――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;0&nbsp;1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;⇡&nbsp;⇡&nbsp;⇡
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;❸&nbsp;❷&nbsp;❶</pre>
+    ❶  $1 - 0 = 1$<br>
+    ❷  $1 - 1 = 0$<br>
+    ❸  $0 - 0 = 0$<br>
+    </td>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%; text-align: center">
+   1 0 0₁0 0 1 1
+―    1₁1 1 0 1 0
+――――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;0&nbsp;0&nbsp;1
+&nbsp;&nbsp;&nbsp;❹</pre>
+        ▶ Ligne du dessus : « emprunt » d'une « deuzaine » nécessaire.<br>
+          ⚠️ $₁0$ doit être compris comme $10_b$.<br>
+        ▶ Ligne du dessous : on compense l'«&thinsp;emprunt&thinsp;» réalisé au-dessus.<br>
+          ⚠️ $₁1$ signifie ici $1 + 1 = 10_b$.<br>
+        ❹ Ligne de résultat : $10_b-1_b = 1_b$.
+    </td>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%;">
+   1 0₁0 0 0 1 1
+―   ₁1₁1 1 0 1 0
+――――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;1
+       ❺        </pre>
+        ▶ Ligne du dessus : « emprunt » encore nécessaire, $₁0$ → $10_b$.<br>
+        ▶ Ligne du dessous : $₁1$ signifie à nouveau $1 + 1 = 10_b$.<br>
+        ❺ Ligne de résultat : $10_b-10_b = 0_b$.
+    </td>
+</tr>
+</table></p>
+<p><table style="table-layout: fixed; width: 99%;">
+<tr>
+    <th>Étape 4</th>
+    <th>Étape 5</th>
+    <th>Étape 6</th>
+</tr>
+<tr>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%;">
+   1₁0 0 0 0 1 1
+―  ₁₁1 1 1 0 1 0
+――――――――――――――――
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;1
+     ❻          </pre>
+        ▶ Ligne du dessus : 3<sup>e</sup> « emprunt ». $₁0$ → $10_b$.<br>
+        ▶ Ligne du dessous : $₁1$ signifie toujours $1 + 1 = 10_b$.<br>
+        ❻ Ligne de résultat : $10_b-10_b = 0_b$
+    </td>
+    <td style="vertical-align: top;">
+        <pre style="font-family: monospace; margin-top: 0em; margin-left: 0em; text-align:center; font-size:120%;">
+   1 0 0 0 0 1 1
+―  ₁ 1 1 1 0 1 0
+――――――――――――――――
+&nbsp;&nbsp;&nbsp;0&nbsp;0&nbsp;0&nbsp;1&nbsp;0&nbsp;0&nbsp;1
+   ❼            </pre>
+        ❼ Ligne de résultat : $1 - 1 = 0$.
+    </td>
+    <td style="vertical-align: top;">
+        <b>Vérifications</b><br>
+        ▶ $1000011_b = 64 + 2 + 1 = 67_d$<br>
+        ▶ $111010_b = 32 + 16 + 8 + 2 = 58_d$<br>
+        ▶ $67 - 58 = 9$<br>
+        ▶ $1001_b = 8 + 1 = 9$<br>
+        ✅ C'est correct !
+    </td>
+</tr>
+</table>
+</div></p>
+</details>
+<h4>Multiplication binaire</h4>
+<p>Effectuer manuellement une multiplication revient à effectuer autant d'additions qu'il y a de bits dans le nombre écrit au-dessous, lorsqu'on pose le calcul.
+Il est <em>fortement</em> recommandé de faire les additions 2 par 2, au fur et à mesure, pour éviter une propagation délicate d'un grand nombre de retenues.</p>
+<p>$0 \times 0 = 0 \times 1 = 1 \times  0 = 0$ et $1 \times  1 = 1$.</p>
+<p><em><strong>Note :</strong> dans un souci d'efficacité, il est pertinent de retenir que $1 + 1 + 1 = 11_b$ (« je pose 1 et je retiens 1 »).</em></p>
+<details class="rem" open="open">
+<summary>cas particulier de la multiplication par $2_d$</summary>
+<p>Multiplier par $2_d$ revient à multiplier par $10_b$. Ainsi, cela revient à <strong>décaler les bits du nombre initial d'un cran vers la gauche, en complétant à droite par un $0$</strong>.<br />
+$1011_b \times 10_b = 10110_b$ (équivalent en décimal à $11 \times 2 = 22$).</p>
+<p>En Python, cette opération de décalage de bit vers la <em>gauche</em> se note <code>&lt;&lt;</code> : <code>11 &lt;&lt; 1</code> donne <code>22</code> (décalage d'un bit vers la gauche) ; <code>11 &lt;&lt; 2</code> donne <code>44</code> (décalage de 2 bits vers la gauche, correspondant à deux multiplication successives par 2).</p>
+</details>
+<h4>Division binaire</h4>
+<p>La division posée n'est rien de plus qu'une succession de soustractions.</p>
+<details class="rem" open="open">
+<summary>cas particulier de la division par $2_d$</summary>
+<p>C'est l'opération réciproque de la multiplication par $2_d$ : cela revient donc à <strong>supprimer le bit de <em>droite</em> du nombre initial</strong>.<br />
+$11011_b\ //\ 10_b = 1101_b$ (équivalent en décimal à $27\ //\ 2 = 13$).</p>
+<p>En Python, cette opération de décalage de bit vers la <em>droite</em> se note <code>&gt;&gt;</code> : <code>27 &gt;&gt; 1</code> donne <code>13</code> (décalage d'un bit vers la droite) ; <code>27 &gt;&gt; 3</code> donne <code>3</code> (décalage de 3 bits vers la droite, correspondant à 3 divisions entières successives par 2).</p>
+</details>
+<h2>Conversions</h2>
+<h3>Base 10 → Base 2</h3>
+<h4>Méthode 1 : divisions successives par 2</h4>
+<p>On divise l'entier par 2 en notant les restes, puis on lit les restes de <em>bas en haut</em> (mais on écrit bien ces restes de gauche à droite !).</p>
+<div class="highlight"><pre><span></span><code>42 ÷ 2 = 21 reste 0
+21 ÷ 2 = 10 reste 1
+10 ÷ 2 = 5  reste 0
+ 5 ÷ 2 = 2  reste 1
+ 2 ÷ 2 = 1  reste 0
+ 1 ÷ 2 = 0  reste 1
+                   ⮡ lecture de bas en haut : 101010
+</code></pre></div>
+<blockquote>
+<p>Donc $42_{10} = 101010_2$.</p>
+</blockquote>
+<h4>Méthode 2 : soustractions de puissances de 2</h4>
+<p>On identifie la plus grande puissance de 2 inférieure ou égale au nombre à convertir, on la soustrait, et on recommence avec la puissance de 2 inférieure.</p>
+<div class="highlight"><pre><span></span><code>42 = 32 + 10 = 32 + 8 + 2 = 2⁵ + 2³ + 2¹
+ ⮩ bits aux positions 5, 3, 1 (comptées à partir de 0 en partant de la droite) : 101010
+</code></pre></div>
+<blockquote>
+<p>On retrouve le fait que $42_d = 101010_b$.</p>
+</blockquote>
+<h4>En Python</h4>
+<div class="highlight"><pre><span></span><code><span class="nb">bin</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>          <span class="c1"># &#39;0b101010&#39;  — fonction native</span>
+<span class="nb">bin</span><span class="p">(</span><span class="mi">42</span><span class="p">)[</span><span class="mi">2</span><span class="p">:]</span>      <span class="c1"># &#39;101010&#39;    — sans le préfixe</span>
+
+<span class="c1"># Manuellement :</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">decimal_vers_binaire</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convertit un entier décimal en une chaîne de caractères composée de 0 et de 1&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;0&#39;</span>
+    <span class="n">resultat</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+    <span class="k">while</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">resultat</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">n</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">resultat</span>                <span class="c1"># n % 2 donne la valeur d&#39;un nouveau bit</span>
+        <span class="n">n</span> <span class="o">//=</span> <span class="mi">2</span>         <span class="c1"># Nouvelle valeur pour n : le résultat de la division entière de n par 2</span>
+    <span class="k">return</span> <span class="n">resultat</span>
+</code></pre></div>
+<details class="rem">
+<summary>plus efficace</summary>
+<p>Ce code montre une méthode « d'accumulation de caractères » dans la variable <code>resultat</code>.
+Mais celle-ci est constamment écrasée / recrée : c'est peu performant.
+Une meilleure approche : créer une <em>liste</em> Python vide <code>resultat = []</code>, accumuler les <em>bits</em> dedans avec <code>resultat.append(str(n % 2))</code>, puis renvoyer <code>''.join(reversed(resultat))</code>.</p>
+<p><strong>Attention</strong> à bien penser à la conversion de <code>n % 2</code> en chaîne de caractères !</p>
+</details>
+<h3>Base 2 → Base 10</h3>
+<p><strong>Méthode : somme des puissances de 2</strong></p>
+<p>Chaque bit à 1 contribue $2^k$ selon sa position $k$ (comptée de droite à gauche depuis 0).</p>
+<div class="highlight"><pre><span></span><code>   1   0   1   0   1   0
+   ↑   ↑   ↑   ↑   ↑   ↑
+   2⁵  2⁴  2³  2²  2¹  2⁰
+= 32 + 0 + 8 + 0 + 2 + 0 = 42
+</code></pre></div>
+<p><strong>En Python :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">int</span><span class="p">(</span><span class="s1">&#39;101010&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>     <span class="c1"># 42  — fonction native (2e argument = base source)</span>
+<span class="nb">int</span><span class="p">(</span><span class="s1">&#39;0b101010&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>   <span class="c1"># 42  — fonctionne aussi avec le préfixe</span>
+
+<span class="c1"># Manuellement :</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">binaire_vers_decimal</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convertit une chaîne de caractères composée de 0 et de 1 en le décimal correspondant&quot;&quot;&quot;</span>
+    <span class="n">resultat</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">resultat</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">pos</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">resultat</span>
+</code></pre></div>
+<details class="rem">
+<summary>autre méthode</summary>
+<p>Une autre façon de procéder :
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">binaire_vers_decimal</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convertit une liste de 0 et de 1 en le décimal correspondant&quot;&quot;&quot;</span>
+    <span class="n">decimal</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+        <span class="n">decimal</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">decimal</span> <span class="o">+</span> <span class="n">b</span>
+    <span class="k">return</span> <span class="n">decimal</span>
+</code></pre></div></p>
+<p>Cet algorithme (dû à <a href="https://fr.wikipedia.org/wiki/M%C3%A9thode_de_Ruffini-Horner">Horner</a>), parcourt la donnée d'entrée <em>de gauche à droite</em>, sans nécessiter de puissances de 2 « compliquées » (façon <code>2**(n-1-pos)</code>).
+Pour mieux percevoir son fonctionnement, il suffit d'afficher à chaque tour de la boucle la représentation binaire du decimal en cours de détermination.
+La multiplication par 2 du décimal courant revient à <em>décaler sa représentation binaire d’un cran vers la gauche</em>.
+Ainsi, à chaque étape, cet algorithme décale vers la gauche « l'écriture » en cours, et lui adjoint à droite le nouveau bit.</p>
+<p><strong>Exemple sur <code>[1, 1, 1, 0, 1, 0]</code> :</strong>
+<div class="highlight"><pre><span></span><code>0b0             # decimal = 0
+0b1             # x2 ➟ 0b0       puis  +1  ➟  0b1      et decimal = 1
+0b11            # x2 ➟ 0b10      puis  +1  ➟  0b11     et decimal = 3
+0b111           # x2 ➟ 0b110     puis  +1  ➟  0b111    et decimal = 7
+0b1110          # x2 ➟ 0b1110    puis  +0  ➟  0b1110   et decimal = 14
+0b11101         # x2 ➟ 0b11100   puis  +1  ➟  0b11101  et decimal = 29
+0b111010        # x2 ➟ 0b111010  puis  +0  ➟  0b111010 et decimal = 58
+</code></pre></div></p>
+<p>On a bien $111010_b = 58_d$.</p>
+</details>
+<h3>Conversions impliquant l'hexadécimal</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">hex</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>          <span class="c1"># &#39;0x2a&#39;   — entier → hexadécimal</span>
+<span class="nb">int</span><span class="p">(</span><span class="s1">&#39;2a&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>    <span class="c1"># 42       — hexadécimal → entier</span>
+</code></pre></div>
+<p><strong>Astuce pour les conversions binaire ↔ hexadécimal :</strong> chaque chiffre hexadécimal correspond exactement à un groupe de 4 bits (aussi appelé <em>quartet</em> en français).
+La conversion est facile et quasiment sans calcul ! Par exemple : 101010 → 0010 1010 → 2 A → 2A.
+Naturellement, cela fonctionne dans l'autre sens...</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Hexadécimal</th>
+<th style="text-align: center;">Décimal</th>
+<th style="text-align: center;">Binaire</th>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">Hexadécimal</th>
+<th style="text-align: center;">Décimal</th>
+<th style="text-align: center;">Binaire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0</td>
+<td style="text-align: center;">0000</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">1000</td>
+</tr>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">0001</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">9</td>
+<td style="text-align: center;">1001</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">0010</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">A</td>
+<td style="text-align: center;">10</td>
+<td style="text-align: center;">1010</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0011</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">B</td>
+<td style="text-align: center;">11</td>
+<td style="text-align: center;">1011</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">0100</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">C</td>
+<td style="text-align: center;">12</td>
+<td style="text-align: center;">1100</td>
+</tr>
+<tr>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">5</td>
+<td style="text-align: center;">0101</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">D</td>
+<td style="text-align: center;">13</td>
+<td style="text-align: center;">1101</td>
+</tr>
+<tr>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0110</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">E</td>
+<td style="text-align: center;">14</td>
+<td style="text-align: center;">1110</td>
+</tr>
+<tr>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">0111</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;">F</td>
+<td style="text-align: center;">15</td>
+<td style="text-align: center;">1111</td>
+</tr>
+</tbody>
+</table>
+<h2>Codage des entiers relatifs</h2>
+<h3>Le problème</h3>
+<p>Comment représenter les nombres négatifs avec seulement des 0 et des 1 ?</p>
+<h3>Signe et valeur absolue</h3>
+<p>Le bit de poids fort indique le signe (0 → le nombre est positif, 1 → il est négatif), les autres bits donnent
+la <a href="https://fr.wikipedia.org/wiki/Valeur_absolue">valeur absolue</a>.</p>
+<p><strong>Problèmes :</strong></p>
+<ul>
+<li>il existe alors deux représentations de zéro (+0 et −0), c'est gênant.</li>
+<li>l'addition ne fonctionne pas directement. En effet, sur 4 bits :
+    $1_d = 0001_b$ ; $-1_d = 1001_b$ ; et $0001_b + 1001_b = 1010_b = -2_d$ !</li>
+</ul>
+<p>C'est pourquoi cette approche historique est très peu utilisée, en pratique.</p>
+<h3>Complément à 2</h3>
+<p>Le <a href="https://fr.wikipedia.org/wiki/Compl%C3%A9ment_%C3%A0_deux">complément à 2</a> est la méthode utilisée par tous les processeurs modernes.</p>
+<h4>Principe sur $n$ bits</h4>
+<ul>
+<li>Les entiers positifs (de $0$ à $2^{n-1}-1$) sont représentés normalement.</li>
+<li>Pour un entier négatif $-x$, on code $2^n - x$.</li>
+<li>Conséquence : le bit de poids fort est 1 si et seulement si le nombre est négatif.</li>
+</ul>
+<h4>Méthode pratique pour obtenir le complément à 2 de $-x$</h4>
+<ol>
+<li>Écrire $x$ en binaire sur $n$ bits.</li>
+<li>Inverser tous les bits (complément à 1 : les 1 deviennent des 0 et les 0 sont changés en 1).</li>
+<li>Ajouter 1.</li>
+</ol>
+<details class="ex">
+<summary>coder $-42_d$ (sur 8 bits)</summary>
+<ul>
+<li>$42_d$ s'écrit en binaire sur 8 bits : $00101010_b$.</li>
+<li>Inversion des bits : $11010101_b$</li>
+<li>Ajout de 1 : $11010110_b$ ← représentation de $-42$.</li>
+</ul>
+<p><strong>Vérification :</strong> $42 + (-42) = 00101010 + 11010110 = 100000000$.
+<em>En ne gardant que les 8 bits de poids faible :</em> on obtient $00000000 = 0$ (on « oublie » le bit le plus à gauche). ✅</p>
+</details>
+<details class="rem">
+<summary>complément à 1</summary>
+<p>On nomme ainsi la technique consistant à changer les 0 en 1 et les 1 en 0, car lorsqu'on additionne le nombre initial à celui résultant de cette transformation, on obtient un nombre composé <em>uniquement</em> de 1.</p>
+</details>
+<h4>Plage de valeurs sur $n$ bits</h4>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Plage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Non signé ($n$ bits)</td>
+<td>$0$ à $2^n - 1$</td>
+</tr>
+<tr>
+<td>Signé complément à 2 ($n$ bits)</td>
+<td>$-2^{n-1}$ à $2^{n-1} - 1$</td>
+</tr>
+</tbody>
+</table>
+<p><em>« Signé »</em> signifie (nombre) <em>« ayant un signe »</em> 😉.</p>
+<p><strong>Concrètement, sur 8 bits :</strong></p>
+<ul>
+<li>Pour un entier non signé, on peut coder les valeurs allant de $0$ à $255$.</li>
+<li>Pour un entier signé (pouvant être négatif), les valeurs iront de $-128$ à $127$.</li>
+</ul>
+<details class="rem">
+<summary>et en Python ?</summary>
+<p>Python gère nativement les entiers de taille <em>arbitraire</em> (pas de dépassement : il n'oublie jamais, volontairement ou non, le bit de poids fort).
+En pratique, pour simuler le comportement sur $n$ bits :</p>
+<div class="highlight"><pre><span></span><code><span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">42</span>
+<span class="n">complement_a_2</span> <span class="o">=</span> <span class="n">x</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">)</span>   <span class="c1"># 214 — représentation non signée de -42 sur 8 bits</span>
+<span class="nb">bin</span><span class="p">(</span><span class="n">complement_a_2</span><span class="p">)</span>           <span class="c1"># &#39;0b11010110&#39;</span>
+</code></pre></div>
+</details>
+<details class="rem">
+<summary>pour la culture : petit-boutisme et gros-boutisme</summary>
+<p>Quand un entier occupe plusieurs octets en mémoire, deux conventions existent pour
+ordonner ces octets :</p>
+<ul>
+<li>
+<p><strong>Gros-boutisme</strong> (<em>big-endian</em>) : l'octet de poids fort est stocké en premier
+  (adresse mémoire la plus basse). Utilisé par les protocoles réseau (TCP/IP).</p>
+</li>
+<li>
+<p><strong>Petit-boutisme</strong> (<em>little-endian</em>) : l'octet de poids faible est stocké en premier.
+  Utilisé par les processeurs x86/x64 (Intel, AMD) et ARM en configuration par défaut.</p>
+</li>
+</ul>
+<p><strong>Exemple :</strong> considérons le nombre codé en hexadécimal par <code>0x1234</code> (sur 2 octets).</p>
+<ul>
+<li>En contexte gros-boutiste, il sera écrit / stocké par : <code>12 34</code>.</li>
+<li>En contexte petit-boutiste, il sera mémorisé par : <code>34 12</code>.</li>
+</ul>
+<p>Cela n'a aucune incidence sur la programmation Python (qui fait abstraction de cela), mais c'est
+crucial lors d'échanges de données binaires entre machines d'architectures différentes.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">byteorder</span>                               <span class="c1"># &#39;little&#39; sur x86/x64</span>
+<span class="p">(</span><span class="mh">0x1234</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;big&#39;</span><span class="p">)</span>       <span class="c1"># b&#39;\x12\x34&#39;</span>
+<span class="p">(</span><span class="mh">0x1234</span><span class="p">)</span><span class="o">.</span><span class="n">to_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">byteorder</span><span class="o">=</span><span class="s1">&#39;little&#39;</span><span class="p">)</span>    <span class="c1"># b&#39;\x34\x12&#39;</span>
+</code></pre></div>
+</details>
+<h2>Codages complémentaires</h2>
+<h3>Hexadécimal</h3>
+<p>L'hexadécimal n'est pas un codage à proprement parler : c'est une <strong>notation compacte</strong>
+du binaire. 4 bits → 1 chiffre hexadécimal. Elle est très utilisée pour afficher des adresses
+mémoire, des couleurs web (<code>#FF5733</code>), des hachages cryptographiques, etc.</p>
+<h3>BCD (<em>Binary-Coded Decimal</em>)</h3>
+<details class="rem">
+<summary>pour la culture</summary>
+<p>Le BCD code chaque chiffre décimal séparément sur 4 bits.</p>
+<p><strong>Exemple :</strong> $42$ en BCD → $0100\ 0010$ (4 codé <code>0100</code>, 2 codé <code>0010</code>).</p>
+<p><strong>Avantage :</strong> conversion décimal ↔ BCD triviale, sans calcul. Utilisé dans les
+calculatrices, les afficheurs 7 segments, les systèmes embarqués traitant des montants
+financiers (évite les erreurs d'arrondi).</p>
+<p><strong>Inconvénient :</strong> moins compact que le binaire pur (6 combinaisons sur 16 sont
+inutilisées par quartet).</p>
+</details>
+<h2>Représentation approchée des réels : les flottants</h2>
+<p>Les nombres réels ne peuvent pas tous être représentés exactement en binaire — la plupart
+ne sont qu'<strong>approximés</strong>. Python (comme la quasi-totalité des langages) utilise la norme
+<strong>IEEE 754</strong> sur 64 bits (<em>double précision</em>).</p>
+<p><strong>Conséquences pratiques :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span>                       <span class="c1"># 0.30000000000000004  — pas 0.3 !</span>
+<span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">==</span> <span class="mf">0.3</span>                <span class="c1"># False ← ne JAMAIS tester l&#39;égalité de deux flottants</span>
+
+<span class="c1"># À faire à la place :</span>
+<span class="nb">abs</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-9</span>     <span class="c1"># True — comparer avec une tolérance de 10⁻⁹</span>
+</code></pre></div>
+<p><strong>Pourquoi ?</strong> poser la division $1/10$ en base 2 est une opération qui se poursuit à l'infini, exactement comme la division $1/3$ ne se termine jamais en décimal.
+Seule une approximation tient en mémoire.</p>
+<p><strong>Quelques valeurs exactement représentables :</strong> $0,5$ (soit $2^{-1}$), $0,25$ (ou $2^{-2}$), $0,125$, etc. — toutes les puissances <em>négatives</em> de 2.
+Naturellement, des nombres dont la partie décimale est composée d'une somme de puissances <em>négatives</em> de $2$ sont parfaitement représentables en binaire.</p>
+<h2>Représentation du texte</h2>
+<h3>Bref historique</h3>
+<table>
+<thead>
+<tr>
+<th>Norme</th>
+<th>Date</th>
+<th>Taille</th>
+<th>Caractères</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://fr.wikipedia.org/wiki/American_Standard_Code_for_Information_Interchange">ASCII</a></td>
+<td>1963</td>
+<td>7 bits</td>
+<td>128 (lettres latines, chiffres, ponctuation)</td>
+</tr>
+<tr>
+<td><a href="https://fr.wikipedia.org/wiki/ISO/CEI_8859-1">ISO-8859-1</a> (<em>Latin-1</em>)</td>
+<td>1987</td>
+<td>8 bits</td>
+<td>256 (ASCII + caractères ouest-européens)</td>
+</tr>
+<tr>
+<td><a href="https://fr.wikipedia.org/wiki/Unicode">Unicode</a></td>
+<td>1991</td>
+<td>variable</td>
+<td>&gt;140 000 caractères (tous les systèmes d'écriture)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Le problème d'ASCII :</strong> pas d'accents, pas de caractères non latins. Chaque région
+du monde a créé sa propre extension (ISO-8859-x, Windows-125x…), incompatibles entre elles.
+Unicode résout définitivement ce problème.</p>
+<h3>Unicode : points de code et encodages</h3>
+<p><strong>Unicode</strong> définit un <strong>point de code</strong> (<em>code point</em>) pour chaque caractère :
+un entier unique, noté <code>U+XXXX</code> en hexadécimal.</p>
+<p><strong>Exemples :</strong></p>
+<table>
+<thead>
+<tr>
+<th>Caractère</th>
+<th>Point de code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A</code></td>
+<td>U+0041</td>
+<td>Lettre latine majuscule A</td>
+</tr>
+<tr>
+<td><code>é</code></td>
+<td>U+00E9</td>
+<td>Lettre e accent aigu</td>
+</tr>
+<tr>
+<td><code>€</code></td>
+<td>U+20AC</td>
+<td>Signe euro</td>
+</tr>
+<tr>
+<td><code>😀</code></td>
+<td>U+1F600</td>
+<td>Visage souriant</td>
+</tr>
+</tbody>
+</table>
+<p>Un point de code n'est <strong>pas</strong> encore un codage : il faut choisir comment stocker cet
+entier en mémoire. C'est le rôle des <strong>encodages</strong>.</p>
+<h3>Encodages UTF-8 et UTF-32</h3>
+<p><strong>UTF-32 :</strong> chaque caractère est stocké sur exactement <strong>4 octets</strong>. Simple, mais
+coûteux en espace (un texte en anglais utilise 4× plus de mémoire qu'en ASCII).</p>
+<p><strong>UTF-8 :</strong> encodage à <strong>longueur variable</strong> (1 à 4 octets selon le caractère).
+Rétrocompatible avec ASCII (les 128 premiers caractères tiennent sur 1 octet).
+C'est l'encodage dominant sur le web (&gt;98% des pages en 2024).</p>
+<p><strong>Exemple : l'émoji 😀 (U+1F600)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Encodage</th>
+<th>Représentation hexadécimale</th>
+<th>Taille</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UTF-32</td>
+<td><code>00 01 F6 00</code></td>
+<td>4 octets</td>
+</tr>
+<tr>
+<td>UTF-8</td>
+<td><code>F0 9F 98 80</code></td>
+<td>4 octets</td>
+</tr>
+<tr>
+<td>UTF-16</td>
+<td><code>D8 3D DE 00</code> <em>(paire surrogate)</em></td>
+<td>4 octets</td>
+</tr>
+</tbody>
+</table>
+<p>Pour cet émoji, les trois encodages coïncident en taille — car U+1F600 est hors du
+Plan Multilingue de Base. En revanche, pour <code>A</code> (U+0041) :</p>
+<table>
+<thead>
+<tr>
+<th>Encodage</th>
+<th>Représentation</th>
+<th>Taille</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UTF-32</td>
+<td><code>00 00 00 41</code></td>
+<td>4 octets</td>
+</tr>
+<tr>
+<td>UTF-8</td>
+<td><code>41</code></td>
+<td><strong>1 octet</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>En Python :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">emoji</span> <span class="o">=</span> <span class="s1">&#39;😀&#39;</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">emoji</span><span class="p">))</span>              <span class="c1"># 128512  — point de code (décimal)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">hex</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">emoji</span><span class="p">)))</span>         <span class="c1"># 0x1f600 — point de code (hexa)</span>
+
+<span class="n">emoji</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>          <span class="c1"># b&#39;\xf0\x9f\x98\x80&#39;  — 4 octets</span>
+<span class="n">emoji</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-32-be&#39;</span><span class="p">)</span>      <span class="c1"># b&#39;\x00\x01\xf6\x00&#39;  — 4 octets</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="n">emoji</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>     <span class="c1"># 4</span>
+<span class="nb">len</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>       <span class="c1"># 1</span>
+<span class="nb">len</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-32-be&#39;</span><span class="p">))</span>   <span class="c1"># 4</span>
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">En pratique</p>
+<p>En Python 3, les chaînes de caractères (<code>str</code>) sont nativement en Unicode.
+L'encodage n'entre en jeu que lors de la lecture/écriture de fichiers ou de
+communications réseau.</p>
+<p>Il est prudent de chercher à déterminer l'encodage d'un fichier avant de l'ouvrir (en lecture comme en écriture).
+Il faut alors préciser cet encodage à l'ouverture d'un fichier, par exemple :</p>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;fichier.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">contenu</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</code></pre></div>
+</div>
+
+    <script>
+// ── Numérotation automatique des titres du document ──────────────────
+function numeroterTitres() {
+    var compteurs = {h2: 0, h3: 0, h4: 0};
+    var titres = document.querySelectorAll('h2, h3, h4');
+    for (var i = 0; i < titres.length; i++) {
+        var titre = titres[i];
+        var niveau = titre.tagName.toLowerCase();
+        if (!titre.textContent.match(/^\d+\./)) {
+            if (niveau === 'h2') {
+                compteurs.h2++; compteurs.h3 = 0; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '. ' + titre.textContent;
+            } else if (niveau === 'h3') {
+                compteurs.h3++; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '. ' + titre.textContent;
+            } else if (niveau === 'h4') {
+                compteurs.h4++;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '.' + compteurs.h4 + '. ' + titre.textContent;
+            }
+        }
+    }
+}
+
+
+// ── Génère un slug à partir d'un texte ───────────────────────────────
+function slugifier(texte) {
+  return texte
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // supprime accents
+    .replace(/[^a-z0-9\s-]/g, "")                    // supprime ponctuation
+    .trim()
+    .replace(/\s+/g, "-");                            // espaces → tirets
+}
+
+
+// ── Fabrique des ancres convenables pour les titres du document ──────
+// À appeler au DOMContentLoaded, AVANT numeroterTitres() !
+function assignerAncres() {
+  const titres = document.querySelectorAll('h2, h3, h4');
+  titres.forEach((t) => {
+    if (!t.id) {
+      t.id = slugifier(t.textContent.trim());
+    }
+  });
+}
+
+
+// ── Thème clair / sombre ─────────────────────────────────────────────
+function basculerTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+
+// ── Cycle des polices (pour dyslexie ; double-clic : reset) ──────────
+let policeCourante = localStorage.getItem('police') || '0';
+let dernierClicPolice = 0;
+
+function basculerPolice() {
+    // Double-clic reset
+    const maintenant = Date.now();
+    if (maintenant - dernierClicPolice < 400) {
+        document.body.classList.remove('police-1', 'police-2', 'police-3');
+        localStorage.setItem('police', '0');
+        policeCourante = '0';
+        return;
+    }
+    dernierClicPolice = maintenant;
+
+    // Cycle 3 polices : 0→1→2→3→0
+    const nouvellePolice = (parseInt(policeCourante) + 1) % 4;
+
+    // Nettoyer classes précédentes
+    document.body.classList.remove('police-1', 'police-2', 'police-3');
+
+    if (nouvellePolice === 0) {
+        // Retour normal
+        localStorage.setItem('police', '0');
+    } else {
+        document.body.classList.add('police-' + nouvellePolice);
+        localStorage.setItem('police', nouvellePolice.toString());
+    }
+
+    policeCourante = nouvellePolice.toString();
+}
+
+
+// ── Fabrique un sommaire automatique pour le document HTML ───────────
+// Nécessite que les ancres aient été préalablement calculées
+function construireSommaire() {
+  const panneau = document.getElementById('toc-overlay');
+  if (panneau.dataset.built) return;
+  const titres = document.querySelectorAll('h2, h3, h4');
+  if (titres.length === 0) {
+    panneau.innerHTML = '<p style="padding:0.5em 1em;color:#888;">Aucun titre trouvé.</p>';
+    panneau.dataset.built = '1';
+    return;
+  }
+  titres.forEach((t) => {
+    const cls = 'toc-' + t.tagName.toLowerCase();
+    const texte = t.textContent.trim();
+    // html += `<a href="#${t.id}" class="${cls}" onclick='fermerSommaire()'>${texte}</a>`;
+    const a = document.createElement('a');
+    a.href = '#' + t.id;
+    a.className = cls;
+    a.textContent = texte;
+    a.addEventListener('click', fermerSommaire);
+    panneau.appendChild(a);
+  });
+  panneau.dataset.built = '1';
+}
+
+function basculerSommaire() {
+    construireSommaire();
+    document.getElementById('toc-overlay').classList.toggle('open');
+}
+
+function fermerSommaire() {
+    document.getElementById('toc-overlay').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+    const controles = document.getElementById('controls');
+    const sommaire = document.getElementById('toc-overlay');
+    if (!controles.contains(e.target) && !sommaire.contains(e.target)) fermerSommaire();
+});
+
+
+// ── Mode pagination par bloc (viewport-height scroll) ────────────────
+// Gestion des touches pour block-scroll à l'appui sur barre d'espacement, page up & down
+document.addEventListener('keydown', (e) => {
+    // Pas dans les champs de saisie !
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    } else if (e.key === 'PageUp') {
+        e.preventDefault();
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    }
+});
+
+
+// ── Impression : ouvrir les <details> avant, puis revenir à leur état
+// Prépare le DOM avant impression
+window.addEventListener('beforeprint', function () {
+    window._impressionEnCours = true;          // ← flag AVANT d'ouvrir les details
+
+    // 1. Ouvrir tous les <details> (admonitions dépliables)
+    //    et mémoriser leur état pour restauration après impression
+    document.querySelectorAll('details').forEach(function (d) {
+        d._etaitOuvert = d.open;
+        d.open = true;
+    });
+
+    // 2. Injecter le titre de chaque onglet juste avant son bloc
+    //    (les labels et blocs sont dans le même ordre : label[i] ↔ block[i])
+    document.querySelectorAll('.tabbed-set').forEach(function (set) {
+        const labels = Array.from(set.querySelectorAll('.tabbed-labels > label'));
+        const blocks = Array.from(set.querySelectorAll('.tabbed-content > .tabbed-block'));
+        labels.forEach(function (label, i) {
+            if (blocks[i]) {
+                const titre = document.createElement('div');
+                titre.className = 'tabbed-print-label';
+                titre.textContent = label.textContent;
+                titre.setAttribute('data-print-injected', '1'); // marqueur de nettoyage
+                blocks[i].prepend(titre);
+            }
+        });
+    });
+});
+
+window.addEventListener('afterprint', function () {
+    window._impressionEnCours = false;         // ← reset du flag
+
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+// Restauration du DOM après impression (retour à l'état avant impression
+window.addEventListener('afterprint', function () {
+
+    // 1. Restaurer l'état d'ouverture initial des <details>
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+
+    // 2. Supprimer les titres d'onglets injectés
+    //    (le marqueur data-print-injected évite tout risque de suppression parasite)
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+
+// ── Bouton copier sur les blocs de code ──────────────────────────────
+function ajouterBoutonsCopier() {
+    document.querySelectorAll('.highlight').forEach(bloc => {
+        // Conteneur relatif pour positionner le bouton
+        bloc.style.position = 'relative';
+
+        const btn = document.createElement('button');
+        btn.textContent = '📋';
+        btn.title = 'Copier le code';
+        btn.style.cssText = `
+            position: absolute;
+            top: 0.4em;
+            right: 0.4em;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0.2em 0.4em;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        `;
+
+        // Afficher au survol du bloc
+        bloc.addEventListener('mouseenter', () => btn.style.opacity = '1');
+        bloc.addEventListener('mouseleave', () => btn.style.opacity = '0');
+
+        btn.addEventListener('click', () => {
+            const cellCode = bloc.querySelector('td.code pre') || bloc.querySelector('pre');
+            const code = cellCode.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✅';
+                setTimeout(() => btn.textContent = '📋', 1500);
+            });
+        });
+
+        bloc.appendChild(btn);
+    });
+}
+
+
+// ── Barre de progression de lecture ──────────────────────────────────
+function majBarreProgression() {
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (docHeight <= 0) return;
+  document.body.style.setProperty('--progress', window.scrollY / docHeight);
+}
+
+window.addEventListener('scroll', majBarreProgression, { passive: true });
+window.addEventListener('resize', majBarreProgression, { passive: true });
+document.addEventListener('DOMContentLoaded', majBarreProgression);
+
+
+// ── Positionnement des notes de bas de page / infobulles ─────────────
+// Il s'agit d'éviter qu'elles soient coupées lorsqu'utilisées dans un bloc
+function positionnerInfobulles() {
+    document.querySelectorAll('.infobulle-note').forEach(note => {
+        const bulle = note.querySelector('.infobulle-contenu');
+
+        note.addEventListener('mouseenter', () => {
+            bulle.style.display = 'block';
+            const rect = note.getBoundingClientRect();
+            const bw   = bulle.offsetWidth;
+            const bh   = bulle.offsetHeight;
+
+            // Position par défaut : centré au-dessus du sup
+            let left = rect.left + rect.width / 2 - bw / 2;
+            let top  = rect.top - bh - 6;
+
+            // Correction débordement droit
+            if (left + bw > window.innerWidth - 8)
+                left = window.innerWidth - bw - 8;
+            // Correction débordement gauche
+            if (left < 8) left = 8;
+            // Si ça dépasse en haut → afficher en dessous
+            if (top < 8) top = rect.bottom + 6;
+
+            bulle.style.left = left + 'px';
+            bulle.style.top  = top  + 'px';
+        });
+
+        note.addEventListener('mouseleave', () => {
+            bulle.style.display = 'none';
+        });
+    });
+}
+
+
+// ── Auto target="_blank" pour liens externes ─────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])')
+        .forEach(link => {
+            if (!link.target) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        });
+});
+
+
+// ── Initialisation complète du document HTML ─────────────────────────
+function initialiser() {
+    assignerAncres();
+    numeroterTitres();
+    positionnerInfobulles();
+
+    // Thème
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // ← Police restaurée au chargement
+    const police = localStorage.getItem('police') || '0';
+    if (parseInt(police) > 0) {
+        document.body.classList.add('police-' + police);
+    }
+    
+    // Bouton copier-coller
+    ajouterBoutonsCopier();   // ← ajouter cette ligne
+    
+    // Pour scroll souris dans le sommaire
+    document.getElementById('toc-overlay').addEventListener(
+        'wheel', function(e) { e.stopPropagation(); }, { passive: true });
+}
+
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+
+    </script>
+</body>
+</html>

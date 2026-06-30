@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python : fiche de synthèse</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <style>
+/* ── Google Font accessibilité ───────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&family=Atkinson+Hyperlegible:wght@400;700&family=Andika:wght@400;700&display=swap');
+
+/* ── Base ────────────────────────────────────────────────────────── */
+body {
+    font-family: Cantarell, Roboto, Ubuntu, sans-serif;
+    line-height: 1.6;
+    color: #2d3748;
+    transition: background-color 0.3s, color 0.3s;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+}
+
+/* ── Pour barre de défilement ────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 3px;
+  background: #6b46c1;
+  transform-origin: left;
+  transform: scaleX(var(--progress, 0));
+  z-index: 2000;
+}
+
+/* ── Cycle polices dyslexie ──────────────────────────────── */
+body.police-1 { font-family: 'Andika', sans-serif !important; }
+body.police-2 { font-family: 'Atkinson Hyperlegible', sans-serif !important; }
+body.police-3 { font-family: 'Ubuntu', sans-serif !important; }
+body.police-1, body.police-2, body.police-3 {
+    letter-spacing: 0.05em !important;
+    word-spacing: 0.1em !important;
+    line-height: 1.8 !important;
+}
+
+/* ── H1 ──────────────────────────────────────────────────── */
+body h1 {
+    color: #6b46c1;
+    border: 0.15em solid #6b46c1;
+    border-radius: 0.5em;
+    padding: 0.5em 0.5em 0.5em 1em;
+    background: none;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* ── H2 / H3 / H4 : dégradé via ::after, pas de boîte ───── */
+body h2, body h3, body h4 {
+    position: relative;
+    z-index: 0;
+    background: none;
+    border-radius: 0;
+    padding: 0.15em 0 0.15em 0.2em;
+}
+
+body h2 { font-size: 1.75rem; color: #2d3748; margin-top: 1.5em; }
+body h3 { font-size: 1.4rem;  color: #2d3748; margin-top: 1.2em; }
+body h4 { font-size: 1.2rem;  color: #2d3748; margin-top: 0.9em; }
+
+/* Premier titre : pas d'espace parasite en haut de page */
+body > :is(h2, h3, h4):first-child { margin-top: 0.5em; }
+
+body h2 em, body h2 i {
+    font-style: italic !important;
+    font-weight: 600 !important;
+    font-synthesis: none;
+    font-family: Georgia, 'Times New Roman', serif !important;
+}
+
+/* Dégradé vertical via ::after (texte jamais affecté) */
+body h2::after, body h3::after, body h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 4px 4px 0 0;
+}
+
+body h2::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(262, 52%, 65%, 0.28) 0%,
+        hsla(262, 52%, 65%, 0.10) 33%,
+        transparent 100%
+    );
+    border-bottom: 4px solid hsla(262, 52%, 65%, 0.55);
+}
+
+body h3::after {
+    height: 100%;
+    background: linear-gradient(
+        to top,
+        hsla(35, 95%, 58%, 0.22) 0%,
+        transparent 33%
+    );
+    border-bottom: 3px solid hsla(35, 95%, 58%, 0.45);
+}
+
+body h4::after {
+    height: 0;
+    border-bottom: 2px solid hsla(100, 56%, 55%, 0.40);
+}
+
+    /* Listes */
+    body ul, body ol {
+        margin: 1rem 0;
+        padding-left: 2rem;
+    }
+
+    body li {
+        margin: 0.5rem 0;
+    }
+
+    /* Code inline */
+    body code {
+        background-color: #edf2f7;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+        font-family: ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', 'Segoe UI Mono', Consolas, 'Liberation Mono', Menlo, 'Courier New', monospace;
+        font-size: 0.9em;
+        color: #c7254e;
+    }
+
+    /* Annuler padding pour code dans pre (évite espace initial) */
+    body pre code,
+    body .highlight pre code {
+        padding: 0;
+        background: none;
+    }
+
+    /* Blocs de code */
+    body .highlight {
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0
+        overflow-x: auto;
+        margin: 1rem 0;
+        /* Forcer le scrollbar visible sur WebKit (Chrome/Safari) */
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .highlight pre {
+        margin: 0;
+        background: none;
+        padding: 1rem;
+        overflow-x: auto;  /* ← ajouter aussi ici par sécurité */
+        white-space: pre;  /* ← garantir le non-wrap */
+    }
+
+    /* Masquer les spans vides de Pygments qui créent un espace initial */
+    body .highlight pre span:empty {
+        display: none !important;
+    }
+    body.dark-mode .highlight pre span:empty {
+        display: none !important;
+    }
+
+    /* Tableaux */
+    body table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 1rem 0;
+        background-color: white;
+    }
+
+    body th, body td {
+        border: 1px solid #e2e8f0;
+        padding: 0.75rem;
+        text-align: left;
+    }
+
+    body th {
+        background-color: #9f7aea;
+        color: white;
+        font-weight: 600;
+    }
+
+    body tr:nth-child(even) {
+        background-color: #f7fafc;
+    }
+
+
+
+/* ── Texte à lignes numérotées (pour littéraires) ────────────────── */
+.texte-numerote,
+.texte-numerote * {
+    text-align: left !important;
+}
+
+.texte-numerote {
+    margin: 1.2em 0;
+    font-family: Andika, sans-serif;
+    font-size: 1em;
+}
+
+.texte-lignes {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.texte-ligne {
+    display: flex;
+    flex-direction: row;           /* ← row, pas row-reverse */
+    align-items: baseline;
+    padding: 0;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.texte-ligne::before {
+    content: attr(data-num);
+    min-width: 2.5em;
+    text-align: right;
+    padding-right: 0.6em;
+    margin-right: 0.8em;
+    border-right: 1px solid #d0dae6;
+    color: #999;
+    font-size: 0.82em;
+    font-family: ui-monospace, monospace;
+    flex-shrink: 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+body.dark-mode .texte-ligne::before {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+
+
+
+
+.highlight [data-linenos]::before {
+    content: attr(data-linenos);
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+
+
+
+    /* ── Bloc contrôles haut-droite ───────────────────────────── */
+    #controls {
+        position: fixed;
+        top: 0.8rem;
+        display: flex;
+        font-size: clamp(0.6rem, 1.5vw, 1rem); /* ajuster la taille des boutons selon le zoom */
+        flex-direction: row;
+        align-items: center;
+        gap: 0.2em;
+        background: var(--ctrl-bg, #ccc);
+        border: 1px solid var(--ctrl-border, #ccc);
+        border-radius: 2em;
+        padding: 0.2em 0.5em;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        box-sizing: border-box;
+        overflow: visible;
+        width: auto;
+        max-width: none;
+        /* Positionner les boutons à droite dans le bloc de texte */
+        /* right: max(0.8rem, calc(50% - 450px + 0.8rem)); */
+        /* right: 0.8rem; */
+        right: max(0.8rem, calc(50vw - 450px - 7.5rem));
+    }
+
+    #controls button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2em;
+        width: 1.8em;
+        height: 1.8em;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        border-radius: 50%;
+        transition: background 0.15s;
+        flex-shrink: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+
+    #controls button:hover {
+        background: var(--ctrl-hover, rgba(0,0,0,0.08));
+    }
+
+    /* Tooltip natif amélioré : on s'appuie sur [title] + pseudo CSS */
+    #controls button[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        top: 2.8em;
+        right: 0;
+        background: var(--tooltip-bg, #333);
+        color: var(--tooltip-fg, #fff);
+        font-size: 0.75rem;
+        font-family: sans-serif;
+        white-space: nowrap;
+        padding: 0.3em 0.6em;
+        border-radius: 4px;
+        pointer-events: none;
+        z-index: 1100;
+    }
+
+    #controls {
+        position: fixed; /* redéclaré pour que ::after soit relatif au bouton */
+    }
+
+    #controls button {
+        position: relative;
+    }
+
+    /* ── Overlay sommaire ─────────────────────────────────────── */
+    #toc-overlay {
+        display: none;
+        position: fixed;
+        top: 3.8rem;
+        right: 1rem;
+        width: clamp(200px, 25vw, 340px);
+        max-height: 70vh;
+        overflow-y: auto;
+        background: var(--toc-bg, #fafafa);
+        border: 1px solid var(--toc-border, #ddd);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        z-index: 999;
+        padding: 0.6em 0;
+        font-size: 0.9rem;
+    }
+    #toc-overlay.open {
+        display: block;
+    }
+    #toc-overlay a {
+        display: block;
+        padding: 0.3em 1em;
+        color: var(--toc-link, #1a1a1a);
+        text-decoration: none;
+        border-left: 3px solid transparent;
+        transition: background 0.12s, border-color 0.12s;
+    }
+    #toc-overlay a:hover {
+        background: var(--toc-hover, #e8f0fe);
+        border-left-color: #448aff;
+    }
+    #toc-overlay a.toc-h2 {
+        font-weight: bold;
+        padding-left: 1em;
+    }
+    #toc-overlay a.toc-h3 {
+        padding-left: 2em;
+        font-weight: normal;
+        color: var(--toc-link-h3, #444);
+    }
+    #toc-overlay a.toc-h4 {
+        padding-left: 3em;
+        font-weight: normal;
+        font-size: 0.85em;
+        color: var(--toc-link-h4, #666);
+    }
+
+    /* ── Variables thème clair ────────────────────────────────── */
+    :root {
+        --ctrl-bg:       #ccc;
+        --ctrl-border:   #eee;
+        --ctrl-hover:    rgba(0,0,0,0.08);
+        --tooltip-bg:    #ccc;
+        --tooltip-fg:    #fff;
+        --toc-bg:        #fafafa;
+        --toc-border:    #ddd;
+        --toc-link:      #1a1a1a;
+        --toc-link-h3:   #444;
+        --toc-link-h4:   #666;
+        --toc-hover:     #e8f0fe;
+    }
+    
+/* ── Liens lisibles (thème clair) ────────────────────────────────── */
+body a               { color: #0066cc; }
+body a:hover         { color: #004499; text-decoration: underline; }
+body a:visited       { color: #6b46c1; }
+
+/* ── Liens lisibles (thème sombre) ───────────────────────────────── */
+body.dark-mode a         { color: #90cdf4; }
+body.dark-mode a:hover   { color: #63b3ed; }
+body.dark-mode a:visited { color: #d6bcfa; }
+
+/* ── Variables thème sombre ──────────────────────────────────────── */
+body.dark-mode {
+    background-color: #1a202c;
+    color: #e2e8f0;
+    --ctrl-bg:       #888;
+    --ctrl-border:   #ddd;
+    --ctrl-hover:    rgba(255,255,255,0.4);
+    --tooltip-bg:    #eee;
+    --tooltip-fg:    #111;
+    --toc-bg:        #1e1e1e;
+    --toc-border:    #444;
+    --toc-link:      #ddd;
+    --toc-link-h3:   #aaa;
+    --toc-link-h4:   #888;
+    --toc-hover:     #1a2a3a;
+}
+
+    /* dark-mode h1 : voir section dark-mode titres */
+
+    /* ── Dark-mode H1 ────────────────────────────────────────────── */
+    body.dark-mode h1  { color: #b794f4; border-color: #b794f4; }
+    body.dark-mode h2  { color: #e2e8f0; }
+    body.dark-mode h3  { color: #e2e8f0; }
+    body.dark-mode h4  { color: #e2e8f0; }
+
+    /* ── Dark-mode ::after dégradés ──────────────────────────────── */
+    body.dark-mode h2::after {
+        background: linear-gradient(
+            to top,
+            hsla(262, 70%, 75%, 0.35) 0%,
+            hsla(262, 70%, 75%, 0.12) 33%,
+            transparent 100%
+        );
+        border-bottom: 4px solid hsla(262, 70%, 75%, 0.60);
+    }
+    body.dark-mode h3::after {
+        background: linear-gradient(
+            to top,
+            hsla(35, 90%, 68%, 0.28) 0%,
+            transparent 33%
+        );
+        border-bottom: 3px solid hsla(35, 90%, 68%, 0.50);
+    }
+    body.dark-mode h4::after {
+        border-bottom: 2px solid hsla(100, 56%, 65%, 0.45);
+    }
+
+    body.dark-mode code {
+        background-color: #2d3748;
+        color: #fc8181;
+    }
+    
+    body.dark-mode a:visited {
+        color: #d6bcfa !important;
+    }
+
+    body.dark-mode table {
+        background-color: #2d3748;
+    }
+
+    body.dark-mode th {
+        background-color: #6b46c1;
+    }
+
+    body.dark-mode tr:nth-child(even) {
+        background-color: #374151;
+    }
+
+    body.dark-mode td {
+        border-color: #4a5568;
+    }
+    
+    body.dark-mode .admonition,
+    body.dark-mode details {
+        background: #2d3748;
+        color: #e2e8f0;
+    }
+    
+    body.dark-mode .admonition a,
+    body.dark-mode details a {
+        color: #90cdf4;
+    }
+    
+    body.dark-mode .admonition a:hover,
+    body.dark-mode details a:hover {
+        color: #63b3ed;
+    }
+
+    body.dark-mode .admonition a:visited,
+    body.dark-mode details a:visited {
+        color: #d6bcfa !important;
+    }
+
+
+    /* ── Coloration syntaxique mode clair — thème "vs" (Visual Studio) */
+    /* Fond légèrement bleuté ajouté pour délimiter visuellement le bloc */
+    td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+    td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+    .highlight .hll { background-color: #ffffcc }
+    .highlight  { background: #f0f4f8; }
+    .highlight .c  { color: #008000 }                      /* Comment */
+    .highlight .err { border: 1px solid #F00 }             /* Error */
+    .highlight .k  { color: #0000FF; font-weight: bold }   /* Keyword */
+    .highlight .ch { color: #008000 }                      /* Comment.Hashbang */
+    .highlight .cm { color: #008000 }                      /* Comment.Multiline */
+    .highlight .cp { color: #0000FF }                      /* Comment.Preproc */
+    .highlight .cpf { color: #008000 }                     /* Comment.PreprocFile */
+    .highlight .c1 { color: #008000 }                      /* Comment.Single */
+    .highlight .cs { color: #008000 }                      /* Comment.Special */
+    .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    .highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+    .highlight .gh { font-weight: bold }                   /* Generic.Heading */
+    .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    .highlight .gu { color: #800080; font-weight: bold }   /* Generic.Subheading */
+    .highlight .kc { color: #0000FF; font-weight: bold }   /* Keyword.Constant */
+    .highlight .kd { color: #0000FF; font-weight: bold }   /* Keyword.Declaration */
+    .highlight .kn { color: #0000FF; font-weight: bold }   /* Keyword.Namespace */
+    .highlight .kp { color: #0000FF }                      /* Keyword.Pseudo */
+    .highlight .kr { color: #0000FF; font-weight: bold }   /* Keyword.Reserved */
+    .highlight .kt { color: #2B91AF }                      /* Keyword.Type */
+    .highlight .s  { color: #A31515 }                      /* Literal.String */
+    .highlight .na { color: #FF0000 }                      /* Name.Attribute */
+    .highlight .nb { color: #00F }                         /* Name.Builtin */
+    .highlight .nc { color: #2B91AF }                      /* Name.Class */
+    .highlight .no { color: #2B91AF }                      /* Name.Constant */
+    .highlight .nd { color: #2B91AF }                      /* Name.Decorator */
+    .highlight .nf { color: #000000 }                      /* Name.Function */
+    .highlight .nt { color: #800000 }                      /* Name.Tag */
+    .highlight .nv { color: #000000 }                      /* Name.Variable */
+    .highlight .ow { color: #0000FF; font-weight: bold }   /* Operator.Word */
+    .highlight .sa { color: #A31515 }                      /* Literal.String.Affix */
+    .highlight .sb { color: #A31515 }                      /* Literal.String.Backtick */
+    .highlight .sc { color: #A31515 }                      /* Literal.String.Char */
+    .highlight .dl { color: #A31515 }                      /* Literal.String.Delimiter */
+    .highlight .sd { color: #A31515 }                      /* Literal.String.Doc */
+    .highlight .s2 { color: #A31515 }                      /* Literal.String.Double */
+    .highlight .se { color: #A31515 }                      /* Literal.String.Escape */
+    .highlight .sh { color: #A31515 }                      /* Literal.String.Heredoc */
+    .highlight .si { color: #A31515 }                      /* Literal.String.Interpol */
+    .highlight .sx { color: #A31515 }                      /* Literal.String.Other */
+    .highlight .sr { color: #A31515 }                      /* Literal.String.Regex */
+    .highlight .s1 { color: #A31515 }                      /* Literal.String.Single */
+    .highlight .ss { color: #A31515 }                      /* Literal.String.Symbol */
+    .highlight .vc { color: #000000 }                      /* Name.Variable.Class */
+    .highlight .vg { color: #000000 }                      /* Name.Variable.Global */
+    .highlight .vi { color: #000000 }                      /* Name.Variable.Instance */
+    .highlight .il { color: #098658 }                      /* Literal.Number.Integer.Long */
+    .highlight .m  { color: #098658 }                      /* Literal.Number */
+    .highlight .mb { color: #098658 }                      /* Literal.Number.Bin */
+    .highlight .mf { color: #098658 }                      /* Literal.Number.Float */
+    .highlight .mh { color: #098658 }                      /* Literal.Number.Hex */
+    .highlight .mi { color: #098658 }                      /* Literal.Number.Integer */
+    .highlight .mo { color: #098658 }                      /* Literal.Number.Oct */
+
+    /* ── Coloration syntaxique mode sombre — thème "one-dark" ────── */
+    body.dark-mode .highlight { background: #282C34; color: #ABB2BF; }
+    body.dark-mode .highlight .hll { background-color: #3E4451; }
+    body.dark-mode .highlight .c  { color: #7F848E; font-style: italic } /* Comment */
+    body.dark-mode .highlight .err { color: #E06C75 }                    /* Error */
+    body.dark-mode .highlight .esc { color: #ABB2BF }                    /* Escape */
+    body.dark-mode .highlight .k  { color: #C678DD }                     /* Keyword */
+    body.dark-mode .highlight .l  { color: #ABB2BF }                     /* Literal */
+    body.dark-mode .highlight .n  { color: #E06C75 }                     /* Name */
+    body.dark-mode .highlight .o  { color: #56B6C2 }                     /* Operator */
+    body.dark-mode .highlight .p  { color: #ABB2BF }                     /* Punctuation */
+    body.dark-mode .highlight .ch { color: #7F848E; font-style: italic } /* Comment.Hashbang */
+    body.dark-mode .highlight .cm { color: #7F848E; font-style: italic } /* Comment.Multiline */
+    body.dark-mode .highlight .cp { color: #7F848E; font-style: italic } /* Comment.Preproc */
+    body.dark-mode .highlight .cpf { color: #7F848E; font-style: italic }/* Comment.PreprocFile */
+    body.dark-mode .highlight .c1 { color: #7F848E; font-style: italic } /* Comment.Single */
+    body.dark-mode .highlight .cs { color: #7F848E; font-style: italic } /* Comment.Special */
+    body.dark-mode .highlight .ge { font-style: italic }                  /* Generic.Emph */
+    body.dark-mode .highlight .gs { font-weight: bold }                   /* Generic.Strong */
+    body.dark-mode .highlight .kc { color: #C678DD }                     /* Keyword.Constant */
+    body.dark-mode .highlight .kd { color: #C678DD }                     /* Keyword.Declaration */
+    body.dark-mode .highlight .kn { color: #C678DD }                     /* Keyword.Namespace */
+    body.dark-mode .highlight .kp { color: #C678DD }                     /* Keyword.Pseudo */
+    body.dark-mode .highlight .kr { color: #C678DD }                     /* Keyword.Reserved */
+    body.dark-mode .highlight .kt { color: #E5C07B }                     /* Keyword.Type */
+    body.dark-mode .highlight .ld { color: #98C379 }                     /* Literal.Date */
+    body.dark-mode .highlight .m  { color: #D19A66 }                     /* Literal.Number */
+    body.dark-mode .highlight .s  { color: #98C379 }                     /* Literal.String */
+    body.dark-mode .highlight .na { color: #E06C75 }                     /* Name.Attribute */
+    body.dark-mode .highlight .nb { color: #61AFEF }                     /* Name.Builtin */
+    body.dark-mode .highlight .nc { color: #E5C07B }                     /* Name.Class */
+    body.dark-mode .highlight .no { color: #E06C75 }                     /* Name.Constant */
+    body.dark-mode .highlight .nd { color: #61AFEF }                     /* Name.Decorator */
+    body.dark-mode .highlight .ni { color: #ABB2BF }                     /* Name.Entity */
+    body.dark-mode .highlight .ne { color: #E06C75 }                     /* Name.Exception */
+    body.dark-mode .highlight .nf { color: #61AFEF }                     /* Name.Function */
+    body.dark-mode .highlight .nl { color: #E06C75 }                     /* Name.Label */
+    body.dark-mode .highlight .nn { color: #E5C07B }                     /* Name.Namespace */
+    body.dark-mode .highlight .nt { color: #E06C75 }                     /* Name.Tag */
+    body.dark-mode .highlight .nv { color: #E06C75 }                     /* Name.Variable */
+    body.dark-mode .highlight .ow { color: #56B6C2 }                     /* Operator.Word */
+    body.dark-mode .highlight .sa { color: #98C379 }                     /* Literal.String.Affix */
+    body.dark-mode .highlight .sb { color: #98C379 }                     /* Literal.String.Backtick */
+    body.dark-mode .highlight .sc { color: #98C379 }                     /* Literal.String.Char */
+    body.dark-mode .highlight .dl { color: #98C379 }                     /* Literal.String.Delimiter */
+    body.dark-mode .highlight .sd { color: #7F848E; font-style: italic } /* Literal.String.Doc */
+    body.dark-mode .highlight .s2 { color: #98C379 }                     /* Literal.String.Double */
+    body.dark-mode .highlight .se { color: #56B6C2 }                     /* Literal.String.Escape */
+    body.dark-mode .highlight .sh { color: #98C379 }                     /* Literal.String.Heredoc */
+    body.dark-mode .highlight .si { color: #D19A66 }                     /* Literal.String.Interpol */
+    body.dark-mode .highlight .sx { color: #98C379 }                     /* Literal.String.Other */
+    body.dark-mode .highlight .sr { color: #56B6C2 }                     /* Literal.String.Regex */
+    body.dark-mode .highlight .s1 { color: #98C379 }                     /* Literal.String.Single */
+    body.dark-mode .highlight .ss { color: #98C379 }                     /* Literal.String.Symbol */
+    body.dark-mode .highlight .mb { color: #D19A66 }                     /* Literal.Number.Bin */
+    body.dark-mode .highlight .mf { color: #D19A66 }                     /* Literal.Number.Float */
+    body.dark-mode .highlight .mh { color: #D19A66 }                     /* Literal.Number.Hex */
+    body.dark-mode .highlight .mi { color: #D19A66 }                     /* Literal.Number.Integer */
+    body.dark-mode .highlight .mo { color: #D19A66 }                     /* Literal.Number.Oct */
+    body.dark-mode .highlight .il { color: #D19A66 }                     /* Literal.Number.Integer.Long */
+    body.dark-mode .highlight .vc { color: #E06C75 }                     /* Name.Variable.Class */
+    body.dark-mode .highlight .vg { color: #E06C75 }                     /* Name.Variable.Global */
+    body.dark-mode .highlight .vi { color: #E06C75 }                     /* Name.Variable.Instance */
+    body.dark-mode .highlight .bp { color: #61AFEF }                     /* Name.Builtin.Pseudo */
+    body.dark-mode .highlight .fm { color: #61AFEF }                     /* Name.Function.Magic */
+
+/* ── Numérotation de lignes — style inline (pymdownx.highlight défaut) */
+/* Les numéros ne se copient pas avec le code — meilleur pour les élèves */
+.highlight .linenos {
+    min-width: 2.5em;
+    padding-right: 0.8em;
+    text-align: right;
+    color: #999;
+    user-select: none;
+    -webkit-user-select: none;
+    border-right: 1px solid #d0dae6;
+    margin-right: 0.5em;
+    display: inline-block;
+    font-size: 0.85em;
+}
+body.dark-mode .highlight .linenos {
+    color: #4a5568;
+    border-right-color: #4a5568;
+}
+
+    
+    /* ── ONGLETS — pymdownx.tabbed (alternate_style) ────────────────── 
+       Structure : .tabbed-set > input[radio]
+                               > .tabbed-labels > label
+                               > .tabbed-content > .tabbed-block */
+    .tabbed-set {
+      margin: 1.2em 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    /* Cacher les radio buttons */
+    .tabbed-set > input { display: none; }
+
+    /* Barre d'onglets */
+    .tabbed-labels {
+      display: flex;
+      flex-wrap: wrap;
+      background: #f7fafc;
+      border-bottom: 1px solid #e2e8f0;
+      margin: 0;
+      padding: 0;
+    }
+
+    .tabbed-labels > label {
+      display: inline-block;
+      padding: 0.5em 1.2em;
+      cursor: pointer;
+      font-size: 0.92em;
+      font-weight: 600;
+      color: #4a5568;
+      border-right: 1px solid #e2e8f0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      margin: 0;
+      user-select: none;
+    }
+
+    .tabbed-labels > label:hover {
+      color: #6b46c1;
+      background: #ede9fe;
+    }
+
+    /* Contenu : tous les blocs cachés par défaut */
+    .tabbed-content { padding: 0; }
+
+    .tabbed-block {
+      display: none;
+      padding: 1em 1.2em;
+    }
+
+    /* Afficher le bon bloc selon l'onglet actif */
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #6b46c1;
+      border-bottom: 2px solid #6b46c1;
+      background: white;
+    }
+
+    .tabbed-set > input:nth-child(1):checked ~ .tabbed-content > .tabbed-block:nth-child(1),
+    .tabbed-set > input:nth-child(2):checked ~ .tabbed-content > .tabbed-block:nth-child(2),
+    .tabbed-set > input:nth-child(3):checked ~ .tabbed-content > .tabbed-block:nth-child(3),
+    .tabbed-set > input:nth-child(4):checked ~ .tabbed-content > .tabbed-block:nth-child(4),
+    .tabbed-set > input:nth-child(5):checked ~ .tabbed-content > .tabbed-block:nth-child(5) {
+      display: block;
+    }
+
+    /* ---- Dark mode ---- */
+    body.dark-mode .tabbed-set { border-color: #4a5568; }
+
+    body.dark-mode .tabbed-labels {
+      background: #2d3748;
+      border-bottom-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label {
+      color: #a0aec0;
+      border-right-color: #4a5568;
+    }
+
+    body.dark-mode .tabbed-labels > label:hover {
+      color: #b794f4;
+      background: #3d2d5e;
+    }
+
+    body.dark-mode .tabbed-set > input:nth-child(1):checked ~ .tabbed-labels > label:nth-child(1),
+    body.dark-mode .tabbed-set > input:nth-child(2):checked ~ .tabbed-labels > label:nth-child(2),
+    body.dark-mode .tabbed-set > input:nth-child(3):checked ~ .tabbed-labels > label:nth-child(3),
+    body.dark-mode .tabbed-set > input:nth-child(4):checked ~ .tabbed-labels > label:nth-child(4),
+    body.dark-mode .tabbed-set > input:nth-child(5):checked ~ .tabbed-labels > label:nth-child(5) {
+      color: #b794f4;
+      border-bottom-color: #b794f4;
+      background: #1a202c;
+    }
+
+    body.dark-mode .tabbed-block { background: #1a202c; }
+
+
+    /* ── CSS bouton "copier" des blocs de code sur écrans tactiles ─ */
+    @media (hover: none) {
+      .highlight button[title="Copier le code"] {
+        opacity: 0.5 !important;
+      }
+    }
+    
+    /* ── Indicateur de progression CSS pur ───────────────────────── */
+    @keyframes grow-progress {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── Figures GeoGebra ────────────────────────────────────────── */
+    .ggb-container {
+      margin: 1.5rem auto;
+      max-width: 100%;
+      overflow-x: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    body.dark-mode .ggb-container {
+      border-color: #4a5568;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* ── Notes "de bas de page" -> infobulles ────────────────────── */
+    .infobulle-note {
+        position: relative;
+        cursor: help;
+    }
+    .infobulle-note sup {
+        color: #6b46c1;
+        font-weight: bold;
+    }
+    .infobulle-contenu {    /* Il faut éviter qu'elles soient coupées dans
+        un bloc, donc plus de bottom/left/transform : ce sera géré en JS */
+        display: none;
+        position: fixed;   /* ← Et plus d'absolute non plus */
+        background: #2d3748;
+        color: #e2e8f0;
+        font-size: 0.82em;
+        line-height: 1.5;
+        padding: 0.5em 0.8em;
+        border-radius: 6px;
+        width: max-content;
+        max-width: 28em;
+        white-space: normal;
+        z-index: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        pointer-events: none;
+    }
+    /* Cacher les footnotes en affichage écran, afficher en impression */
+    .footnote-impression { display: none; }
+    
+    /* ── Gestion des légendes / titres d'images ──────────────────── */
+    figure {
+        margin: 1.5em auto;
+        text-align: center;
+    }
+    figure img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+    figcaption {
+        font-size: 0.85em;
+        color: #718096;
+        font-style: oblique 8deg;
+        margin-top: 0.4em;
+    }
+    body.dark-mode figcaption {
+        color: #a0aec0;
+    }
+
+
+    /* ── CSS pour impression sur feuille A4 ──────────────────────── */
+    @media print {
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+
+        /* Pour les textes à lignes numérotées */
+        .texte-ligne::after { color: #666; }
+
+        /* Gestion des légendes */
+        figcaption {
+            color: #444 !important;
+            font-size: 0.8em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 4px 8px;
+        }
+
+        body {
+            background-color: white !important;
+            color: black !important;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            padding-top: 0.5cm !important;  /* tentative pour impression PDF */
+            padding-bottom: 0.5cm !important;
+        }
+
+        #controls {
+            display: none !important;
+        }
+
+        /* Définitions et propriétés : encadrées, sans couleur */
+        .admonition.def, details.def,
+        .admonition.prop, details.prop {
+            border: 1.5px solid #000 !important;
+            background: white !important;
+            border-left-width: 1.5px !important;
+        }
+        .admonition.def > .admonition-title,
+        details.def > summary,
+        .admonition.prop > .admonition-title,
+        details.prop > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+            border-bottom: 1px solid #000;
+        }
+        /* Toutes admonitions : fond blanc à l'impression */
+        .admonition, details {
+            background: white !important;
+            border-color: #888 !important;
+        }
+        .admonition-title, details > summary {
+            background: #f0f0f0 !important;
+            color: black !important;
+        }
+        /* Exemples et remarques : forcer l'affichage déplié */
+        details.ex, details.rem {
+            display: block !important;
+        }
+        details.ex > summary,
+        details.rem > summary {
+            display: block !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            page-break-after: avoid;
+            page-break-inside: avoid;
+            background: none !important;
+            color: black !important;
+            border-color: black !important;
+        }
+
+        /* ── Traits sous les titres à l'impression ───────────────── */
+        /* Modifié le 18/02/2026 par intégration aux règles principales
+        h2::after { border-bottom-width: 4px !important; }
+        h3::after { border-bottom-width: 3px !important; }
+        h4::after { border-bottom-width: 2px !important; } */
+
+        pre, blockquote, table {
+            page-break-inside: avoid;
+        }
+
+        img {
+            max-width: 100%;
+            page-break-inside: avoid;
+        }
+
+        * {
+            box-shadow: none !important;
+            text-shadow: none !important;
+        }
+
+        /* APRÈS */
+        .highlight, pre {
+            background-color: #f5f5f5 !important;
+            color: black !important;
+            border: 1px solid #ccc !important;
+        }
+
+        /* Code inline : fond léger, sans bordure */
+        code {
+            background-color: #f0f0f0 !important;
+            color: black !important;
+            border: none !important;
+            padding: 0.1em 0.2em !important;
+        }
+
+        /* Annuler le fond pour code dans pre (évite double fond) */
+        pre code {
+            background: none !important;
+            border: none !important;
+            padding: 0 !important;
+        }
+
+        table, th, td {
+            border-color: black !important;
+        }
+
+        th {
+            background-color: #ddd !important;
+            color: black !important;
+        }
+
+        a {
+            color: #000 !important;
+            text-decoration: underline !important;
+        }
+
+        a[href^="http"]:after {
+            content: none !important;
+            font-size: 0.8em;
+        }
+        
+        /* Onglets à l'impression */
+        .tabbed-set { border: 1px solid #aaa !important; }
+        .tabbed-labels { display: flex !important; background: #eee !important; border-bottom: 1px solid #aaa !important; }
+        .tabbed-labels > label { display: inline-block !important; padding: 0.3em 0.8em !important; font-weight: bold !important; color: black !important; border-right: 1px solid #aaa !important; font-size: 0.85em !important; }
+        .tabbed-block { display: block !important; border-top: 1px dashed #ccc !important; padding: 0.5em 0.8em !important; }
+
+        .tabbed-print-label {
+            font-weight: bold;
+            font-size: 0.85em;
+            color: #444;
+            background: #eee;
+            padding: 0.2em 0.6em;
+            margin-bottom: 0.4em;
+            border-left: 3px solid #aaa;
+        }
+        
+        .tabbed-labels { display: none !important; }
+        .tabbed-set { border: none !important; }
+        
+        /* Notes de bas de page à la fin */
+        .infobulle-contenu  { display: none !important; }
+        .footnote-impression {
+            display: block !important;
+            border-top: 1px solid #000;
+            margin-top: 2em;
+            font-size: 0.85em;
+        }
+    }
+
+    /* ── Admonitions (!!! et ???) ─────────────────────────────────── */
+    .admonition, details {
+        margin: 1.2em 0;
+        /* padding: 0 0 0.6em; */
+        padding: 0 0 0.6em;
+        border-left: 4px solid #999;
+        border-radius: 4px;
+        background: #f8f8f8;
+        /* overflow: hidden; */
+    }
+    .admonition-title, details > summary {
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        padding: 0.45em 0.8em;
+        background: #e0e0e0;
+        cursor: pointer;
+        list-style: none;
+        user-select: none;
+    }
+    details > summary { justify-content: space-between; }
+    details > summary::-webkit-details-marker { display: none; }
+
+    /* Flèche droite / bas selon état */
+    details > summary::after {
+        content: '▶';
+        font-size: 0.75em;
+        transition: transform 0.2s;
+        margin-left: auto;
+        padding-left: 0.8em;
+        flex-shrink: 0;
+    }
+    details[open] > summary::after {
+        content: '▼';
+    }
+
+    /* Corps du contenu */
+    .admonition > *:not(.admonition-title),
+    details > *:not(summary) {
+        margin: 0.5em 0.9em;
+    }
+    
+    /* Annuler l'espace entre bandeau et premier contenu */
+    .admonition > .admonition-title + * {
+        margin-top: 0;
+    }
+
+    details > summary + * {
+        margin-top: 0 !important;
+    }
+
+    /* ── Icônes par type ──────────────────────────────────────────── */
+    .admonition-title::before,
+    details > summary .admonition-icon {
+        font-style: normal;
+    }
+
+    /* note */
+    .admonition.note, details.note {
+        border-color: #448aff;
+    }
+    .admonition.note > .admonition-title,
+    details.note > summary {
+        background: #e3ecff;
+        color: #1a4ab5;
+    }
+    .admonition.note > .admonition-title::before,
+    details.note > summary::before {
+        content: '📝';
+    }
+
+    /* abstract / summary / tldr */
+    .admonition.abstract, details.abstract,
+    .admonition.summary,  details.summary,
+    .admonition.tldr,     details.tldr {
+        border-color: #00b0ff;
+    }
+    .admonition.abstract > .admonition-title,
+    details.abstract > summary,
+    .admonition.summary > .admonition-title,
+    details.summary > summary,
+    .admonition.tldr > .admonition-title,
+    details.tldr > summary {
+        background: #e1f5fe;
+        color: #0060a0;
+    }
+    .admonition.abstract > .admonition-title::before,
+    details.abstract > summary::before,
+    .admonition.summary > .admonition-title::before,
+    details.summary > summary::before,
+    .admonition.tldr > .admonition-title::before,
+    details.tldr > summary::before {
+        content: '📋';
+    }
+
+    /* info */
+    .admonition.info, details.info {
+        border-color: #26c6da;
+    }
+    .admonition.info > .admonition-title,
+    details.info > summary {
+        background: #e0f7fa;
+        color: #006270;
+    }
+    .admonition.info > .admonition-title::before,
+    details.info > summary::before {
+        content: 'ℹ️';
+    }
+
+    /* tip / hint / important */
+    .admonition.tip,       details.tip,
+    .admonition.hint,      details.hint,
+    .admonition.important, details.important {
+        border-color: #00bfa5;
+    }
+    .admonition.tip > .admonition-title,
+    details.tip > summary,
+    .admonition.hint > .admonition-title,
+    details.hint > summary,
+    .admonition.important > .admonition-title,
+    details.important > summary {
+        background: #e0f7f4;
+        color: #007a6a;
+    }
+    .admonition.tip > .admonition-title::before,
+    details.tip > summary::before,
+    .admonition.hint > .admonition-title::before,
+    details.hint > summary::before,
+    .admonition.important > .admonition-title::before,
+    details.important > summary::before {
+        content: '💡';
+    }
+
+    /* success / check / done */
+    .admonition.success, details.success,
+    .admonition.check,   details.check,
+    .admonition.done,    details.done {
+        border-color: #4caf50;
+    }
+    .admonition.success > .admonition-title,
+    details.success > summary,
+    .admonition.check > .admonition-title,
+    details.check > summary,
+    .admonition.done > .admonition-title,
+    details.done > summary {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    .admonition.success > .admonition-title::before,
+    details.success > summary::before,
+    .admonition.check > .admonition-title::before,
+    details.check > summary::before,
+    .admonition.done > .admonition-title::before,
+    details.done > summary::before {
+        content: '✅';
+    }
+
+    /* question / help / faq */
+    .admonition.question, details.question,
+    .admonition.help,     details.help,
+    .admonition.faq,      details.faq {
+        border-color: #64dd17;
+    }
+    .admonition.question > .admonition-title,
+    details.question > summary,
+    .admonition.help > .admonition-title,
+    details.help > summary,
+    .admonition.faq > .admonition-title,
+    details.faq > summary {
+        background: #f1f8e9;
+        color: #387002;
+    }
+    .admonition.question > .admonition-title::before,
+    details.question > summary::before,
+    .admonition.help > .admonition-title::before,
+    details.help > summary::before,
+    .admonition.faq > .admonition-title::before,
+    details.faq > summary::before {
+        content: '❓';
+    }
+
+    /* warning / caution / attention */
+    .admonition.warning,   details.warning,
+    .admonition.caution,   details.caution,
+    .admonition.attention, details.attention {
+        border-color: #ff9100;
+    }
+    .admonition.warning > .admonition-title,
+    details.warning > summary,
+    .admonition.caution > .admonition-title,
+    details.caution > summary,
+    .admonition.attention > .admonition-title,
+    details.attention > summary {
+        background: #fff3e0;
+        color: #b35e00;
+    }
+    .admonition.warning > .admonition-title::before,
+    details.warning > summary::before,
+    .admonition.caution > .admonition-title::before,
+    details.caution > summary::before,
+    .admonition.attention > .admonition-title::before,
+    details.attention > summary::before {
+        content: '⚠️';
+    }
+
+    /* failure / fail / missing */
+    .admonition.failure, details.failure,
+    .admonition.fail,    details.fail,
+    .admonition.missing, details.missing {
+        border-color: #ff5252;
+    }
+    .admonition.failure > .admonition-title,
+    details.failure > summary,
+    .admonition.fail > .admonition-title,
+    details.fail > summary,
+    .admonition.missing > .admonition-title,
+    details.missing > summary {
+        background: #fde8e8;
+        color: #b00020;
+    }
+    .admonition.failure > .admonition-title::before,
+    details.failure > summary::before,
+    .admonition.fail > .admonition-title::before,
+    details.fail > summary::before,
+    .admonition.missing > .admonition-title::before,
+    details.missing > summary::before {
+        content: '❌';
+    }
+
+    /* danger / error */
+    .admonition.danger, details.danger,
+    .admonition.error,  details.error {
+        border-color: #e53935;
+    }
+    .admonition.danger > .admonition-title,
+    details.danger > summary,
+    .admonition.error > .admonition-title,
+    details.error > summary {
+        background: #fde8e8;
+        color: #a00;
+    }
+    .admonition.danger > .admonition-title::before,
+    details.danger > summary::before,
+    .admonition.error > .admonition-title::before,
+    details.error > summary::before {
+        content: '🛑';
+    }
+
+    /* bug */
+    .admonition.bug, details.bug {
+        border-color: #f50057;
+    }
+    .admonition.bug > .admonition-title,
+    details.bug > summary {
+        background: #fce4ec;
+        color: #9b0039;
+    }
+    .admonition.bug > .admonition-title::before,
+    details.bug > summary::before {
+        content: '🐛';
+    }
+
+    /* example */
+    .admonition.example, details.example {
+        border-color: #7c4dff;
+    }
+    .admonition.example > .admonition-title,
+    details.example > summary {
+        background: #ede7f6;
+        color: #4a148c;
+    }
+    .admonition.example > .admonition-title::before,
+    details.example > summary::before {
+        content: '🔬';
+    }
+
+    /* quote / cite */
+    .admonition.quote, details.quote,
+    .admonition.cite,  details.cite {
+        border-color: #9e9e9e;
+    }
+    .admonition.quote > .admonition-title,
+    details.quote > summary,
+    .admonition.cite > .admonition-title,
+    details.cite > summary {
+        background: #f5f5f5;
+        color: #424242;
+    }
+    .admonition.quote > .admonition-title::before,
+    details.quote > summary::before,
+    .admonition.cite > .admonition-title::before,
+    details.cite > summary::before {
+        content: '💬';
+    }
+    
+    .admonition.quote em, .admonition.quote i, details.quote em, 
+    details.quote i {
+        font-family: Andika, sans-serif;
+        font-style: oblique 8deg;  /* inclinaison légère, non cursive */
+    }
+
+
+    /* Correction mode sombre : titres d'admonition */
+    body.dark-mode .admonition.algo > .admonition-title {
+        color: #1a202c !important;
+    }
+
+    
+    /* ── Définitions (def) ────────────────────────────────────── */
+    .admonition.def, details.def {
+        border-color: #2b6cb0;
+        background: #ebf8ff;
+    }
+    .admonition.def > .admonition-title,
+    details.def > summary {
+        background: #bee3f8;
+        color: #1a365d;
+    }
+    .admonition.def > .admonition-title::before,
+    details.def > summary::before {
+        content: '🎓';
+    }
+
+    /* ── Propriétés (prop) ────────────────────────────────────── */
+    .admonition.prop, details.prop {
+        border-color: #276749;
+        background: #f0fff4;
+    }
+    .admonition.prop > .admonition-title,
+    details.prop > summary {
+        background: #c6f6d5;
+        color: #1c4532;
+    }
+    .admonition.prop > .admonition-title::before,
+    details.prop > summary::before {
+        content: '⚙️';
+    }
+
+    /* ── Exemples (ex) : filet droit, zéro boîte ────────────── */
+    .admonition.ex, details.ex {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        margin-left: 0;
+        padding-right: 0.8em;
+        border-right: 2px solid #a0aec0;
+    }
+    .admonition.ex > .admonition-title,
+    details.ex > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .admonition.ex > .admonition-title::before,
+    details.ex > summary::before { content: '✏️ Exemple : '; }
+
+    /* ── Remarques (rem) : filet droit pointillé, zéro boîte ── */
+    .admonition.rem, details.rem {
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        position: relative;
+        padding-right: 0.8em;
+        border-right: 2px dashed #cbd5e0;
+    }
+    details.rem[open]::after { display: none; }
+    .admonition.rem > .admonition-title,
+    details.rem > summary {
+        background: transparent;
+        color: #718096;
+        font-weight: bold;
+        font-size: 0.95em;
+        padding-left: 0;
+        border-bottom: 1px dotted #e2e8f0;
+    }
+    .admonition.rem > .admonition-title::before,
+    details.rem > summary::before { content: '💭 Remarque : '; }
+
+    /* dark-mode ex + rem */
+    body.dark-mode .admonition.ex,
+    body.dark-mode details.ex       { border-right-color: #4a5568; }
+    body.dark-mode .admonition.ex > .admonition-title,
+    body.dark-mode details.ex > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+    body.dark-mode .admonition.rem,
+    body.dark-mode details.rem      { border-right-color: #4a5568; }
+    body.dark-mode .admonition.rem > .admonition-title,
+    body.dark-mode details.rem > summary { color: #a0aec0; border-bottom-color: #4a5568; }
+
+    /* ── Défi (defi) ──────────────────────────────────────────── */
+    .admonition.defi, details.defi {
+        border-color: #e53e3e;
+        background: linear-gradient(
+            135deg,
+            #fff5f5 0%,
+            #fffaf0 40%,
+            #fefcbf 100%
+        );
+    }
+    .admonition.defi > .admonition-title,
+    details.defi > summary {
+        background: linear-gradient(
+            135deg,
+            #fc8181 0%,
+            #f6ad55 50%,
+            #f6e05e 100%
+        );
+        color: #7b341e;
+        font-weight: bold;
+    }
+    .admonition.defi > .admonition-title::before,
+    details.defi > summary::before {
+        content: '💪';
+    }
+
+    /* Admonitions imbriquées */
+    .admonition .admonition,
+    details details {
+        margin: 0.8em 0.4em;
+        font-size: 0.97em;
+    }
+
+    </style>
+    <!-- MathJax pour le rendu LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [["$", "$"]],
+                displayMath: [["$$", "$$"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+    
+</head>
+<body>
+    <div id="controls">
+        <button id="btn-police" title="Police standard / Polices pour dys (double-clic pour annuler)" onclick="basculerPolice()">Aa</button>
+        <button id="theme-btn"  title="Thème clair / thème sombre"                                    onclick="basculerTheme()">🌓</button>
+        <button id="btn-toc"    title="Sommaire"                                                      onclick="basculerSommaire()">📑</button>
+    </div>
+    <div id="toc-overlay"></div>
+
+    <h1>Python : fiche de synthèse</h1>
+<h2>Règles de nommage et gestion des espacements</h2>
+<p>Python suit la convention <a href="https://fr.wikipedia.org/wiki/Snake_case"><strong>snake_case</strong></a> : mots en minuscules séparés par des caractères <em>underscores</em> (« souligné du 8 »).</p>
+<div class="highlight"><pre><span></span><code><span class="n">ma_variable</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">calculer_moyenne</span><span class="p">(</span><span class="n">liste</span><span class="p">):</span> <span class="o">...</span>
+</code></pre></div>
+<ul>
+<li>Constantes : <code>MAJUSCULES_AVEC_UNDERSCORES</code>.</li>
+<li>Classes : <code>PascalCase</code> (variante du <a href="https://fr.wikipedia.org/wiki/Camel_case"><code>CamelCase</code></a> débutant par une majuscule).</li>
+<li><strong>Éviter les noms courts</strong> sauf dans les boucles (<code>i</code>, <code>j</code>). Préférer des noms plus <em>explicites</em> (<code>for pos in range(len(lst))</code>.</li>
+</ul>
+<p>Toute portion de code associée à une <em>structure de contrôle</em> nécessite une <strong>indentation</strong> : un décalage horizontal du code de <strong>4 espaces</strong>, par convention.</p>
+<h2>Variables et types</h2>
+<h3>Généralités</h3>
+<p>Une <strong>variable</strong> est une <em>zone précise</em> de la mémoire vive de l'ordinateur (on parle <em>d'adresse mémoire</em>).
+À partir de cet emplacement, on trouvera une succession de <em>bits</em> dont l'agencement spécifique déterminera à la fois une <strong>valeur</strong> et un <strong>type</strong>. </p>
+<p>Pour retrouver facilement et de manière fiable une zone précise de la RAM, on lui associe une étiquette : un texte, nommé <strong><em>nom</em> de la variable</strong>.
+Par commodité, on assimile une variable et son nom. Dire <em>« la variable <code>var</code> vaut <code>42</code> et est de type <code>int</code> »</em> est donc un abus de langage fréquent.</p>
+<p>Une variable peut être <em>immuable</em> ou <em>mutable</em>.</p>
+<ul>
+<li>
+<p><strong>Variable immuable :</strong> la « case mémoire » ne change pas de valeur.
+    Quand on force la valeur à changer, une <em>nouvelle</em> case mémoire est utilisée, et le nom de la variable lui est associé (on perd le lien avec la case mémoire initiale).
+    Python maintient un <em>identificateur numérique</em> pour chaque objet qu'on lui déclare : on l'obtient avec la commande <code>id()</code>.
+    Il change lorsqu'on modifie la valeur d'une variable immuable.</p>
+<details class="ex">
+<summary>les <code>int</code>, <code>float</code> et <code>str</code> sont immuables</summary>
+<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="mf">12.5</span>
+<span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>       <span class="c1"># Renvoie par exemple 134256423983280</span>
+<span class="n">a</span> <span class="o">+=</span> <span class="mi">1</span>      <span class="c1"># a désigne désormais la valeur 13.5</span>
+<span class="nb">id</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>       <span class="c1"># Renvoie un autre identifiant, 134256424593712 par exemple</span>
+</code></pre></div>
+</details>
+</li>
+<li>
+<p><strong>Variable mutable :</strong> la variable désigne toujours la <em>même</em> case mémoire, mais la ou les valeurs associées peuvent changer.
+    <em>À l'exception notable du <strong><code>tuple</code></strong>,</em> les variables mutables sont souvent des « objets composés » : <code>list</code>, <code>dict</code>, objets définis par le programmeur dans un contexte de Programmation Orientée Objet (POO)...</p>
+<details class="ex">
+<summary>mutabilité et points de vigilance ⚠️</summary>
+<p>Les types <strong>mutables</strong> peuvent être modifiés après création, deux variables peuvent pointer vers le <strong>même objet</strong>.
+C'est un piège classique !</p>
+<div class="highlight"><pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>               <span class="c1"># b N&#39;est PAS une COPIE de a !</span>
+<span class="n">b</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>            <span class="c1"># [1, 2, 3, 4]  ← a est modifiée !</span>
+</code></pre></div>
+<p>Ici, <code>b</code> n'est qu'une autre étiquette qui, tout comme <code>a</code>, est « attachée » à la même zone mémoire.</p>
+<p>Les types <strong>immuables</strong> (<code>int</code>, <code>str</code>, <code>tuple</code>) ne posent pas ce problème : toute « modification » crée un nouvel objet.</p>
+</details>
+</li>
+</ul>
+<h3>Types de base</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Mutable ?</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>int</code></td>
+<td>Non</td>
+<td><code>42</code></td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>Non</td>
+<td><code>3.14</code></td>
+</tr>
+<tr>
+<td><code>str</code></td>
+<td>Non</td>
+<td><code>"Hello world !"</code></td>
+</tr>
+<tr>
+<td><code>bool</code></td>
+<td>Non</td>
+<td><code>True</code>, <code>False</code></td>
+</tr>
+<tr>
+<td><code>list</code></td>
+<td><strong>Oui</strong></td>
+<td><code>[1, 2, 3]</code></td>
+</tr>
+<tr>
+<td><code>dict</code></td>
+<td><strong>Oui</strong></td>
+<td><code>{"a": 1}</code></td>
+</tr>
+<tr>
+<td><code>tuple</code></td>
+<td>Non</td>
+<td><code>(1, 2, 3)</code></td>
+</tr>
+</tbody>
+</table>
+<details class="rem">
+<summary><em>f-string</em> ?</summary>
+<p>C'est une chaîne de caractères un peu particulière :</p>
+<ul>
+<li>elle est préfixée d'un <code>f</code> ;</li>
+<li>tout texte placé entre accolades sera remplacé par la valeur de la variable correspondante, qui <strong>doit</strong> pré-exister.</li>
+</ul>
+<p><strong>Exemple :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">var</span> <span class="o">=</span> <span class="mi">42</span>
+<span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Réponse : </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&quot;</span>    <span class="c1"># La chaîne est créée à ce moment, avec la valeur actuelle de var</span>
+<span class="n">var</span> <span class="o">=</span> <span class="mi">43</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>                  <span class="c1"># Affichera « Réponse : 42 »</span>
+</code></pre></div>
+<p>Attention, cette chaîne est <em>immuable</em>. Elle ne sera pas modifiée pour refléter les évolutions éventuelles de <code>var</code>.</p>
+</details>
+<h3>Transtypage</h3>
+<p>C'est l'action de changer la structure interne d'un objet Python pour la faire correspondre à celle d'un autre type (en anglais on parle de <em>casting</em>).
+Il faut que cela soit permis, naturellement :</p>
+<ul>
+<li>un <code>int</code> peut toujours être changé en <code>float</code> avec la fonction <code>float()</code> ;</li>
+<li>un <code>float</code> peut toujours être changé en <code>int</code> avec la fonction <code>int()</code> (une <em>troncature</em> est réalisée : la partie décimale est supprimée) ;</li>
+<li>une <code>str</code> peut être convertie en <code>list</code> ou en <code>tuple</code> : <code>list("abc")</code> donne <code>['a', 'b', 'c']</code> ;</li>
+<li>une <code>str</code> peut <em>parfois</em> être convertie en <code>int</code> ou en <code>float</code> avec les fonctions correspondantes.
+    C'est nécessaire lorsqu'on veut appliquer un traitement numérique au résultat d'une saisie utilisateur obtenue <em>via</em> la commande <code>input(...)</code>.</li>
+<li>une <code>list</code> (ou un <code>tuple</code>) peut être convertie en <code>str</code>, <em>mais <strong>PAS</strong></em> au sens d'une opération réciproque de la précédente !
+    En effet, <code>str(['a', 'b', 'c'])</code> donne <code>"['a', 'b', 'c']"</code>...</li>
+<li>on peut convertir beaucoup d'objets en booléen avec la fonction <code>bool</code>.
+    La valeur <code>False</code> sera obtenue à partir de <code>0</code> ou <code>0.0</code>, <code>()</code> (tuple vide), <code>[]</code> (liste vide), <code>{}</code> (dictionnaire vide) ou <code>None</code>.
+    Les autres valeurs seront transtypées en <code>True</code>.</li>
+</ul>
+<details class="rem">
+<summary>opération réciproque de <code>list("abc")</code> 🤔 ?</summary>
+<p>Pour recomposer <code>"abc"</code> à partir de <code>['a', 'b', 'c']</code>, il faut faire <code>"".join(['a', 'b', 'c'])</code>.</p>
+<p>Plus généralement, <code>sep.join(liste)</code> concatène les éléments d'une liste de chaînes en les séparant par <code>sep</code> :</p>
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;-&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;un&quot;</span><span class="p">,</span> <span class="s2">&quot;deux&quot;</span><span class="p">,</span> <span class="s2">&quot;trois&quot;</span><span class="p">])</span>   <span class="c1"># &quot;un-deux-trois&quot;</span>
+<span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">,</span> <span class="s2">&quot;monde&quot;</span><span class="p">])</span>      <span class="c1"># &quot;Bonjour monde&quot;</span>
+</code></pre></div>
+<p><strong>Attention !</strong> Tous les éléments de la liste doivent être des <code>str</code>, sinon une <code>TypeError</code> est levée.</p>
+</details>
+<h3>Affectations multiples</h3>
+<div class="highlight"><pre><span></span><code><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span>                 <span class="c1"># Affectation parallèle</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>               <span class="c1"># « Unpacking » depuis une liste</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span>                 <span class="c1"># Échange de valeurs (swap)</span>
+</code></pre></div>
+<details class="rem">
+<summary><em>unpacking</em> étendu</summary>
+<p><strong>Pour la culture</strong> (hors programme) : l'<em>unpacking</em> est l'action de « désempaqueter » un objet composé.
+Ainsi, lorsqu'on écrit <code>x, y = [1, 2]</code>, Python comprend qu'on souhaite affecter le 1<sup>er</sup> élément de <code>[1, 2]</code> à <code>x</code> et le 2<sup>nd</sup> à <code>y</code>.</p>
+<p>On peut aller plus loin : <code>x, *suite = [1, 2, 3, 4]</code> permet d'affecter le 1<sup>er</sup> élément de la liste à <code>x</code> et <em>l'ensemble des éléments restants</em> formera une <em>nouvelle liste</em> affectée à <code>suite</code>, grâce à la « syntaxe étoilée » <code>*suite</code>.</p>
+</details>
+<h2>Opérateurs arithmétiques</h2>
+<h3>Généralités</h3>
+<table>
+<thead>
+<tr>
+<th>Opérateur</th>
+<th>Rôle</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>+</code>, <code>-</code>, <code>*</code></td>
+<td>Addition, soustraction, multiplication</td>
+<td><code>3 * 4</code> → <code>12</code></td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>Division réelle</td>
+<td><code>7 / 2</code> → <code>3.5</code></td>
+</tr>
+<tr>
+<td><code>//</code></td>
+<td>Division entière ou euclidienne (quotient)</td>
+<td><code>7 // 2</code> → <code>3</code></td>
+</tr>
+<tr>
+<td><code>%</code></td>
+<td>Modulo (reste de la division entière)</td>
+<td><code>7 % 2</code> → <code>1</code></td>
+</tr>
+<tr>
+<td><code>**</code></td>
+<td>Puissance</td>
+<td><code>2 ** 10</code> → <code>1024</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>//</code> et <code>%</code> sont complémentaires : <code>a == (a // b) * b + (a % b)</code>.</p>
+<details class="rem">
+<summary>division euclidienne</summary>
+<p>Cette dernière relation n'est rien d'autre qu'une réécriture en Python de la définition de la <em>division euclidienne</em>, vue en mathématiques au collège :
+le dividende <code>a</code> est égal au quotient <code>a // b</code> multiplié par le diviseur <code>b</code> augmenté du reste <code>a % b</code>.</p>
+</details>
+<p>Usages classiques :</p>
+<ul>
+<li><code>n % 2 == 0</code> teste si <code>n</code> est pair ;</li>
+<li><code>n % 10</code> extrait le chiffre des unités de <code>n</code> ;</li>
+<li><code>n // 10</code> supprime le chiffre des unités de <code>n</code>.</li>
+</ul>
+<details class="rem">
+<summary><code>^</code> <strong>n</strong>'est <strong>pas</strong> la puissance !</summary>
+<p>En Python, <code>^</code> est l'opérateur <strong>XOR bit à bit</strong> (<em>bitwise exclusive or</em>), pas la puissance !
+Ce piège vient d'autres contextes (calculatrices, Excel, mathématiques en ligne) où <code>^</code> signifie effectivement « exposant ».</p>
+<p>Le XOR compare deux entiers <strong>bit par bit</strong> : chaque bit du résultat vaut <code>1</code> si les deux bits en regard sont <strong>différents</strong>, <code>0</code> s'ils sont <strong>identiques</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 2  en binaire :  0010</span>
+<span class="c1"># 10 en binaire :  1010</span>
+<span class="c1"># XOR bit à bit :  1000  → 8</span>
+<span class="mi">2</span> <span class="o">^</span> <span class="mi">10</span>      <span class="c1"># Donne 8, pas 1024 ! (XOR bit à bit de 2 et 10)</span>
+<span class="mi">2</span> <span class="o">**</span> <span class="mi">10</span>     <span class="c1"># Donne 1024 (puissance en Python)</span>
+</code></pre></div>
+<p>Le problème est <em>silencieux</em> : aucune erreur ici, Python calcule simplement autre chose que ce que l'on souhaitait le voir calculer !</p>
+</details>
+<h3>Opérateurs d'affectation composée</h3>
+<p>Ils combinent une opération arithmétique et une affectation en une seule écriture :</p>
+<div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">+=</span> <span class="mi">1</span>      <span class="c1"># équivalent à : x = x + 1</span>
+<span class="n">x</span> <span class="o">-=</span> <span class="mi">3</span>      <span class="c1"># équivalent à : x = x - 3</span>
+<span class="n">x</span> <span class="o">*=</span> <span class="mi">2</span>      <span class="c1"># équivalent à : x = x * 2</span>
+<span class="n">x</span> <span class="o">/=</span> <span class="mi">4</span>      <span class="c1"># équivalent à : x = x / 4</span>
+<span class="n">x</span> <span class="o">//=</span> <span class="mi">2</span>     <span class="c1"># équivalent à : x = x // 2</span>
+<span class="n">x</span> <span class="o">%=</span> <span class="mi">10</span>     <span class="c1"># équivalent à : x = x % 10</span>
+<span class="n">x</span> <span class="o">**=</span> <span class="mi">3</span>     <span class="c1"># équivalent à : x = x ** 3</span>
+</code></pre></div>
+<p>C'est une écriture plus concise, très courante en Python.
+Elle ne change pas le comportement : la valeur de droite est calculée d'abord, puis réaffectée à la variable de gauche.</p>
+<h2>Tests et structures conditionnelles</h2>
+<h3>Tests et opérateurs de comparaison</h3>
+<p>Un test est le résultat d'une opération de comparaison : <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, <code>&gt;=</code>, <code>is</code>, <code>is not</code>, <code>in</code>, <code>not in</code>.
+Son résultat est un <em>booléen</em> (un objet Python de classe <code>bool</code>), qui vaut <code>True</code> ou <code>False</code></p>
+<details class="ex">
+<summary></summary>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="ow">is</span> <span class="kc">True</span>
+<span class="kc">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">==</span> <span class="kc">True</span>
+<span class="kc">True</span>
+</code></pre></div>
+</details>
+<h3>Structures conditionnelles</h3>
+<p>Une structure conditionnelle est une <em>structure de contrôle</em> (elle permet d'influer sur l'ordre d'exécution des instructions).
+Elle repose sur un ou plusieurs tests pour arbitrer sur le code qui sera réellement exécuté.</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">condition</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">elif</span> <span class="n">autre_condition</span><span class="p">:</span>       <span class="c1"># autre_condition indispensable quand on utilise elif</span>
+    <span class="o">...</span>
+<span class="k">else</span><span class="p">:</span>                       <span class="c1"># PAS de condition ici (jamais après un else)</span>
+    <span class="o">...</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Piège</p>
+<p>Ne pas confondre ces deux codes !</p>
+<p><div style="text-align:center;margin:10px">
+<table style="width:99%">
+<tr>
+<td style="width:50%; vertical-align:top">
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">test</span><span class="p">():</span>
+    <span class="n">faire_ceci</span><span class="p">()</span>
+<span class="n">faire_cela</span><span class="p">()</span>
+</code></pre></div>
+</td>
+<td style="width:50%; vertical-align:top">
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">test</span><span class="p">():</span>
+    <span class="n">faire_ceci</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">faire_cela</span><span class="p">()</span>
+</code></pre></div>
+</td>
+</tr>
+<tr>
+<td>Si <code>test()</code> donne <code>True</code>, <code>faire_ceci()</code> est exécutée. La fonction <code>faire_cela()</code> sera <strong>toujours</strong> exécutée, <em>quoi qu'il arrive</em> avant !</td>
+<td>Si <code>test()</code> donne <code>True</code>, <code>faire_ceci()</code> est exécutée <strong>mais pas</strong> <code>faire_cela()</code>. La fonction <code>faire_cela()</code> sera exécutée <strong>seulement si</strong> <code>test()</code> renvoie <code>False</code> !</td>
+</tr>
+</table>
+</div></p>
+</div>
+<h3>Opérateurs logiques</h3>
+<p>Ils permettent de <em>combiner <strong>plusieurs</strong></em> tests.</p>
+<table>
+<thead>
+<tr>
+<th>Opérateur</th>
+<th>Sens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>and</code></td>
+<td>vrai si <strong>les deux</strong> conditions sont vraies</td>
+</tr>
+<tr>
+<td><code>or</code></td>
+<td>vrai si <em>au moins une</em> est vraie</td>
+</tr>
+<tr>
+<td><code>not</code></td>
+<td>inverse la condition</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>            <span class="c1"># équivalent à : if 0 &lt; x &lt; 10:</span>
+    <span class="o">...</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">est_vide</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h2>Structure linéaire 1 : la liste Python (type <code>list</code>)</h2>
+<p>La liste est une structure où chaque élément est numéroté par une position numérique : un <code>int</code> compté à partir de <code>0</code>.</p>
+<h3>Création</h3>
+<p><strong>Création directe</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>                 <span class="c1"># Création par peuplement direct</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>                        <span class="c1"># Création d&#39;une liste vide</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>                    <span class="c1"># Variante de création vide</span>
+</code></pre></div>
+<p><strong>Création par accumulation</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Création en compréhension</strong> (plus idiomatique) :</p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)]</span>
+<span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span> <span class="k">if</span> <span class="n">x</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>        <span class="c1"># Avec filtre</span>
+</code></pre></div>
+<h3>Accès et modification</h3>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                          <span class="c1"># Renvoie le premier élément</span>
+<span class="n">lst</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>                         <span class="c1"># Renvoie le dernier élément</span>
+<span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">99</span>                     <span class="c1"># Modification de la valeur en 2e position</span>
+</code></pre></div>
+<h3>Ajout et suppression</h3>
+<table>
+<thead>
+<tr>
+<th>Opération</th>
+<th>Méthode</th>
+<th>Coût</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ajout en fin</td>
+<td><code>lst.append(x)</code></td>
+<td>$\mathcal O(1)$ (à peu près)</td>
+</tr>
+<tr>
+<td>Ajout/liste en fin</td>
+<td><code>lst.extend([x, ...])</code></td>
+<td>$\mathcal O(k)$ où $k$ désigne la longueur de <code>[x, ...]</code></td>
+</tr>
+<tr>
+<td>Suppression en fin</td>
+<td><code>lst.pop()</code></td>
+<td>$\mathcal O(1)$</td>
+</tr>
+<tr>
+<td>Suppression à l'indice i</td>
+<td><code>lst.pop(i)</code></td>
+<td>$\mathcal O(n)$</td>
+</tr>
+<tr>
+<td>Suppression par valeur</td>
+<td><code>lst.remove(x)</code></td>
+<td>$\mathcal O(n)$</td>
+</tr>
+</tbody>
+</table>
+<details class="rem">
+<summary>complexité et coût</summary>
+<p>Coût et complexité sont deux notions connexes mais différentes.</p>
+<ul>
+<li>
+<p>Le coût mesure la quantité de ressources (temps, espace mémoire) pour qu'une opération s'exécute.</p>
+</li>
+<li>
+<p>La complexité vise à comprendre la façon dont évolue le coût lorsque la taille des données augmente (on parle de <em>comportement asymptotique</em>).</p>
+</li>
+</ul>
+<p>En pratique, on assimile les deux au lycée. Quant à la notion, il suffit pour le moment de retenir que $\mathcal O(...)$ signifie approximativement « de l'ordre de ... », « proportionnel à ... ». </p>
+</details>
+<h3>Autres fonctions ou méthodes utiles</h3>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>               <span class="c1"># Renverse la liste (en place, renvoie None)</span>
+<span class="n">lst</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>                  <span class="c1"># Tri croissant en place (renvoie None)</span>
+<span class="n">lst</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>      <span class="c1"># Tri décroissant en place (renvoie None)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>                    <span class="c1"># Renvoie la longueur de la liste</span>
+</code></pre></div>
+<details class="warning">
+<summary>piège <code>lst = lst.sort()</code> ⚠️</summary>
+<p><code>sort()</code> et <code>reverse()</code> modifient la liste <strong>en place</strong> et renvoient <code>None</code>.
+L'erreur classique est d'écrire :</p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span> <span class="o">=</span> <span class="n">lst</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>        <span class="c1"># lst vaut maintenant None !</span>
+</code></pre></div>
+<p>La bonne écriture est simplement :</p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>              <span class="c1"># lst est triée, et elle est toujours accessible sous ce nom</span>
+</code></pre></div>
+</details>
+<h3>Copie</h3>
+<div class="highlight"><pre><span></span><code><span class="n">copie</span> <span class="o">=</span> <span class="n">lst</span><span class="p">[:]</span>              <span class="c1"># Copie superficielle par slicing (hors programme)</span>
+<span class="n">copie</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">]</span>    <span class="c1"># Copie par compréhension (explicitement au programme)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>   <span class="c1"># Technique utile si la liste contient des objets mutables</span>
+<span class="n">copie</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>       <span class="c1"># Copie profonde (pour la culture)</span>
+</code></pre></div>
+<h3>Slicing (pour la culture)</h3>
+<p>Cette notion n'est pas explicitement au programme, mais peut être rencontrée à l'occasion.</p>
+<div class="highlight"><pre><span></span><code><span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>                    <span class="c1"># Renvoie une nouvelle liste comportant les éléments d&#39;indice 1 à 3</span>
+<span class="n">lst</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span>                    <span class="c1"># Nouvelle liste contenant 1 élément sur 2 de la liste originale </span>
+<span class="n">lst</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>                   <span class="c1"># Renverse la liste (renvoie aussi une nouvelle liste)</span>
+</code></pre></div>
+<h3>Variante : le <code>tuple</code></h3>
+<p>Le tuple est une liste <strong>immuable</strong> : on ne peut pas le modifier après création.
+Syntaxe : <code>(1, 2, 3)</code> ou <code>1, 2, 3</code>. Utilisé pour des collections fixes ou les valeurs de retour multiples.</p>
+<details class="rem">
+<summary>tuple immuable... mais pas toujours sans surprise 🤯 !</summary>
+<p>Un <code>tuple</code> est immuable : on ne peut pas <em>remplacer</em> un de ses éléments.
+Mais s'il <em>contient</em> des objets mutables (comme des listes), ceux-ci restent modifiables :</p>
+<div class="highlight"><pre><span></span><code><span class="n">t</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>            <span class="c1"># Affiche (0, [1, 2, 3])  ← le tuple n&#39;a pas changé, mais son contenu si !</span>
+</code></pre></div>
+<p>L'immuabilité du tuple garantit que ses <em>références</em> ne changent pas, pas que les objets référencés sont eux-mêmes figés.</p>
+</details>
+<h2>Structure linéaire 2 : le dictionnaire (type <code>dict</code>)</h2>
+<p>Le dictionnaire est une structure où chaque valeur est associée à une clef, un peu comme si elle était étiquetée.
+Les clefs doivent être de types <em>immuables</em>.</p>
+<h3>Création</h3>
+<div class="highlight"><pre><span></span><code><span class="n">dic</span> <span class="o">=</span> <span class="p">{}</span>                              <span class="c1"># Création d&#39;un dictionnaire vide</span>
+<span class="n">dic</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>                          <span class="c1"># Variante</span>
+<span class="n">dic</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;nom&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;âge&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">}</span>     <span class="c1"># Création d&#39;un dictionnaire déjà peuplé</span>
+</code></pre></div>
+<h3>Accès, modification, ajout, suppression, appartenance</h3>
+<div class="highlight"><pre><span></span><code><span class="n">dic</span><span class="p">[</span><span class="n">clef</span><span class="p">]</span>                   <span class="c1"># Accès à une valeur connaissant la clef (KeyError si clef absente)</span>
+<span class="n">dic</span><span class="p">[</span><span class="n">clef</span><span class="p">]</span> <span class="o">=</span> <span class="n">valeur</span>          <span class="c1"># Modification OU **ajout** d&#39;une valeur associée à une clef</span>
+<span class="k">del</span> <span class="n">dic</span><span class="p">[</span><span class="s2">&quot;nom&quot;</span><span class="p">]</span>              <span class="c1"># Suppression d&#39;un couple clef-valeur </span>
+</code></pre></div>
+<p>L'appartenance peut porter sur deux domaines : les clefs ou les valeurs.</p>
+<div class="highlight"><pre><span></span><code><span class="n">key</span> <span class="ow">in</span> <span class="n">dic</span>                  <span class="c1"># Renvoie True ou False, selon que key est ou non une clef de dic</span>
+<span class="n">val</span> <span class="ow">in</span> <span class="n">dic</span><span class="o">.</span><span class="n">values</span><span class="p">()</span>         <span class="c1"># Renvoie True ou False, selon que val est ou non une valeur de dic</span>
+</code></pre></div>
+<h3>⚠️ <code>dict.get(clef)</code> vs <code>dict[clef]</code></h3>
+<p>La méthode <code>get</code> des dictionnaires devient de plus en plus populaire, au bac...<br />
+Elle trouve son intérêt lorsqu'on veut extraire de l'information d'un dictionnaire sans être sûr au préalable que la clef existe bien.</p>
+<p>Supposons une variable <code>clef_absente</code> définie (de type immuable), et un dictionnaire <code>dic</code> qui <strong>ne</strong> contient <strong>pas</strong> cette clef.</p>
+<div class="highlight"><pre><span></span><code><span class="n">dic</span><span class="p">[</span><span class="n">clef_absente</span><span class="p">]</span>           <span class="c1"># Provoque une exception KeyError</span>
+<span class="n">dic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">clef_absente</span><span class="p">)</span>       <span class="c1"># Renvoie None pour une clef absente du dictionnaire</span>
+<span class="n">dic</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">clef_absente</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>   <span class="c1"># Renvoie 42 pour une clef absente du dictionnaire</span>
+</code></pre></div>
+<p>Il faut privilégier <code>get()</code> lorsqu'on n'est pas sûr que la clef existe.
+Le code est plus lisible que <code>if key in dic: ...</code> (mais moins explicite).</p>
+<h2>Définir une fonction</h2>
+<h3>Généralités</h3>
+<p>Une fonction est une structure de contrôle : elle influe sur l'ordre dans lequel des instructions sont exécutées.
+C'est au minimum un moyen de grouper en les nommant plusieurs instructions : cela facilite leur réemploi, et simplifie la maintenance du code (évolutions, corrections de bogues...).
+Une fonction peut (ou non) avoir des paramètres (des valeurs d'entrée) et 0, une ou plusieurs valeurs de retour (en sortie).</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">aire_rectangle</span><span class="p">(</span><span class="n">largeur</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">hauteur</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calcule et retourne l&#39;aire d&#39;un rectangle.</span>
+
+<span class="sd">    largeur : largeur en unités</span>
+<span class="sd">    hauteur : hauteur en unités</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">largeur</span> <span class="o">*</span> <span class="n">hauteur</span>
+</code></pre></div>
+<ul>
+<li>
+<p>La <strong>docstring</strong> (chaîne de documentation, entre <code>"""</code>) documente la fonction.
+    Elle est censée indiquer son action, lister ses paramètres et valeur(s) de retour (noms et types).</p>
+</li>
+<li>
+<p>Les <strong>annotations de type</strong> (<code>: float</code>, <code>-&gt; float</code>) sont indicatives, non contraignantes.
+    Elles aident à mieux percevoir la nature de « ce qui entre et ce qui sort » d'une fonction.</p>
+</li>
+</ul>
+<h3>Argument avec valeur par défaut</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">saluer</span><span class="p">(</span><span class="n">nom</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Bonjour&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">nom</span><span class="si">}</span><span class="s2"> !&quot;</span>
+</code></pre></div>
+<h3>⚠️ Piège : valeur par défaut mutable ⚠️</h3>
+<p><strong>Ne jamais</strong> utiliser un type mutable comme valeur par défaut :</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Ici, la MÊME liste est partagée entre tous les appels !</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ajouter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lst</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lst</span>
+
+<span class="n">ajouter</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>          <span class="c1"># Renvoie [1]</span>
+<span class="n">ajouter</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>          <span class="c1"># Renvoie [1, 2], pas [2] !</span>
+</code></pre></div>
+<p><strong>La bonne approche est :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ajouter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">lst</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">lst</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lst</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lst</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lst</span>
+</code></pre></div>
+<h3>Valeurs de retour</h3>
+<p>Une fonction Python peut <em>ne pas</em> comporter le mot-clef <code>return</code> : dans ce cas, elle renvoie <em>implicitement</em> <code>None</code>.</p>
+<p>Autrement, une expression ou un nom de variable doit suivre <code>return</code>. Le type de cette expression ou variable est sans importance (<code>dict</code>, <code>list</code>, <code>str</code>...).</p>
+<p><strong>Exception :</strong> un <code>return</code> seul (non suivi) signifie <code>return None</code>.
+Certains l'emploient, en dehors de la dernière ligne d'une fonction, pour marquer explicitement un point de sortie « anticipé ».</p>
+<p><strong>Plusieurs</strong> valeurs peuvent être renvoyées en écrivant <code>return a, b, c</code> (par exemple) : c'est en réalité un <code>tuple</code> qui est alors renvoyé.
+On peut alors écrire <code>x, y, z = f()</code> pour « déballer » le tuple obtenu.</p>
+<h3>Portée des variables</h3>
+<p>Une variable définie <strong>dans</strong> une fonction est <strong>locale</strong> : elle n'existe que <em>pendant l'exécution</em> de cette fonction et est <em>inaccessible</em> depuis « l'extérieur » (de cette fonction).</p>
+<p>Une variable définie <strong>hors</strong> de toute fonction est <strong>globale</strong> : elle est <em>lisible</em> depuis l'intérieur d'une fonction, mais on <strong>ne</strong> peut <strong>pas</strong> la réaffecter sans précaution.</p>
+<div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="mi">10</span>          <span class="c1"># variable globale</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>    <span class="c1"># lecture autorisée</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">g</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="mi">99</span>      <span class="c1"># crée une variable LOCALE x, ne modifie pas le x global !</span>
+</code></pre></div>
+<details class="rem">
+<summary><code>global</code></summary>
+<p>Le mot-clef <code>global</code> autorise la réaffectation d'une variable depuis une fonction, mais son usage est <strong><em>fortement</em> déconseillé</strong> !
+Il rend le code difficile à déboguer car il autorise des interactions complexes.
+Il faut absolument privilégier l'usage de paramètres et de valeurs de retour dans l'écriture de fonctions.</p>
+</details>
+<h2>Boucles</h2>
+<h3>Boucle bornée : <code>for</code></h3>
+<p>On emploie ce genre de boucle lorsqu'on peut connaître à l'avance le nombre répétitions à effectuer.</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>          <span class="c1"># i prendra successivement les valeurs 0, 1, ..., n-1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>       <span class="c1"># i prendra successivement les valeurs a, a+1, ..., b-1</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">pas</span><span class="p">):</span>  <span class="c1"># Idem mais avec un pas (écart ou saut, qui peut être négatif)</span>
+</code></pre></div>
+<h3>Boucle non bornée : <code>while</code></h3>
+<p>On emploie ce genre de boucle lorsqu'on <strong>NE</strong> peut <strong>PAS</strong> connaître à l'avance le nombre répétitions à effectuer.</p>
+<div class="highlight"><pre><span></span><code><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>   <span class="c1"># attention : &lt; et non &lt;= si on veut éviter l&#39;IndexError</span>
+    <span class="o">...</span>
+    <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>            <span class="c1"># ne pas oublier de faire avancer l&#39;indice !</span>
+</code></pre></div>
+<p>Les mêmes opérateurs logiques (<code>and</code>, <code>or</code>, <code>not</code>) permettent de combiner plusieurs conditions dans le test du <code>while</code>.</p>
+<p><strong>Instructions complémentaires :</strong></p>
+<ul>
+<li><strong><code>break</code></strong> : interrompt immédiatement la boucle.</li>
+<li><strong><code>continue</code></strong> : passe directement à l'itération suivante.</li>
+</ul>
+<h3>Parcourir une liste, un tuple ou une chaîne</h3>
+<p>La façon de parcourir ces trois types composés est identique. Elle peut se faire de 3 manières différentes.</p>
+<p><strong>Parcours par position</strong> : un indice décrit tous les numéros d'emplacements possibles (comptés à partir de <code>0</code>) :</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</code></pre></div>
+<p><strong>Parcours par valeur :</strong> on récupère séquentiellement chaque élément. Dans certains autres langages, le mot-clef spécifique <code>foreach</code> est utilisé (ce qui est plus explicite).</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">elt</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">elt</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Parcours mixte : par position ET par valeur :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lst</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+</code></pre></div>
+<p>Les mêmes formes s'appliquent aux <strong>tuples</strong> et aux <strong>chaînes</strong> (<code>str</code>).</p>
+<h3>Parcourir un dictionnaire</h3>
+<p>On retrouve les trois types de parcours précédents : parcours par clef (équivalent au parcours par position), par valeur et mixte.</p>
+<p><strong>Parcours par clef :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">clef</span> <span class="ow">in</span> <span class="n">d</span><span class="p">:</span>                  <span class="c1"># Équivalent à : for clef in d.keys()</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p><strong>Parcours par valeur :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p><strong>Parcours mixte :</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">clef</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>     <span class="c1"># S&#39;il n&#39;y en a qu&#39;un à retenir, c&#39;est lui !</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h2>Fonctions intégrées utiles</h2>
+<table>
+<thead>
+<tr>
+<th>Fonction</th>
+<th>Rôle</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>len(x)</code></td>
+<td>Longueur d'une séquence</td>
+<td><code>len([1,2,3])</code> → <code>3</code></td>
+</tr>
+<tr>
+<td><code>int(x)</code></td>
+<td>Conversion en entier</td>
+<td><code>int("42")</code> → <code>42</code></td>
+</tr>
+<tr>
+<td><code>ord(c)</code></td>
+<td>Code Unicode d'un caractère</td>
+<td><code>ord('A')</code> → <code>65</code></td>
+</tr>
+<tr>
+<td><code>chr(n)</code></td>
+<td>Caractère depuis un code Unicode</td>
+<td><code>chr(65)</code> → <code>'A'</code></td>
+</tr>
+<tr>
+<td><code>bin(n)</code></td>
+<td>Représentation binaire</td>
+<td><code>bin(10)</code> → <code>'0b1010'</code></td>
+</tr>
+<tr>
+<td><code>hex(n)</code></td>
+<td>Représentation hexadécimale</td>
+<td><code>hex(255)</code> → <code>'0xff'</code></td>
+</tr>
+</tbody>
+</table>
+<h2>Modularité et modules utiles</h2>
+<h3>Intérêt</h3>
+<p>La <strong>modularité</strong> consiste à organiser le code en fichiers (modules) réutilisables.
+Importer du code peut se faire de trois manières différentes :</p>
+<ul>
+<li><strong>simple mais souvent excessive :</strong> <code>from math import *</code>.
+    Les fonctions ou constantes ainsi importées sont utilisables nativement (exemple : <code>pi</code> ou <code>log2</code>).</li>
+<li><strong>ciblée :</strong> <code>from random import random</code> importe la fonction <code>random()</code> du module <code>random</code> (variante avec <em>alias</em> : <code>from random import randrange as rr</code>, qui permet de « raccourcir » les noms).
+    Les fonctions ou constantes ainsi importées sont utilisables nativement (exemple : <code>random</code> ou <code>rr</code>, qui sera synonyme de <code>randrange</code>).
+    Toute autre fonction <em>non spécifiquement</em> importée sera inutilisable (pas moyen d'appeler <code>randint</code>, ainsi).</li>
+<li><strong>minimaliste :</strong> <code>import math</code>. On peut alors accéder à <em>toutes</em> les fonctions du module en préfixant leurs noms par celui du module et en usant de la notation pointée
+    (exemple : <code>math.sqrt</code>). Cette approche est très utile lorsque deux modules différents définissent le même nom de fonction : tout autre forme d'import masquerait l'une des deux !</li>
+</ul>
+<h3>Créer un module Python</h3>
+<p>De façon basique, rien n'est plus simple : n'importe quel fichier Python peut être importé.
+C'est particulièrement facile lorsque les fichiers sont dans le même répertoire.
+Supposons que <code>A.py</code> et <code>B.py</code> le soient, on peut mettre dans <code>B.py</code> l'instruction <code>from A import *</code> : toute fonction (ou variable) déclarée dans <code>A.py</code> sera alors utilisable dans <code>B.py</code>.   </p>
+<h3><code>if __name__ == "__main__"</code></h3>
+<p>Cette syntaxe idiomatique de Python permet de n'exécuter du code présent dans un fichier / module <strong>que</strong> si ce fichier / module est <strong>directement exécuté</strong>.
+Ce code <strong>N</strong>'est <strong>PAS</strong> exécuté lorsque ce fichier / module est importé.
+Cette approche est généralement utilisée pour inclure du code de test dans un module.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ma_fonction</span><span class="p">():</span>
+    <span class="o">...</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Ce bloc n&#39;est exécuté que si on lance ce fichier, pas s&#39;il est importé depuis un autre</span>
+    <span class="n">ma_fonction</span><span class="p">()</span>
+</code></pre></div>
+<h3>Module <code>random</code></h3>
+<p>Module assurant la génération de nombres aléatoires.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>         <span class="c1"># Génère un float aléatoire dans [0.0, 1.0[</span>
+<span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>    <span class="c1"># Génère un entier aléatoire dans [a, b] (bornes incluses)</span>
+<span class="n">random</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>  <span class="c1"># Génère un entier aléatoire dans [a, b[ (borne haute exclue, comme range)</span>
+</code></pre></div>
+<p>La fonction <code>choice</code> permet de choisir au hasard un élément dans une liste :</p>
+<div class="highlight"><pre><span></span><code><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>                        <span class="c1"># Simule un pile ou face (pièce équilibrée)</span>
+<span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">([</span><span class="s2">&quot;Alice&quot;</span><span class="p">,</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;Charlie&quot;</span><span class="p">,</span> <span class="s2">&quot;Diana&quot;</span><span class="p">])</span> <span class="c1"># Tire un nom au sort dans une liste</span>
+</code></pre></div>
+<h3>Module <code>pprint</code></h3>
+<p>Ce module permet un « meilleur affichage » en console.
+Il peut s'avérer utile pour « déboguer au <code>print</code> » un code impliquant des listes ou des dictionnaires (ce qui peut servir en Épreuve Pratique).</p>
+<p><strong>👉 C'est spécialement vrai lorsque listes ou dictionnaires sont imbriqués !</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span> <span class="k">as</span> <span class="n">pp</span>
+
+<span class="n">pp</span><span class="p">(</span><span class="n">donnees</span><span class="p">)</span>             <span class="c1"># Affichage lisible, hiérarchisé et structuré</span>
+<span class="n">pp</span><span class="p">(</span><span class="n">donnees</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>   <span class="c1"># Limite la largeur à 60 caractères (passage à la ligne au-delà)</span>
+</code></pre></div>
+<h2>Les assertions</h2>
+<p>Une <strong>assertion</strong> vérifie qu'une condition est vraie à un instant donné.
+Si elle est fausse, le programme provoque une <code>AssertionError</code>.</p>
+<p>On utilise souvent les assertions pour vérifier des préconditions, ou (en NSI), pour valider le comportement d'un code.</p>
+<div style="text-align:center;margin:10px">
+<table style="width:99%">
+<tr>
+<th>Vérification d'une précondition</th>
+<th>Vérification de la conformité d'une sortie</th>
+</tr>
+<tr>
+<td style="width:50%; vertical-align:top">
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inverse</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">x</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;0 n&#39;a pas d&#39;inverse&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="o">/</span><span class="n">x</span>
+</code></pre></div>
+</td>
+<td style="width:50; vertical-align:top%">
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">double</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n</span>
+
+<span class="k">assert</span> <span class="n">double</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
+<span class="k">assert</span> <span class="n">double</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="k">assert</span> <span class="n">double</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span>
+</code></pre></div>
+</td>
+</tr>
+</table>
+</div>
+
+<p><strong>Bonnes pratiques</strong></p>
+<ul>
+<li>Écrire les assertions <strong>immédiatement après la définition</strong> de la fonction, comme jeu de tests minimal.</li>
+<li>Tester les <strong>cas limites</strong> : liste vide, zéro, valeurs négatives, chaîne vide.</li>
+<li>Les assertions peuvent être désactivées à l'exécution avec le flag <code>-O</code> ; elles servent au <strong>développement</strong>, pas à la validation en production.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># Exemple avec cas limites</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">premier_element</span><span class="p">(</span><span class="n">lst</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;La liste ne doit pas être vide&quot;</span>
+    <span class="k">return</span> <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+<p>Le message <em>facultatif</em> après la virgule précise la cause de l'erreur.</p>
+
+    <script>
+// ── Numérotation automatique des titres du document ──────────────────
+function numeroterTitres() {
+    var compteurs = {h2: 0, h3: 0, h4: 0};
+    var titres = document.querySelectorAll('h2, h3, h4');
+    for (var i = 0; i < titres.length; i++) {
+        var titre = titres[i];
+        var niveau = titre.tagName.toLowerCase();
+        if (!titre.textContent.match(/^\d+\./)) {
+            if (niveau === 'h2') {
+                compteurs.h2++; compteurs.h3 = 0; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '. ' + titre.textContent;
+            } else if (niveau === 'h3') {
+                compteurs.h3++; compteurs.h4 = 0;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '. ' + titre.textContent;
+            } else if (niveau === 'h4') {
+                compteurs.h4++;
+                titre.textContent = compteurs.h2 + '.' + compteurs.h3 + '.' + compteurs.h4 + '. ' + titre.textContent;
+            }
+        }
+    }
+}
+
+
+// ── Génère un slug à partir d'un texte ───────────────────────────────
+function slugifier(texte) {
+  return texte
+    .toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // supprime accents
+    .replace(/[^a-z0-9\s-]/g, "")                    // supprime ponctuation
+    .trim()
+    .replace(/\s+/g, "-");                            // espaces → tirets
+}
+
+
+// ── Fabrique des ancres convenables pour les titres du document ──────
+// À appeler au DOMContentLoaded, AVANT numeroterTitres() !
+function assignerAncres() {
+  const titres = document.querySelectorAll('h2, h3, h4');
+  titres.forEach((t) => {
+    if (!t.id) {
+      t.id = slugifier(t.textContent.trim());
+    }
+  });
+}
+
+
+// ── Thème clair / sombre ─────────────────────────────────────────────
+function basculerTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+
+
+// ── Cycle des polices (pour dyslexie ; double-clic : reset) ──────────
+let policeCourante = localStorage.getItem('police') || '0';
+let dernierClicPolice = 0;
+
+function basculerPolice() {
+    // Double-clic reset
+    const maintenant = Date.now();
+    if (maintenant - dernierClicPolice < 400) {
+        document.body.classList.remove('police-1', 'police-2', 'police-3');
+        localStorage.setItem('police', '0');
+        policeCourante = '0';
+        return;
+    }
+    dernierClicPolice = maintenant;
+
+    // Cycle 3 polices : 0→1→2→3→0
+    const nouvellePolice = (parseInt(policeCourante) + 1) % 4;
+
+    // Nettoyer classes précédentes
+    document.body.classList.remove('police-1', 'police-2', 'police-3');
+
+    if (nouvellePolice === 0) {
+        // Retour normal
+        localStorage.setItem('police', '0');
+    } else {
+        document.body.classList.add('police-' + nouvellePolice);
+        localStorage.setItem('police', nouvellePolice.toString());
+    }
+
+    policeCourante = nouvellePolice.toString();
+}
+
+
+// ── Fabrique un sommaire automatique pour le document HTML ───────────
+// Nécessite que les ancres aient été préalablement calculées
+function construireSommaire() {
+  const panneau = document.getElementById('toc-overlay');
+  if (panneau.dataset.built) return;
+  const titres = document.querySelectorAll('h2, h3, h4');
+  if (titres.length === 0) {
+    panneau.innerHTML = '<p style="padding:0.5em 1em;color:#888;">Aucun titre trouvé.</p>';
+    panneau.dataset.built = '1';
+    return;
+  }
+  titres.forEach((t) => {
+    const cls = 'toc-' + t.tagName.toLowerCase();
+    const texte = t.textContent.trim();
+    // html += `<a href="#${t.id}" class="${cls}" onclick='fermerSommaire()'>${texte}</a>`;
+    const a = document.createElement('a');
+    a.href = '#' + t.id;
+    a.className = cls;
+    a.textContent = texte;
+    a.addEventListener('click', fermerSommaire);
+    panneau.appendChild(a);
+  });
+  panneau.dataset.built = '1';
+}
+
+function basculerSommaire() {
+    construireSommaire();
+    document.getElementById('toc-overlay').classList.toggle('open');
+}
+
+function fermerSommaire() {
+    document.getElementById('toc-overlay').classList.remove('open');
+}
+
+document.addEventListener('click', function(e) {
+    const controles = document.getElementById('controls');
+    const sommaire = document.getElementById('toc-overlay');
+    if (!controles.contains(e.target) && !sommaire.contains(e.target)) fermerSommaire();
+});
+
+
+// ── Mode pagination par bloc (viewport-height scroll) ────────────────
+// Gestion des touches pour block-scroll à l'appui sur barre d'espacement, page up & down
+document.addEventListener('keydown', (e) => {
+    // Pas dans les champs de saisie !
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'PageDown' || e.key === ' ') {
+        e.preventDefault();
+        window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
+    } else if (e.key === 'PageUp') {
+        e.preventDefault();
+        window.scrollBy({ top: -window.innerHeight, behavior: 'smooth' });
+    }
+});
+
+
+// ── Impression : ouvrir les <details> avant, puis revenir à leur état
+// Prépare le DOM avant impression
+window.addEventListener('beforeprint', function () {
+    window._impressionEnCours = true;          // ← flag AVANT d'ouvrir les details
+
+    // 1. Ouvrir tous les <details> (admonitions dépliables)
+    //    et mémoriser leur état pour restauration après impression
+    document.querySelectorAll('details').forEach(function (d) {
+        d._etaitOuvert = d.open;
+        d.open = true;
+    });
+
+    // 2. Injecter le titre de chaque onglet juste avant son bloc
+    //    (les labels et blocs sont dans le même ordre : label[i] ↔ block[i])
+    document.querySelectorAll('.tabbed-set').forEach(function (set) {
+        const labels = Array.from(set.querySelectorAll('.tabbed-labels > label'));
+        const blocks = Array.from(set.querySelectorAll('.tabbed-content > .tabbed-block'));
+        labels.forEach(function (label, i) {
+            if (blocks[i]) {
+                const titre = document.createElement('div');
+                titre.className = 'tabbed-print-label';
+                titre.textContent = label.textContent;
+                titre.setAttribute('data-print-injected', '1'); // marqueur de nettoyage
+                blocks[i].prepend(titre);
+            }
+        });
+    });
+});
+
+window.addEventListener('afterprint', function () {
+    window._impressionEnCours = false;         // ← reset du flag
+
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+// Restauration du DOM après impression (retour à l'état avant impression
+window.addEventListener('afterprint', function () {
+
+    // 1. Restaurer l'état d'ouverture initial des <details>
+    document.querySelectorAll('details').forEach(function (d) {
+        d.open = d._etaitOuvert;
+    });
+
+    // 2. Supprimer les titres d'onglets injectés
+    //    (le marqueur data-print-injected évite tout risque de suppression parasite)
+    document.querySelectorAll('[data-print-injected]').forEach(function (el) {
+        el.remove();
+    });
+});
+
+
+// ── Bouton copier sur les blocs de code ──────────────────────────────
+function ajouterBoutonsCopier() {
+    document.querySelectorAll('.highlight').forEach(bloc => {
+        // Conteneur relatif pour positionner le bouton
+        bloc.style.position = 'relative';
+
+        const btn = document.createElement('button');
+        btn.textContent = '📋';
+        btn.title = 'Copier le code';
+        btn.style.cssText = `
+            position: absolute;
+            top: 0.4em;
+            right: 0.4em;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 0.2em 0.4em;
+            line-height: 1;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+        `;
+
+        // Afficher au survol du bloc
+        bloc.addEventListener('mouseenter', () => btn.style.opacity = '1');
+        bloc.addEventListener('mouseleave', () => btn.style.opacity = '0');
+
+        btn.addEventListener('click', () => {
+            const cellCode = bloc.querySelector('td.code pre') || bloc.querySelector('pre');
+            const code = cellCode.innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '✅';
+                setTimeout(() => btn.textContent = '📋', 1500);
+            });
+        });
+
+        bloc.appendChild(btn);
+    });
+}
+
+
+// ── Barre de progression de lecture ──────────────────────────────────
+function majBarreProgression() {
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  if (docHeight <= 0) return;
+  document.body.style.setProperty('--progress', window.scrollY / docHeight);
+}
+
+window.addEventListener('scroll', majBarreProgression, { passive: true });
+window.addEventListener('resize', majBarreProgression, { passive: true });
+document.addEventListener('DOMContentLoaded', majBarreProgression);
+
+
+// ── Positionnement des notes de bas de page / infobulles ─────────────
+// Il s'agit d'éviter qu'elles soient coupées lorsqu'utilisées dans un bloc
+function positionnerInfobulles() {
+    document.querySelectorAll('.infobulle-note').forEach(note => {
+        const bulle = note.querySelector('.infobulle-contenu');
+
+        note.addEventListener('mouseenter', () => {
+            bulle.style.display = 'block';
+            const rect = note.getBoundingClientRect();
+            const bw   = bulle.offsetWidth;
+            const bh   = bulle.offsetHeight;
+
+            // Position par défaut : centré au-dessus du sup
+            let left = rect.left + rect.width / 2 - bw / 2;
+            let top  = rect.top - bh - 6;
+
+            // Correction débordement droit
+            if (left + bw > window.innerWidth - 8)
+                left = window.innerWidth - bw - 8;
+            // Correction débordement gauche
+            if (left < 8) left = 8;
+            // Si ça dépasse en haut → afficher en dessous
+            if (top < 8) top = rect.bottom + 6;
+
+            bulle.style.left = left + 'px';
+            bulle.style.top  = top  + 'px';
+        });
+
+        note.addEventListener('mouseleave', () => {
+            bulle.style.display = 'none';
+        });
+    });
+}
+
+
+// ── Auto target="_blank" pour liens externes ─────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="http"]:not([href*="' + window.location.hostname + '"])')
+        .forEach(link => {
+            if (!link.target) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+            }
+        });
+});
+
+
+// ── Initialisation complète du document HTML ─────────────────────────
+function initialiser() {
+    assignerAncres();
+    numeroterTitres();
+    positionnerInfobulles();
+
+    // Thème
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
+
+    // ← Police restaurée au chargement
+    const police = localStorage.getItem('police') || '0';
+    if (parseInt(police) > 0) {
+        document.body.classList.add('police-' + police);
+    }
+    
+    // Bouton copier-coller
+    ajouterBoutonsCopier();   // ← ajouter cette ligne
+    
+    // Pour scroll souris dans le sommaire
+    document.getElementById('toc-overlay').addEventListener(
+        'wheel', function(e) { e.stopPropagation(); }, { passive: true });
+}
+
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialiser);
+} else {
+    initialiser();
+}
+
+    </script>
+</body>
+</html>
